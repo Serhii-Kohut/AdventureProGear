@@ -43,4 +43,7 @@ public class ProductAttribute extends BaseEntity {
     @OneToMany(mappedBy = "product")
     List<ProductStorage> productStorages;
 
+    @OneToMany(mappedBy = "productAttribute")
+    List<OrdersList> ordersLists;
+
 }

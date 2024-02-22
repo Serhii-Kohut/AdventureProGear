@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -38,4 +40,7 @@ public class User extends BaseEntity {
 
     @Column(name = "date")
     LocalDate date;
+
+    @OneToMany(mappedBy = "user")
+    List<Order> orders;
 }
