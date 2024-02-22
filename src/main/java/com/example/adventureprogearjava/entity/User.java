@@ -13,11 +13,11 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity {
 

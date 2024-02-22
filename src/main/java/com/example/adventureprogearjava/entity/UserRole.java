@@ -13,17 +13,19 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
+@Table(name = "userRole")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_roles")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserRole extends BaseEntity{
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
     @Column(nullable = false)
     String role;
+
 }
