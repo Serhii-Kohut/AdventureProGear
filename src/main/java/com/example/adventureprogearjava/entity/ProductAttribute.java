@@ -40,7 +40,7 @@ public class ProductAttribute extends BaseEntity {
     @Column(name = "price_deviation", nullable = false)
     Long priceDeviation;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "productAttribute")
     List<ProductStorage> productStorages;
 
     @OneToMany(mappedBy = "productAttribute")
