@@ -1,7 +1,10 @@
 package com.example.adventureprogearjava.entity;
 
+import com.example.adventureprogearjava.entity.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -40,6 +43,10 @@ public class User extends BaseEntity {
 
     @Column(name = "date")
     LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    Role role;
 
     @OneToMany(mappedBy = "user")
     List<Order> orders;
