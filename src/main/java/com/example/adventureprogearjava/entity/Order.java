@@ -1,7 +1,10 @@
 package com.example.adventureprogearjava.entity;
 
+import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -23,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order extends BaseEntity{
+public class Order extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -32,7 +35,7 @@ public class Order extends BaseEntity{
     @Column(name = "order_date")
     LocalDateTime orderDate;
 
-    @Column(name = "city",nullable = false)
+    @Column(name = "city", nullable = false)
     String city;
 
     @Column(name = "post_address", nullable = false)
@@ -44,14 +47,9 @@ public class Order extends BaseEntity{
     @Column(name = "price")
     Long price;
 
-    @Column(name = "is_paid", nullable = false)
-    boolean isPaid;
-
-    @Column(name = "is_delivered", nullable = false)
-    boolean isDelivered;
-
-    @Column(name = "is_canceled", nullable = false)
-    boolean isCanceled;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    OrderStatus status;
 
     @OneToMany(mappedBy = "order")
     List<OrdersList> ordersLists;
