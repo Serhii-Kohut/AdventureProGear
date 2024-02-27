@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 @Entity
-@Table(name = "productAttribute")
+@Table(name = "product_attributes")
 @Getter
 @Setter
 @NoArgsConstructor

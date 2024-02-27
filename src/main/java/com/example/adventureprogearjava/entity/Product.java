@@ -16,11 +16,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.Type;
 
 import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -13,7 +13,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "ordersList")
+@Table(name = "orders_list")
 @Getter
 @Setter
 @NoArgsConstructor
