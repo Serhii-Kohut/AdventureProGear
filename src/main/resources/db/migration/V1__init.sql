@@ -1,6 +1,6 @@
-CREATE TYPE gender AS ENUM ('male','female');
+CREATE TYPE gender AS ENUM ('MALE','FEMALE');
 
-CREATE TYPE category AS ENUM ('T-Shirts','Pants', 'Linen', 'Headwears', 'Hiking Equipment', 'Bags', 'Shoes' );
+CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
 
 CREATE TABLE IF NOT EXISTS public.users
 (

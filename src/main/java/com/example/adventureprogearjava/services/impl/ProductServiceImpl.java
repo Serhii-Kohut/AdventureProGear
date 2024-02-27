@@ -2,6 +2,8 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.Product;
+import com.example.adventureprogearjava.entity.enums.Gender;
+import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.ProductMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;
@@ -10,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +43,13 @@ public class ProductServiceImpl implements CRUDService<ProductDTO> {
     }
 
     @Override
+    @Transactional
     public ProductDTO create(ProductDTO productDTO) {
-        productRepo.save(productMapper.toEntity(productDTO));
+        productRepo.insertProduct(productDTO.getProductName(),
+                productDTO.getDescription(),
+                productDTO.getBasePrice(),
+                ProductCategory.BAGS.toString(),
+                Gender.FEMALE.toString());
         return productDTO;
     }
 

@@ -50,19 +50,19 @@ values (nextval('user_role_seq'), 2, 'user');
 insert into user_roles (id, user_id, role)
 values (nextval('user_role_seq'), 2, 'admin');
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'female', 'T-Shirts');
+values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'FEMALE', 'T_SHIRTS');
 
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'male', 'T-Shirts');
+values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'MALE', 'T_SHIRTS');
 
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'female', 'Shoes');
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'FEMALE', 'SHOES');
 
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'male', 'Shoes');
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'MALE', 'SHOES');
 
 insert into products (id, product_name, description, base_price, category)
-values (nextval('product_seq'), 'Butcher knife', 'Common shirt', 120, 'Hiking Equipment');
+values (nextval('product_seq'), 'Butcher knife', 'Common knife', 120, 'HIKING_EQUIPMENT');
 
 insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_1');
 insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_2');

@@ -1,0 +1,1 @@
+delete from products where product_name = 'name'
