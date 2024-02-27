@@ -17,11 +17,24 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Query(value = "insert into products (id ,product_name, description, base_price, gender, category)\n" +
-                    "            values (nextval('product_content_seq'), :name, :description, :price, CAST(:gender as gender) , CAST(:category as category));",
+            "            values (nextval('product_content_seq'), :name, :description, :price, CAST(:gender as gender) , CAST(:category as category));",
             nativeQuery = true)
     void insertProduct(@Param("name") String name,
                        @Param("description") String description,
                        @Param("price") Long price,
                        @Param("category") String category,
                        @Param("gender") String gender);
+
+    @Modifying
+    @Query(value = "UPDATE products set product_name = :name, " +
+            "description=:description, base_price = :price," +
+            "category = CAST(:category as category)," +
+            "gender= CAST(:gender as gender) where id = :id",
+            nativeQuery = true)
+    void update(@Param("id") Long id,
+                @Param("name") String name,
+                @Param("description") String description,
+                @Param("price") Long price,
+                @Param("category") String category,
+                @Param("gender") String gender);
 }

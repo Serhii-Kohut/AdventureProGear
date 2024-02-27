@@ -45,9 +45,19 @@ class ProductServiceImplTest {
     }
 
     @Test
+    @Sql(value = {"classpath:create_product_before.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"classpath:delete_product_after.sql"},
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void update() {
-        //TODO Write tests after update implementation
+        assert(productService.getById(6L).getProductName()
+                .equals("Test"));
+        ProductDTO productDTO = new ProductDTO("updatedName", "updatedDescr", 1L, null, ProductCategory.PANTS);
+        productService.update(productDTO, 6L);
+        assert (productService.getById(6L).getProductName()
+                .equals(productDTO.getProductName()));
     }
+
 
     @Test
     @Sql(value = {"classpath:create_product_before.sql"},

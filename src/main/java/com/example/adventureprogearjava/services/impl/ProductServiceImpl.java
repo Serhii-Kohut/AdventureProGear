@@ -54,8 +54,13 @@ public class ProductServiceImpl implements CRUDService<ProductDTO> {
     }
 
     @Override
+    @Transactional
     public void update(ProductDTO productDTO, Long id) {
-        //TODO Perform an update query from repository, in order to simplify code
+        productRepo.update(id, productDTO.getProductName(),
+                productDTO.getDescription(),
+                productDTO.getBasePrice(),
+                ProductCategory.BAGS.toString(),
+                Gender.FEMALE.toString());
     }
 
     @Override
