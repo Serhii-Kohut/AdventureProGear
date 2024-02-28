@@ -1,6 +1,8 @@
 package com.example.adventureprogearjava.dto;
 
 import com.example.adventureprogearjava.entity.OrdersList;
+import com.example.adventureprogearjava.entity.ProductAttribute;
+import com.example.adventureprogearjava.entity.ProductContent;
 import com.example.adventureprogearjava.entity.ProductStorage;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.entity.enums.ProductCategory;
@@ -10,10 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDTO {
     @NotBlank(message = "Name is mandatory")
@@ -33,4 +33,8 @@ public class ProductDTO {
     Gender gender;
 
     ProductCategory category;
+
+    List<ProductAttributeDTO> attributes;
+
+    List<ContentDTO> contents;
 }

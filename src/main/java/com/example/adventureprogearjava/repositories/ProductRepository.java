@@ -13,8 +13,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findAll();
-
     @Modifying
     @Query(value = "insert into products (id ,product_name, description, base_price, gender, category)\n" +
             "            values (nextval('product_content_seq'), :name, :description, :price, CAST(:gender as gender) , CAST(:category as category));",
