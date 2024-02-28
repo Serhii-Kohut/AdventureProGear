@@ -45,26 +45,34 @@ public class ProductServiceImpl implements CRUDService<ProductDTO> {
     @Override
     @Transactional
     public ProductDTO create(ProductDTO productDTO) {
-        productRepo.insertProduct(productDTO.getProductName(),
-                productDTO.getDescription(),
-                productDTO.getBasePrice(),
-                ProductCategory.BAGS.toString(),
-                Gender.FEMALE.toString());
+        insertProduct(productDTO);
         return productDTO;
     }
 
     @Override
     @Transactional
     public void update(ProductDTO productDTO, Long id) {
-        productRepo.update(id, productDTO.getProductName(),
-                productDTO.getDescription(),
-                productDTO.getBasePrice(),
-                ProductCategory.BAGS.toString(),
-                Gender.FEMALE.toString());
+        if (!productRepo.existsById(id)) {
+            insertProduct(productDTO);
+        } else {
+            productRepo.update(id, productDTO.getProductName(),
+                    productDTO.getDescription(),
+                    productDTO.getBasePrice(),
+                    productDTO.getCategory().toString(),
+                    productDTO.getGender().toString());
+        }
     }
 
     @Override
     public void delete(Long id) {
         productRepo.deleteById(id);
+    }
+
+    private void insertProduct(ProductDTO productDTO) {
+        productRepo.insertProduct(productDTO.getProductName(),
+                productDTO.getDescription(),
+                productDTO.getBasePrice(),
+                productDTO.getCategory().toString(),
+                productDTO.getGender().toString());
     }
 }
