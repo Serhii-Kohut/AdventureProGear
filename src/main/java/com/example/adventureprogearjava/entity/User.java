@@ -36,7 +36,7 @@ public class User extends BaseEntity {
     String email;
 
     @Column(name = "phone_number", nullable = false, unique = true)
-    String phone_number;
+    String phoneNumber;
 
     @Column(name = "verified", nullable = false)
     boolean verified;

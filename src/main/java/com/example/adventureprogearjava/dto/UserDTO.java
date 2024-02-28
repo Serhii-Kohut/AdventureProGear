@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.dto;
 import com.example.adventureprogearjava.entity.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
@@ -31,6 +32,7 @@ public class UserDTO {
     @Pattern(regexp="(^$|[0-9]{10})", message="Phone number should be valid")
     String phoneNumber;
 
+    @NotNull(message = "Verified field is mandatory")
     boolean verified;
 
     @PastOrPresent(message = "Date should be in the past or present")
