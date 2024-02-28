@@ -38,7 +38,14 @@ class ProductServiceImplTest {
     @Sql(value = {"classpath:delete_product_after.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void create() {
-        ProductDTO productDTO = new ProductDTO("name", "descr", 100L, Gender.MALE, ProductCategory.PANTS);
+        ProductDTO productDTO = ProductDTO
+                .builder()
+                .productName("name")
+                .description("descr")
+                .basePrice(100L)
+                .gender(Gender.MALE)
+                .category(ProductCategory.PANTS)
+                .build();
         ProductDTO created = productService.create(productDTO);
         assert (created.getProductName().equals(productDTO.getProductName()));
         assert(productService.getAll().size()==6);
@@ -52,7 +59,13 @@ class ProductServiceImplTest {
     void update() {
         assert(productService.getById(6L).getProductName()
                 .equals("Test"));
-        ProductDTO productDTO = new ProductDTO("updatedName", "updatedDescr", 1L, null, ProductCategory.PANTS);
+        ProductDTO productDTO = ProductDTO
+                .builder()
+                .productName("updatedName")
+                .description("updatedDescr")
+                .basePrice(1L)
+                .category(ProductCategory.PANTS)
+                .build();
         productService.update(productDTO, 6L);
         assert (productService.getById(6L).getProductName()
                 .equals(productDTO.getProductName()));
