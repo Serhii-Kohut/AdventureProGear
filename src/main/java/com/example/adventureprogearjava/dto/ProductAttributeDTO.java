@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.dto;
 
 import com.example.adventureprogearjava.entity.Product;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,4 +23,6 @@ public class ProductAttributeDTO {
     String additional;
     @NotNull
     Long priceDeviation;
+    @JsonIgnore
+    Long productId;
 }

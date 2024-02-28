@@ -46,10 +46,14 @@ public class ProductAttributeServiceImpl implements CRUDService<ProductAttribute
     }
 
     @Override
+    @Transactional
     public ProductAttributeDTO create(ProductAttributeDTO productAttributeDTO) {
         log.info("Creating new productAttribute.");
-        productAttributeRepo.save(productAttributeMapper
-                .toEntity(productAttributeDTO));
+        productAttributeRepo.insertProductAttr(productAttributeDTO.getSize(),
+                productAttributeDTO.getColor(),
+                productAttributeDTO.getAdditional(),
+                productAttributeDTO.getPriceDeviation(),
+                productAttributeDTO.getProductId());
         return productAttributeDTO;
     }
 
@@ -72,7 +76,7 @@ public class ProductAttributeServiceImpl implements CRUDService<ProductAttribute
     @Override
     public void delete(Long id) {
         log.info("Deleting productAttribute with id: {}", id);
-        if (!productAttributeRepo.existsById(id)){
+        if (!productAttributeRepo.existsById(id)) {
             log.warn("No content present!");
             throw new NoContentException("No content present!");
         }
