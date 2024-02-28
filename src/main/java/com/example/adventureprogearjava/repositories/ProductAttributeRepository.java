@@ -10,6 +10,16 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductAttributeRepository extends JpaRepository<ProductAttribute, Long> {
     @Modifying
+    @Query(value = "insert into product_attributes (id, size, color, additional, price_deviation, product_id)" +
+            "            values (nextval('product_content_seq'),:size,:color,:additional, :price_deviation, :product_id );",
+            nativeQuery = true)
+    void insertProduct(@Param("size") String size,
+                       @Param("additional") String additional,
+                       @Param("color") String color,
+                       @Param("price_deviation") Long priceDeviation,
+                       @Param("product_id") Long productId);
+
+    @Modifying
     @Query(value = "UPDATE product_attributes set size = :size, " +
             "color=:color, additional = :additional," +
             "price_deviation = :price_deviation where id=:id",
@@ -18,5 +28,10 @@ public interface ProductAttributeRepository extends JpaRepository<ProductAttribu
                 @Param("size") String size,
                 @Param("additional") String additional,
                 @Param("color") String color,
-                @Param("price_deviation") Long price_deviation);
+                @Param("price_deviation") Long priceDeviation);
+
+    @Modifying
+    @Query(value = "DELETE FROM product_attributes WHERE id =:id",
+            nativeQuery = true)
+    void deleteById(@Param("id") Long id);
 }

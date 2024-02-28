@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.services.impl;
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.entity.enums.ProductCategory;
+import com.example.adventureprogearjava.services.CRUDService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @TestPropertySource(locations= "classpath:application.yml")
 class ProductServiceImplTest {
     @Autowired
-    ProductServiceImpl productService;
+    CRUDService<ProductDTO> productService;
 
     @Test
     void getAll() {
@@ -79,5 +80,8 @@ class ProductServiceImplTest {
         assert(productService.getAll().size()==6);
         productService.delete(6L);
         assert(productService.getAll().size()==5);
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> productService.delete(10L));
+        assert (exception.getMessage().equals("No content present!"));
     }
 }
