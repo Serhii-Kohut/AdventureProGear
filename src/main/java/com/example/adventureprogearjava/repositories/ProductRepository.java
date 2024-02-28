@@ -26,13 +26,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = "UPDATE products set product_name = :name, " +
             "description=:description, base_price = :price," +
-            "category = CAST(:category as category)," +
-            "gender= CAST(:gender as gender) where id = :id",
+            "category = CAST(:category as category)" +
+            "where id = :id",
             nativeQuery = true)
     void update(@Param("id") Long id,
                 @Param("name") String name,
                 @Param("description") String description,
                 @Param("price") Long price,
-                @Param("category") String category,
+                @Param("category") String category);
+
+    @Modifying
+    @Query(value = "UPDATE products set "+
+            "gender= CAST(:gender as gender) where id = :id",
+            nativeQuery = true)
+    void updateGender(@Param("id") Long id,
                 @Param("gender") String gender);
 }
