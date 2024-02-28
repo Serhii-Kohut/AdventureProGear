@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,4 +13,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ContentDTO {
     String source;
+    @JsonIgnore
+    Long productId;
 }

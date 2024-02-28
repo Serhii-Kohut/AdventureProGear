@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface ProductAttributeRepository extends JpaRepository<ProductAttribute, Long> {
     @Modifying
     @Query(value = "insert into product_attributes (id, size, color, additional, price_deviation, product_id)" +
-            "            values (nextval('product_content_seq'),:size,:color,:additional, :price_deviation, :product_id );",
+            "            values (nextval('product_attr_seq'),:size,:color,:additional, :price_deviation, :product_id );",
             nativeQuery = true)
-    void insertProduct(@Param("size") String size,
+    void insertProductAttr(@Param("size") String size,
                        @Param("additional") String additional,
                        @Param("color") String color,
                        @Param("price_deviation") Long priceDeviation,

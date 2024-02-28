@@ -49,7 +49,7 @@ public class ProductAttributeServiceImpl implements CRUDService<ProductAttribute
     @Transactional
     public ProductAttributeDTO create(ProductAttributeDTO productAttributeDTO) {
         log.info("Creating new productAttribute.");
-        productAttributeRepo.insertProduct(productAttributeDTO.getSize(),
+        productAttributeRepo.insertProductAttr(productAttributeDTO.getSize(),
                 productAttributeDTO.getColor(),
                 productAttributeDTO.getAdditional(),
                 productAttributeDTO.getPriceDeviation(),
