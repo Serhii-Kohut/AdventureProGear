@@ -112,11 +112,6 @@ public class UserServiceImpl implements CRUDService<UserDTO> {
     public void delete(Long id) {
         log.info("Deleting user with id: {}", id);
 
-        if (!userRepository.existsById(id)) {
-            log.warn("User not found with id: {}", id);
-            throw new ResourceNotFoundException("User not found with id " + id);
-        }
-
         userRepository.deleteById(id);
     }
 }
