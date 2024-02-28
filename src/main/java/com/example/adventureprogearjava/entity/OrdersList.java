@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrdersList extends BaseEntity{
+public class OrdersList extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
