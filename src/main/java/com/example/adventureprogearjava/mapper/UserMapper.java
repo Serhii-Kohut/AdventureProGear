@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
     UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
 
-    public UserDTO toDTO(User user);
+    UserDTO toDTO(User user);
 
-    public User toEntity(UserDTO dto);
+    User toEntity(UserDTO dto);
 }

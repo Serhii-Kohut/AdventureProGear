@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface OrdersListMapper {
-    public OrdersListDTO toDTO(OrdersList ordersList);
+    OrdersListDTO toDTO(OrdersList ordersList);
 
-    public OrdersList toEntity(OrdersListDTO ordersListDTO);
+    OrdersList toEntity(OrdersListDTO ordersListDTO);
 
 }
