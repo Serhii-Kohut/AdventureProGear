@@ -53,7 +53,8 @@ public class ProductAttributeServiceImpl implements CRUDService<ProductAttribute
                 productAttributeDTO.getColor(),
                 productAttributeDTO.getAdditional(),
                 productAttributeDTO.getPriceDeviation(),
-                productAttributeDTO.getProductId());
+                productAttributeDTO.getProductId(),
+                productAttributeDTO.getQuantity());
         return productAttributeDTO;
     }
 
@@ -69,7 +70,8 @@ public class ProductAttributeServiceImpl implements CRUDService<ProductAttribute
                     productAttributeDTO.getSize(),
                     productAttributeDTO.getAdditional(),
                     productAttributeDTO.getColor(),
-                    productAttributeDTO.getPriceDeviation());
+                    productAttributeDTO.getPriceDeviation(),
+                    productAttributeDTO.getQuantity());
         }
     }
 
