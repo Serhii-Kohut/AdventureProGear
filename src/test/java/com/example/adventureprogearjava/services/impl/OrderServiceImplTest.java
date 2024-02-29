@@ -65,7 +65,7 @@ public class OrderServiceImplTest {
     @Sql(value = {"classpath:delete_order_after.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void update() {
-        assert(orderService.getById(1L).getCity()
+        assert(orderService.getById(3L).getCity()
                 .equals("city"));
         OrderDTO orderDTO = OrderDTO
                 .builder()
@@ -76,7 +76,7 @@ public class OrderServiceImplTest {
                 .price(200L)
                 .status(OrderStatus.DELIVERED)
                 .build();
-        orderService.update(orderDTO, 1L);
+        orderService.update(orderDTO, 3L);
         assert (orderService.getById(1L).getCity()
                 .equals(orderDTO.getCity()));
     }
