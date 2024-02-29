@@ -77,7 +77,7 @@ public class OrderServiceImplTest {
                 .status(OrderStatus.DELIVERED)
                 .build();
         orderService.update(orderDTO, 3L);
-        assert (orderService.getById(1L).getCity()
+        assert (orderService.getById(3L).getCity()
                 .equals(orderDTO.getCity()));
     }
 
