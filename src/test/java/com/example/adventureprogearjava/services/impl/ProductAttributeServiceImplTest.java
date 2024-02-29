@@ -46,6 +46,7 @@ class ProductAttributeServiceImplTest {
                 .color("red")
                 .priceDeviation(0L)
                 .productId(6L)
+                .quantity(5L)
                 .build();
         ProductAttributeDTO created = productAttributeService
                 .create(productAttributeDTO);
@@ -63,6 +64,7 @@ class ProductAttributeServiceImplTest {
         ProductAttributeDTO productAttributeDTO = ProductAttributeDTO.builder()
                 .color("updatedColor")
                 .priceDeviation(10L)
+                .quantity(4L)
                 .build();
         productAttributeService.update(productAttributeDTO, 20L);
         assert (productAttributeService.getById(20L).getColor()
