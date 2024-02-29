@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -39,15 +40,15 @@ public class User extends BaseEntity {
     String phoneNumber;
 
     @Column(name = "verified", nullable = false)
-    boolean verified;
+    Boolean verified;
 
-    @Column(name = "date")
+    @Column(name = "registration_date")
     LocalDate date;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     List<Order> orders;
 }
