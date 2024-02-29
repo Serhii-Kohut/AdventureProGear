@@ -5,7 +5,7 @@ import com.example.adventureprogearjava.entity.OrdersList;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface OrdersListMapper {
     OrdersListMapper MAPPER = Mappers.getMapper(OrdersListMapper.class);
 

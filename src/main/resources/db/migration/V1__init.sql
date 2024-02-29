@@ -1,5 +1,9 @@
 CREATE TYPE gender AS ENUM ('MALE','FEMALE');
 
+CREATE TYPE status AS ENUM('PAID','DELIVERED','CANCELED');
+
+CREATE TYPE user_role AS ENUM('USER', 'ADMIN');
+
 CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
 
 CREATE TABLE IF NOT EXISTS public.users
@@ -9,16 +13,8 @@ CREATE TABLE IF NOT EXISTS public.users
     surname           varchar not null,
     email             varchar not null unique,
     phone_number      varchar not null unique,
-    registration_date date
-);
-
-CREATE TABLE IF NOT EXISTS public.user_roles
-(
-    id      bigint primary key,
-    user_id integer not null
-        constraint urole_usr_fk
-            references public.users,
-    role    varchar not null
+    registration_date date,
+    role user_role
 );
 
 CREATE TABLE IF NOT EXISTS public.products
@@ -40,7 +36,8 @@ CREATE TABLE IF NOT EXISTS public.product_attributes
     price_deviation integer not null,
     product_id      integer not null
         constraint prodatr_prod_fk
-            references public.products
+            references public.products,
+    quantity             integer not null
 );
 
 CREATE TABLE IF NOT EXISTS public.product_content
@@ -50,19 +47,6 @@ CREATE TABLE IF NOT EXISTS public.product_content
         constraint prodcont_prod_fk
             references public.products,
     source     varchar not null
-);
-
-
-CREATE TABLE IF NOT EXISTS public.product_storage
-(
-    id                   bigint primary key,
-    product_id           integer not null
-        constraint prodstor_prod_fk
-            references public.products,
-    product_attribute_id integer
-        constraint prodstor_prodatr_fk
-            references public.product_attributes,
-    quantity             integer not null
 );
 
 CREATE TABLE IF NOT EXISTS public.orders
@@ -76,9 +60,7 @@ CREATE TABLE IF NOT EXISTS public.orders
     post_address varchar not null,
     comment      text,
     price        int,
-    is_paid      bool    not null,
-    is_delivered bool    not null,
-    is_canceled  bool    not null
+    status status not null
 );
 
 CREATE TABLE IF NOT EXISTS public.orders_list

@@ -15,4 +15,8 @@ public interface ProductContentRepository extends JpaRepository<ProductContent, 
             nativeQuery = true)
     void insertContent(@Param("source") String source,
                        @Param("product_id") Long productId);
+    @Modifying
+    @Query(value = "DELETE FROM product_content WHERE id =:id",
+            nativeQuery = true)
+    void deleteById(@Param("id") Long id);
 }

@@ -1,11 +1,6 @@
 package com.example.adventureprogearjava.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,8 +35,8 @@ public class ProductAttribute extends BaseEntity {
     @Column(name = "price_deviation", nullable = false)
     Long priceDeviation;
 
-    @OneToMany(mappedBy = "productAttribute")
-    List<ProductStorage> productStorages;
+    @Column(name = "quantity", nullable = false)
+    Long quantity;
 
     @OneToMany(mappedBy = "productAttribute")
     List<OrdersList> ordersLists;

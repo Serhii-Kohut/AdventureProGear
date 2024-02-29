@@ -33,9 +33,6 @@ public class Product extends BaseEntity {
     ProductCategory category;
 
     @OneToMany(mappedBy = "product")
-    List<ProductStorage> productStorages;
-
-    @OneToMany(mappedBy = "product")
     List<OrdersList> ordersLists;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
