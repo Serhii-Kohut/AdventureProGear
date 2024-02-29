@@ -52,7 +52,7 @@ public class OrderServiceImpl implements CRUDService<OrderDTO> {
         return orderMapper.toDTO(order);
     }
 
-    @Override
+    /*@Override
     @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
         log.info("Creating new order.");
@@ -65,9 +65,17 @@ public class OrderServiceImpl implements CRUDService<OrderDTO> {
         Order savedOrder = orderRepository.save(order);
 
         return orderMapper.toDTO(savedOrder);
-    }
+    }*/
 
     @Override
+    @Transactional
+    public OrderDTO create(OrderDTO orderDTO) {
+        log.info("Creating new order.");
+        insertOrder(orderDTO);
+        return orderDTO;
+    }
+
+/*    @Override
     @Transactional
     public void update(OrderDTO orderDTO, Long id) {
         log.info("Updating order with id: {}", id);
@@ -84,7 +92,21 @@ public class OrderServiceImpl implements CRUDService<OrderDTO> {
 
         orderRepository.save(orderToUpdate);
 
+    }*/
+
+    @Override
+    @Transactional
+    public void update(OrderDTO orderDTO, Long id) {
+        log.info("Updating order with id: {}", id);
+        if (!orderRepository.existsById(id)) {
+            log.warn("Order not found!");
+            throw new ResourceNotFoundException("Order not found with id " + id);
+        } else {
+            orderRepository.update(id, orderDTO.getCity(), orderDTO.getComment(), orderDTO.getOrderDate(),
+                    orderDTO.getPostAddress(), orderDTO.getPrice(), orderDTO.getStatus().toString(), orderDTO.getUserId());
+        }
     }
+
 
     @Override
     public void delete(Long id) {
@@ -92,5 +114,17 @@ public class OrderServiceImpl implements CRUDService<OrderDTO> {
 
         orderRepository.deleteById(id);
 
+    }
+
+    private void insertOrder(OrderDTO orderDTO) {
+        orderRepository.insertOrder(
+                orderDTO.getCity(),
+                orderDTO.getComment(),
+                orderDTO.getOrderDate(),
+                orderDTO.getPostAddress(),
+                orderDTO.getPrice(),
+                orderDTO.getStatus().toString(),
+                orderDTO.getUserId()
+        );
     }
 }

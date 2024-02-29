@@ -1,0 +1,1 @@
+delete from test.public.orders where city = 'city';

@@ -1,49 +1,85 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
-import com.example.adventureprogearjava.entity.Order;
-import com.example.adventureprogearjava.mapper.OrderMapper;
-import com.example.adventureprogearjava.repositories.OrderRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.adventureprogearjava.entity.enums.OrderStatus;
+import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
+import com.example.adventureprogearjava.services.CRUDService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.yml")
 public class OrderServiceImplTest {
-
     @Autowired
-    private OrderRepository orderRepository;
+    CRUDService<OrderDTO> orderService;
 
-    private OrderMapper orderMapper = OrderMapper.MAPPER;
-
-    private OrderServiceImpl orderService;
-
-    @BeforeEach
-    public void setUp() {
-        orderService = new OrderServiceImpl(orderRepository, orderMapper);
+    @Test
+    void getAll() {
+        List<OrderDTO> dtos = orderService.getAll();
+        assert (!dtos.isEmpty());
     }
 
     @Test
-    public void testGetAll() {
-        // Prepare data
-        Order order = new Order();
-        // Set properties of the order
-        orderRepository.save(order);
+    void getById() {
+        OrderDTO dtoById = orderService.getById(1L);
+        assert (dtoById != null);
 
-        // Call service
-        List<OrderDTO> result = orderService.getAll();
-
-        // Verify and assert
-        assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
+        Exception exception = assertThrows(ResourceNotFoundException.class,
+                () -> orderService.getById(9999L));
+        assert (exception.getMessage().contains("Order not found with id"));
     }
+
+    @Test
+    @Sql(value = {"classpath:delete_order_after.sql"},
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void create() {
+        OrderDTO orderDTO = OrderDTO
+                .builder()
+                .userId(1L)
+                .city("city")
+                .comment("comment")
+                .orderDate(LocalDateTime.now())
+                .postAddress("postAddress")
+                .price(100L)
+                .status(OrderStatus.CANCELED)
+                .build();
+
+        OrderDTO created = orderService.create(orderDTO);
+
+        assertThat(created.getUserId()).isEqualTo(orderDTO.getUserId());
+        assertThat(orderService.getAll().size()).isEqualTo(3);
+    }
+
+    @Test
+    @Sql(value = {"classpath:create_order_before.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"classpath:delete_order_after.sql"},
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void update() {
+        assert(orderService.getById(1L).getCity()
+                .equals("city"));
+        OrderDTO orderDTO = OrderDTO
+                .builder()
+                .userId(1L)
+                .city("UpdatedCity")
+                .postAddress("UpdatedAddress")
+                .comment("UpdatedComment")
+                .price(200L)
+                .status(OrderStatus.DELIVERED)
+                .build();
+        orderService.update(orderDTO, 1L);
+        assert (orderService.getById(1L).getCity()
+                .equals(orderDTO.getCity()));
+    }
+
 
 }
