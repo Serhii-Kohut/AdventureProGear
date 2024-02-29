@@ -77,3 +77,6 @@ CREATE TABLE IF NOT EXISTS public.orders_list
             references public.product_attributes,
     quantity             integer not null
 );
+
+ALTER TABLE users
+    ADD COLUMN verified BOOLEAN;
