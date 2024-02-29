@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -25,7 +26,9 @@ public class ProductAttributeDTO {
     String additional;
     @NotNull
     Long priceDeviation;
-    List<ProductStorageDTO> storages;
+    @NotNull
+    @Min(0)
+    Long quantity;
     @JsonIgnore
     Long productId;
 }

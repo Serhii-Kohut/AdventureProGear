@@ -35,8 +35,8 @@ public class ProductAttribute extends BaseEntity {
     @Column(name = "price_deviation", nullable = false)
     Long priceDeviation;
 
-    @OneToMany(mappedBy = "productAttribute", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    List<ProductStorage> productStorages;
+    @Column(name = "quantity", nullable = false)
+    Long quantity;
 
     @OneToMany(mappedBy = "productAttribute")
     List<OrdersList> ordersLists;
