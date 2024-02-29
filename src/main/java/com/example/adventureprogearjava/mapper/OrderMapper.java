@@ -4,7 +4,7 @@ import com.example.adventureprogearjava.dto.OrderDTO;
 import com.example.adventureprogearjava.entity.Order;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface OrderMapper {
     OrderDTO toDTO(Order order);
 

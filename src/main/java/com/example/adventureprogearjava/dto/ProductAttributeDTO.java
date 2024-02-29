@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class ProductAttributeDTO {
     String additional;
     @NotNull
     Long priceDeviation;
+    List<ProductStorageDTO> storages;
     @JsonIgnore
     Long productId;
 }
