@@ -22,7 +22,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrdersListServiceImpl implements CRUDService<OrdersListDTO> {
     OrdersListRepository ordersListRepository;
-    OrdersListMapper ordersListMapper;
+    OrdersListMapper ordersListMapper = OrdersListMapper.MAPPER;
 
     @Override
     public List<OrdersListDTO> getAll() {
