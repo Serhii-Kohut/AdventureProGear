@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,7 @@ public class ProductContentServiceImpl implements CRUDService<ContentDTO> {
     }
 
     @Override
+    @Transactional
     public ContentDTO create(ContentDTO contentDTO) {
         log.info("Adding new content.");
         contentRepository.insertContent(contentDTO.getSource(),
@@ -56,6 +58,7 @@ public class ProductContentServiceImpl implements CRUDService<ContentDTO> {
     }
 
     @Override
+    @Transactional
     public void update(ContentDTO contentDTO, Long id) {
         log.info("Updating content with id: {}", id);
         ProductContent existingContent = contentRepository.findById(id)
