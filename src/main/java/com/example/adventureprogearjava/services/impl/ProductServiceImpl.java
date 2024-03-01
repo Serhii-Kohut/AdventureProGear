@@ -25,7 +25,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getProductsByName(String productName) {
-        return null;
+        log.info("Getting products by name");
+        return productRepo.findByProductName(productName)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override

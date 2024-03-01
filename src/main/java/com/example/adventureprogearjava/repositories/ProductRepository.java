@@ -42,6 +42,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void updateGender(@Param("id") Long id,
                 @Param("gender") String gender);
 
+    List<Product> findByProductName(String name);
+
     @Query(value = "SELECT * FROM products where gender= CAST(:gender as gender)", nativeQuery = true)
     List<Product> findByGender(@Param("gender") String gender);
 
