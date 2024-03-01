@@ -1,94 +1,97 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
-import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.entity.enums.ProductCategory;
-import com.example.adventureprogearjava.exceptions.NoContentException;
-import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.ProductMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;
-import com.example.adventureprogearjava.services.CRUDService;
+import com.example.adventureprogearjava.services.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ProductServiceImpl implements CRUDService<ProductDTO> {
+public class ProductServiceImpl implements ProductService {
     ProductRepository productRepo;
 
-    ProductMapper productMapper;
+    ProductMapper mapper;
 
     @Override
-    public List<ProductDTO> getAll() {
-        log.info("Getting all products");
-        return productRepo.findAll()
+    public List<ProductDTO> getProductsByName(String productName) {
+        return null;
+    }
+
+    @Override
+    public List<ProductDTO> getProductsByGender(String gender) {
+        log.info("Getting products by gender");
+        return productRepo.findByGender(gender)
                 .stream()
-                .map(productMapper::toDto)
+                .map(mapper::toDto)
                 .toList();
     }
 
     @Override
-    public ProductDTO getById(Long id) {
-        log.info("Getting products by id: {}", id);
-        Optional<Product> product = productRepo.findById(id);
-        if (product.isEmpty()) {
-            log.warn("Product not found!");
-            throw new ResourceNotFoundException("Resource is not available!");
-        }
-        return product.map(productMapper::toDto).get();
+    public List<ProductDTO> getProductsByCategory(String category) {
+        log.info("Getting products by category");
+        return productRepo.findByCategory(category)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
-    @Transactional
-    public ProductDTO create(ProductDTO productDTO) {
-        log.info("Creating new product.");
-        insertProduct(productDTO);
-        return productDTO;
+    public List<ProductDTO> getProductsByCategoryAndGender(String category, String gender) {
+        log.info("Getting products by category and gender");
+        return productRepo.findByCategoryAndGender(category, gender)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
-    @Transactional
-    public void update(ProductDTO productDTO, Long id) {
-        log.info("Updating product with id: {}", id);
-        if (!productRepo.existsById(id)) {
-            log.warn("Product not found!");
-            throw new ResourceNotFoundException("Resource is not available!");
-        } else {
-            if (productDTO.getGender() != null) {
-                productRepo.updateGender(id, productDTO.getGender().toString());
-            }
-            productRepo.update(id, productDTO.getProductName(),
-                    productDTO.getDescription(),
-                    productDTO.getBasePrice(),
-                    productDTO.getCategory().toString());
-        }
+    public List<ProductDTO> getProductsByPrice(Long priceFrom, Long priceTo) {
+        log.info("Getting products by price");
+        return productRepo.findByBasePriceBetween(priceFrom, priceTo)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
     @Override
-    public void delete(Long id) {
-        log.info("Deleting product with id: {}", id);
-        if (!productRepo.existsById(id)) {
-            log.warn("No content present!");
-            throw new NoContentException("No content present!");
-        }
-        productRepo.deleteById(id);
+    public List<ProductDTO> getProductsByPriceAndGender(Long priceFrom, Long priceTo, String gender) {
+        log.info("Getting products by price and gender");
+        return productRepo.findByBasePriceBetween(priceFrom, priceTo)
+                .stream()
+                .filter(product -> product.getGender().equals(Gender.valueOf(gender)))
+                .map(mapper::toDto)
+                .toList();
     }
 
-    private void insertProduct(ProductDTO productDTO) {
-        productRepo.insertProduct(productDTO.getProductName(),
-                productDTO.getDescription(),
-                productDTO.getBasePrice(),
-                productDTO.getCategory().toString(),
-                productDTO.getGender().toString());
+    @Override
+    public List<ProductDTO> getProductsByPriceAndCategory(Long priceFrom, Long priceTo, String category) {
+        log.info("Getting products by price and category");
+        return productRepo.findByBasePriceBetween(priceFrom, priceTo)
+                .stream()
+                .filter(product -> product.getCategory().equals(ProductCategory.valueOf(category)))
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<ProductDTO> getProductsByPriceAndCategoryAndGender(Long priceFrom, Long priceTo, String category, String gender) {
+        log.info("Getting products by price and category and gender");
+        return productRepo.findByBasePriceBetween(priceFrom, priceTo)
+                .stream()
+                .filter(product -> product.getCategory().equals(ProductCategory.valueOf(category)))
+                .filter(product -> product.getGender().equals(Gender.valueOf(gender)))
+                .map(mapper::toDto)
+                .toList();
     }
 }
