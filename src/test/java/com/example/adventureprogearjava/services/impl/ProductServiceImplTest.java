@@ -3,85 +3,124 @@ package com.example.adventureprogearjava.services.impl;
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.entity.enums.ProductCategory;
-import com.example.adventureprogearjava.services.CRUDService;
+import com.example.adventureprogearjava.services.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @SpringBootTest
-@TestPropertySource(locations= "classpath:application.yml")
+@TestPropertySource(locations = "classpath:application.yml")
 class ProductServiceImplTest {
     @Autowired
-    CRUDService<ProductDTO> productService;
+    ProductService productService;
 
     @Test
-    void getAll() {
-        List<ProductDTO> dtos = productService.getAll();
-        assert(dtos.size()==5);
+    void getProductsByName() {
+        String productName = "T-Shirt";
+        List<ProductDTO> dtos = productService.getProductsByName(productName);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream().filter(productDTO -> !productDTO.getProductName()
+                .equals(productName)).toList();
+        assert (dtos.isEmpty());
     }
 
     @Test
-    void getById() {
-        ProductDTO dtoById = productService.getById(1L);
-        assert (dtoById.getProductName().equals("T-Shirt"));
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> productService.getById(7L));
-        assert (exception.getMessage().equals("Resource is not available!"));
+    void getProductsByGender() {
+        String gender = "MALE";
+        List<ProductDTO> dtos = productService.getProductsByGender(gender);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream().filter(productDTO -> !productDTO.getGender()
+                .equals(Gender.valueOf(gender))).toList();
+        assert (dtos.isEmpty());
     }
 
     @Test
-    @Sql(value = {"classpath:delete_product_after.sql"},
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void create() {
-        ProductDTO productDTO = ProductDTO
-                .builder()
-                .productName("name")
-                .description("descr")
-                .basePrice(100L)
-                .gender(Gender.MALE)
-                .category(ProductCategory.PANTS)
-                .build();
-        ProductDTO created = productService.create(productDTO);
-        assert (created.getProductName().equals(productDTO.getProductName()));
-        assert(productService.getAll().size()==6);
+    void getProductsByCategory() {
+        String category = "T_SHIRTS";
+        List<ProductDTO> dtos = productService.getProductsByCategory(category);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream().filter(productDTO -> !productDTO.getCategory()
+                .equals(ProductCategory.valueOf(category))).toList();
+        assert (dtos.isEmpty());
     }
 
     @Test
-    @Sql(value = {"classpath:create_product_before.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"classpath:delete_product_after.sql"},
-            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-    void update() {
-        assert(productService.getById(6L).getProductName()
-                .equals("Test"));
-        ProductDTO productDTO = ProductDTO
-                .builder()
-                .productName("updatedName")
-                .description("updatedDescr")
-                .basePrice(1L)
-                .category(ProductCategory.PANTS)
-                .build();
-        productService.update(productDTO, 6L);
-        assert (productService.getById(6L).getProductName()
-                .equals(productDTO.getProductName()));
+    void getProductsByCategoryAndGender() {
+        String category = "T_SHIRTS";
+        String gender = "FEMALE";
+        List<ProductDTO> dtos = productService.getProductsByCategoryAndGender(category, gender);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream().filter(productDTO -> !productDTO.getCategory()
+                        .equals(ProductCategory.valueOf(category)))
+                .filter(productDTO -> !productDTO.getGender()
+                        .equals(Gender.valueOf(gender)))
+                .toList();
+        assert (dtos.isEmpty());
     }
 
+    @Test
+    void getProductsByPrice() {
+        Long priceFrom = 150L;
+        Long priceTo = 250L;
+        List<ProductDTO> dtos = productService.getProductsByPrice(priceFrom, priceTo);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream()
+                .filter(productDTO -> !(productDTO.getBasePrice() >= priceFrom &&
+                        productDTO.getBasePrice() <= priceTo)).toList();
+        assert (dtos.isEmpty());
+    }
 
     @Test
-    @Sql(value = {"classpath:create_product_before.sql"},
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void delete() {
-        assert(productService.getAll().size()==6);
-        productService.delete(6L);
-        assert(productService.getAll().size()==5);
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> productService.delete(10L));
-        assert (exception.getMessage().equals("No content present!"));
+    void getProductsByPriceAndGender() {
+        String gender = "MALE";
+        Long priceFrom = 150L;
+        Long priceTo = 250L;
+        List<ProductDTO> dtos = productService.getProductsByPriceAndGender(priceFrom, priceTo, gender);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream()
+                .filter(productDTO -> !(productDTO.getBasePrice() >= priceFrom &&
+                        productDTO.getBasePrice() <= priceTo))
+                .filter(productDTO -> !productDTO.getGender()
+                        .equals(Gender.valueOf(gender)))
+                .toList();
+        assert (dtos.isEmpty());
+    }
+
+    @Test
+    void getProductsByPriceAndCategory() {
+        String category = "T_SHIRTS";
+        Long priceFrom = 150L;
+        Long priceTo = 250L;
+        List<ProductDTO> dtos = productService.getProductsByPriceAndCategory(priceFrom, priceTo, category);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream()
+                .filter(productDTO -> !(productDTO.getBasePrice() >= priceFrom &&
+                        productDTO.getBasePrice() <= priceTo))
+                .filter(productDTO -> !productDTO.getCategory()
+                        .equals(ProductCategory.valueOf(category)))
+                .toList();
+        assert (dtos.isEmpty());
+    }
+
+    @Test
+    void getProductsByPriceAndCategoryAndGender() {
+        String category = "T_SHIRTS";
+        String gender = "FEMALE";
+        Long priceFrom = 150L;
+        Long priceTo = 250L;
+        List<ProductDTO> dtos = productService.getProductsByPriceAndCategoryAndGender(priceFrom, priceTo, category, gender);
+        assert (!dtos.isEmpty());
+        dtos = dtos.stream()
+                .filter(productDTO -> !(productDTO.getBasePrice() >= priceFrom &&
+                        productDTO.getBasePrice() <= priceTo))
+                .filter(productDTO -> !productDTO.getCategory()
+                        .equals(ProductCategory.valueOf(category)))
+                .filter(productDTO -> !productDTO.getGender()
+                        .equals(Gender.valueOf(gender)))
+                .toList();
+        assert (dtos.isEmpty());
     }
 }

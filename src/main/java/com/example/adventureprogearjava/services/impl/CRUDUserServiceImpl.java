@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserServiceImpl implements CRUDService<UserDTO> {
+public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
 
     UserRepository userRepository;
     UserMapper userMapper = UserMapper.MAPPER;

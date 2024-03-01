@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ProductAttributeServiceImpl implements CRUDService<ProductAttributeDTO> {
+public class CRUDProductAttributeServiceImpl implements CRUDService<ProductAttributeDTO> {
     ProductAttributeRepository productAttributeRepo;
 
     ProductAttributeMapper productAttributeMapper;

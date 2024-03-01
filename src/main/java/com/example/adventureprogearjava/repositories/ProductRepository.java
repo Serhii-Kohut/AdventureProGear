@@ -41,4 +41,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             nativeQuery = true)
     void updateGender(@Param("id") Long id,
                 @Param("gender") String gender);
+
+    List<Product> findByProductName(String name);
+
+    @Query(value = "SELECT * FROM products where gender= CAST(:gender as gender)", nativeQuery = true)
+    List<Product> findByGender(@Param("gender") String gender);
+
+    @Query(value = "SELECT * FROM products where category= CAST(:category as category)", nativeQuery = true)
+    List<Product> findByCategory(@Param("category") String category);
+
+    @Query(value = "SELECT * FROM products where category= CAST(:category as category) and gender= CAST(:gender as gender)",
+            nativeQuery = true)
+    List<Product> findByCategoryAndGender(@Param("category") String category, @Param("gender") String gender);
+
+    List<Product> findByBasePriceBetween(Long from, Long to);
 }
