@@ -21,12 +21,12 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserServiceImplTest {
+public class CRUDUserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserServiceImpl userService;
+    private CRUDUserServiceImpl userService;
 
     private User user;
 

@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class OrdersListServiceImpl implements CRUDService<OrdersListDTO> {
+public class CRUDOrdersListServiceImpl implements CRUDService<OrdersListDTO> {
     OrdersListRepository ordersListRepository;
     OrdersListMapper ordersListMapper = OrdersListMapper.MAPPER;
 

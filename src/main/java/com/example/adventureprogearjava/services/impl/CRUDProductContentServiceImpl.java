@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ProductContentServiceImpl implements CRUDService<ContentDTO> {
+public class CRUDProductContentServiceImpl implements CRUDService<ContentDTO> {
     ContentMapper contentMapper;
 
     ProductContentRepository contentRepository;
