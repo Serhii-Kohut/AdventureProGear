@@ -81,5 +81,15 @@ public class CRUDOrderServiceImplTest {
                 .equals(orderDTO.getCity()));
     }
 
-
+    @Test
+    @Sql(value = {"classpath:create_order_before.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void delete() {
+        assert(orderService.getAll().size()==3);
+        orderService.delete(3L);
+        assert(orderService.getAll().size()==2);
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> orderService.delete(5L));
+        assert (exception.getMessage().equals("No content present!"));
+    }
 }
