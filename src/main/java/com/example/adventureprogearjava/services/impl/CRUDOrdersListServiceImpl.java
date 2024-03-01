@@ -52,7 +52,7 @@ public class CRUDOrdersListServiceImpl implements CRUDService<OrdersListDTO> {
         return ordersListMapper.toDTO(ordersList);
     }
 
-    @Override
+/*    @Override
     @Transactional
     public OrdersListDTO create(OrdersListDTO ordersListDTO) {
         log.info("Creating new orders list.");
@@ -65,6 +65,14 @@ public class CRUDOrdersListServiceImpl implements CRUDService<OrdersListDTO> {
         OrdersList savedOrdersList = ordersListRepository.save(ordersList);
 
         return ordersListMapper.toDTO(savedOrdersList);
+    }*/
+
+    @Override
+    @Transactional
+    public OrdersListDTO create(OrdersListDTO ordersListDTO) {
+        log.info("Creating new orders list.");
+        insertOrdersList(ordersListDTO);
+        return ordersListDTO;
     }
 
     @Override
@@ -90,5 +98,14 @@ public class CRUDOrdersListServiceImpl implements CRUDService<OrdersListDTO> {
         log.info("Deleting orders list with id: {}", id);
 
         ordersListRepository.deleteById(id);
+    }
+
+    private void insertOrdersList(OrdersListDTO ordersListDTO) {
+        ordersListRepository.insertOrdersList(
+                ordersListDTO.getOrderId(),
+                ordersListDTO.getProductId(),
+                ordersListDTO.getProductAttributeId(),
+                ordersListDTO.getQuantity()
+        );
     }
 }
