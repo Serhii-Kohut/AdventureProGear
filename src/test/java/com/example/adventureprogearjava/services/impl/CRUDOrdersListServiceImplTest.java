@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.yml")
-public class OrdersListServiceImplTest {
+public class CRUDOrdersListServiceImplTest {
     @Autowired
     CRUDService<OrdersListDTO> orderListService;
 
