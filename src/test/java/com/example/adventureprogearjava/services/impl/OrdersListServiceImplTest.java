@@ -1,7 +1,9 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrdersListDTO;
+import com.example.adventureprogearjava.entity.OrdersList;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
+import com.example.adventureprogearjava.repositories.OrdersListRepository;
 import com.example.adventureprogearjava.services.CRUDService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class OrdersListServiceImplTest {
     @Autowired
     CRUDService<OrdersListDTO> orderListService;
+
+    @Autowired
+    OrdersListRepository ordersListRepository;
 
     @Test
     void getAll() {
@@ -57,8 +62,25 @@ public class OrdersListServiceImplTest {
         assert(createdOrdersList.getOrderId().equals(ordersListDTO.getOrderId()));
     }
 
+    @Test
+    @Sql(scripts = {"classpath:create_orders_list_before.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"classpath:delete_orders_list_after.sql"},
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void update() {
+        OrdersListDTO ordersListDTO = OrdersListDTO.builder()
+                .orderId(4L)
+                .productId(7L)
+                .productAttributeId(4L)
+                .quantity(2L)
+                .build();
 
+        orderListService.update(ordersListDTO, 1L);
 
+        OrdersList updatedOrdersList = ordersListRepository.findById(1L).orElse(null);
 
+        assert(updatedOrdersList != null);
+        assert(updatedOrdersList.getOrder().getId().equals(ordersListDTO.getOrderId()));
+    }
 
 }

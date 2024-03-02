@@ -80,6 +80,10 @@ public class CRUDOrdersListServiceImpl implements CRUDService<OrdersListDTO> {
     public void update(OrdersListDTO ordersListDTO, Long id) {
         log.info("Updating orders list with id: {}", id);
 
+        if (ordersListDTO.getOrderId() == null) {
+            throw new IllegalArgumentException("orderId cannot be null");
+        }
+
         OrdersList existingOrdersList = ordersListRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Orders list not found with id: {}", id);

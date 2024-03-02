@@ -18,4 +18,14 @@ public interface OrdersListRepository extends JpaRepository<OrdersList, Long> {
                           @Param("productAttributeId") Long productAttributeId,
                           @Param("quantity") Long quantity);
 
+    @Modifying
+    @Query(value = "UPDATE orders_list SET order_id = :orderId, product_id = :productId, product_attribute_id = :productAttributeId, quantity = :quantity " +
+            "WHERE id = :id",
+            nativeQuery = true)
+    void update(@Param("id") Long id,
+                @Param("orderId") Long orderId,
+                @Param("productId") Long productId,
+                @Param("productAttributeId") Long productAttributeId,
+                @Param("quantity") Long quantity);
+
 }
