@@ -45,7 +45,7 @@ public class OrdersListServiceImplTest {
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(statements = "SELECT setval('orders_list_seq', (SELECT MAX(id) FROM orders_list))",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"classpath:delete_orders_list_after.sql"},
+    @Sql(value = {"classpath:delete_orders_list_after_create.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void create() {
 
@@ -58,8 +58,8 @@ public class OrdersListServiceImplTest {
 
         OrdersListDTO createdOrdersList = orderListService.create(ordersListDTO);
 
-        assert(createdOrdersList != null);
-        assert(createdOrdersList.getOrderId().equals(ordersListDTO.getOrderId()));
+        assert (createdOrdersList != null);
+        assert (createdOrdersList.getOrderId().equals(ordersListDTO.getOrderId()));
     }
 
     @Test
@@ -79,8 +79,22 @@ public class OrdersListServiceImplTest {
 
         OrdersList updatedOrdersList = ordersListRepository.findById(1L).orElse(null);
 
-        assert(updatedOrdersList != null);
-        assert(updatedOrdersList.getOrder().getId().equals(ordersListDTO.getOrderId()));
+        assert (updatedOrdersList != null);
+        assert (updatedOrdersList.getOrder().getId().equals(ordersListDTO.getOrderId()));
+    }
+
+    @Test
+    @Sql(value = {"classpath:create_orders_list_before.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"classpath:delete_orders_list_after.sql"},
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    void delete() {
+        assert (orderListService.getAll().size() == 7);
+        orderListService.delete(88L);
+        assert (orderListService.getAll().size() == 6);
+        Exception exception = assertThrows(RuntimeException.class,
+                () -> orderListService.delete(555L));
+        assert (exception.getMessage().equals("No content present!"));
     }
 
 }

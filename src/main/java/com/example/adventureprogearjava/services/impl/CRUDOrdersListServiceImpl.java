@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrdersListDTO;
 import com.example.adventureprogearjava.entity.OrdersList;
+import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.NoOrdersListFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.OrdersListMapper;
@@ -100,6 +101,11 @@ public class CRUDOrdersListServiceImpl implements CRUDService<OrdersListDTO> {
     @Override
     public void delete(Long id) {
         log.info("Deleting orders list with id: {}", id);
+
+        if (!ordersListRepository.existsById(id)) {
+            log.warn("No content present!");
+            throw new NoContentException("No content present!");
+        }
 
         ordersListRepository.deleteById(id);
     }
