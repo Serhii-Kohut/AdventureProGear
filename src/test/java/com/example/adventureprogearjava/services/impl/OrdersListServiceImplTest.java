@@ -6,13 +6,12 @@ import com.example.adventureprogearjava.services.CRUDService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.yml")
@@ -39,14 +38,16 @@ public class OrdersListServiceImplTest {
     @Test
     @Sql(scripts = {"classpath:create_orders_list_before.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(statements = "SELECT setval('orders_list_seq', (SELECT MAX(id) FROM orders_list))",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = {"classpath:delete_orders_list_after.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void create() {
 
         OrdersListDTO ordersListDTO = OrdersListDTO.builder()
-                .orderId(11L)
-                .productId(22L)
-                .productAttributeId(55L)
+                .orderId(3L)
+                .productId(2L)
+                .productAttributeId(5L)
                 .quantity(2L)
                 .build();
 
