@@ -1,7 +1,11 @@
 package com.example.adventureprogearjava.entity;
 
+import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -17,13 +21,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order extends BaseEntity{
+public class Order extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -32,7 +36,7 @@ public class Order extends BaseEntity{
     @Column(name = "order_date")
     LocalDateTime orderDate;
 
-    @Column(name = "city",nullable = false)
+    @Column(name = "city", nullable = false)
     String city;
 
     @Column(name = "post_address", nullable = false)
@@ -44,16 +48,11 @@ public class Order extends BaseEntity{
     @Column(name = "price")
     Long price;
 
-    @Column(name = "is_paid", nullable = false)
-    boolean isPaid;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    OrderStatus status;
 
-    @Column(name = "is_delivered", nullable = false)
-    boolean isDelivered;
-
-    @Column(name = "is_canceled", nullable = false)
-    boolean isCanceled;
-
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     List<OrdersList> ordersLists;
 
 }

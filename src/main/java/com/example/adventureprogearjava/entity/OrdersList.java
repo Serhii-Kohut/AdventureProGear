@@ -13,13 +13,13 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "ordersList")
+@Table(name = "orders_list")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrdersList extends BaseEntity{
+public class OrdersList extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)

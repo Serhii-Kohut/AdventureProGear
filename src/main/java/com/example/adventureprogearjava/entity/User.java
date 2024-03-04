@@ -1,7 +1,11 @@
 package com.example.adventureprogearjava.entity;
 
+import com.example.adventureprogearjava.entity.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -15,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,14 +37,18 @@ public class User extends BaseEntity {
     String email;
 
     @Column(name = "phone_number", nullable = false, unique = true)
-    String phone_number;
+    String phoneNumber;
 
     @Column(name = "verified", nullable = false)
-    boolean verified;
+    Boolean verified;
 
-    @Column(name = "date")
+    @Column(name = "registration_date")
     LocalDate date;
 
-    @OneToMany(mappedBy = "user")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    Role role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     List<Order> orders;
 }
