@@ -2,7 +2,6 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
 import com.example.adventureprogearjava.entity.Order;
-import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
