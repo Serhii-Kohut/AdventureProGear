@@ -114,10 +114,9 @@ public class CRUDOrderServiceImpl implements CRUDService<OrderDTO> {
         log.info("Deleting order with id: {}", id);
 
         if (!orderRepository.existsById(id)) {
-            log.warn("No content present!");
-            throw new NoContentException("No content present!");
+            log.warn("Order not found with id: {}", id);
+            throw new ResourceNotFoundException("Order not found with id " + id);
         }
-
         orderRepository.deleteById(id);
     }
 

@@ -140,13 +140,14 @@ public class UserControllerTest {
 
     @Test
     public void deleteUserTest() throws Exception {
-        Long userId = 1L;
+        Long nonExistentUserId = -1L;
 
-        doNothing().when(crudUserService).delete(userId);
+        doThrow(new ResourceNotFoundException("User not found with id " + nonExistentUserId))
+                .when(crudUserService).delete(nonExistentUserId);
 
-        mockMvc.perform(delete("/api/users/" + userId)
+        mockMvc.perform(delete("/api/users/" + nonExistentUserId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isNotFound());
     }
 
 }

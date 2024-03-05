@@ -2,7 +2,6 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.entity.User;
-import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.exceptions.UserAlreadyExistsException;
@@ -114,8 +113,8 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
         log.info("Deleting user with id: {}", id);
 
         if (!userRepository.existsById(id)) {
-            log.warn("No user present!");
-            throw new NoContentException("No user present!");
+            log.warn("User not found with id: {}", id);
+            throw new ResourceNotFoundException("User not found with id " + id);
         }
 
         userRepository.deleteById(id);
