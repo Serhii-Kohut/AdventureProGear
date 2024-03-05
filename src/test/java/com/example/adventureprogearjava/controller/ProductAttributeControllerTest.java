@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.controller;
 
 import com.example.adventureprogearjava.dto.ProductAttributeDTO;
 import com.example.adventureprogearjava.exceptions.NoContentException;
+import com.example.adventureprogearjava.controller.ProductAttributeController;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.fasterxml.jackson.databind.ObjectMapper;
