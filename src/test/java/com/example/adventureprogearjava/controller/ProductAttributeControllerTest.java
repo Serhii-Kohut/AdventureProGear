@@ -1,26 +1,20 @@
 package com.example.adventureprogearjava.controller;
 
-import com.example.adventureprogearjava.dto.ContentDTO;
+import com.example.adventureprogearjava.dto.ProductAttributeDTO;
 import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -33,14 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class ProductContentControllerTest {
+class ProductAttributeControllerTest {
     @Mock
-    private CRUDService<ContentDTO> crudService;
+    private CRUDService<ProductAttributeDTO> crudService;
 
     @InjectMocks
-    private ProductContentController contentController;
+    private ProductAttributeController attributeController;
 
-    private ContentDTO contentDTO;
+    private ProductAttributeDTO attributeDTO;
 
     private MockMvc mockMvc;
 
@@ -48,69 +42,87 @@ class ProductContentControllerTest {
 
     @BeforeEach
     public void setUp() {
+        attributeDTO = ProductAttributeDTO.builder()
+                .quantity(10L)
+                .color("red")
+                .size("L")
+                .productId(1L)
+                .priceDeviation(0L)
+                .build();
         objectMapper = new ObjectMapper();
-        contentDTO = new ContentDTO("img_1488", 1L);
-        mockMvc = MockMvcBuilders.standaloneSetup(contentController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(attributeController).build();
     }
 
     @Test
-    void getAllProductContent() throws Exception {
-        when(crudService.getAll()).thenReturn(List.of(contentDTO));
-        mockMvc.perform(get("/api/v1/productContent"))
+    void getAllProductAttributes() throws Exception {
+        when(crudService.getAll()).thenReturn(List.of(attributeDTO));
+        mockMvc.perform(get("/api/v1/productAttributes"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(contentDTO.getSource())));
+                .andExpect(content().string(containsString(attributeDTO
+                        .getProductId().toString())));
     }
 
     @Test
-    void getProductContentById() throws Exception {
-        when(crudService.getById(1L)).thenReturn(contentDTO);
+    void getProductAttributeById() throws Exception {
+        when(crudService.getById(1L)).thenReturn(attributeDTO);
         when(crudService.getById(2L)).thenThrow(new ResourceNotFoundException());
-        mockMvc.perform(get("/api/v1/productContent/1"))
+        mockMvc.perform(get("/api/v1/productAttributes/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(contentDTO.getSource())));
-        mockMvc.perform(get("/api/v1/productContent/2"))
+                .andExpect(content().string(containsString(attributeDTO
+                        .getProductId().toString())));
+        mockMvc.perform(get("/api/v1/productAttributes/2"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void createProductContent() throws Exception {
-        ContentDTO newContentDTO = new ContentDTO("new_img", 2L);
-        String newContentJson = objectMapper.writeValueAsString(newContentDTO);
-        when(crudService.create(any())).thenReturn(newContentDTO);
-        mockMvc.perform(post("/api/v1/productContent")
+    void createProductAttribute() throws Exception {
+        ProductAttributeDTO newAttributeDTO = ProductAttributeDTO.builder()
+                .productId(2L)
+                .quantity(0L)
+                .priceDeviation(-10L)
+                .additional("test")
+                .build();
+        String newContentJson = objectMapper.writeValueAsString(newAttributeDTO);
+        when(crudService.create(any())).thenReturn(newAttributeDTO);
+        mockMvc.perform(post("/api/v1/productAttributes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContentJson))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(newContentDTO.getSource())));
+                .andExpect(content().string(containsString(newAttributeDTO.getAdditional())));
     }
 
     @Test
-    void updateProductContent() throws Exception {
-        ContentDTO newContentDTO = new ContentDTO("updated_img", 1L);
-        String newContentJson = objectMapper.writeValueAsString(newContentDTO);
+    void updateProductAttribute() throws Exception {
+        ProductAttributeDTO newAttributeDTO = ProductAttributeDTO.builder()
+                .productId(2L)
+                .quantity(0L)
+                .priceDeviation(-10L)
+                .additional("test")
+                .build();
+        String newContentJson = objectMapper.writeValueAsString(newAttributeDTO);
         doAnswer((Answer<Void>) invocation -> {
             throw new ResourceNotFoundException();
         }).when(crudService)
                 .update(any(),eq(2L));
-        mockMvc.perform(put("/api/v1/productContent/1")
+        mockMvc.perform(put("/api/v1/productAttributes/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContentJson))
                 .andExpect(status().isOk());
-        mockMvc.perform(put("/api/v1/productContent/2")
+        mockMvc.perform(put("/api/v1/productAttributes/2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContentJson))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void deleteProductContent() throws Exception {
+    void deleteProductAttribute() throws Exception {
         doAnswer((Answer<Void>) invocation -> {
             throw new NoContentException();
         }).when(crudService)
                 .delete(2L);
-        mockMvc.perform(delete("/api/v1/productContent/1"))
+        mockMvc.perform(delete("/api/v1/productAttributes/1"))
                 .andExpect(status().isOk());
-        mockMvc.perform(delete("/api/v1/productContent/2"))
+        mockMvc.perform(delete("/api/v1/productAttributes/2"))
                 .andExpect(status().isNoContent());
     }
 }
