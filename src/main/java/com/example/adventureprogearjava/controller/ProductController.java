@@ -4,6 +4,7 @@ import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.ProductService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,12 +40,12 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO createProduct(@RequestBody ProductDTO productDTO){
+    public ProductDTO createProduct(@Valid @RequestBody ProductDTO productDTO){
         return productCRUDService.create(productDTO);
     }
 
     @PutMapping("/{id}")
-    public void updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+    public void updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO){
         productCRUDService.update(productDTO, id);
     }
 
