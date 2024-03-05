@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -53,7 +54,7 @@ public class UserControllerTest {
 
     @Test
     public void getAllUsersTest() throws Exception {
-        List<UserDTO> users = Arrays.asList(userDTO);
+        List<UserDTO> users = Collections.singletonList(userDTO);
 
         when(crudUserService.getAll()).thenReturn(users);
 
