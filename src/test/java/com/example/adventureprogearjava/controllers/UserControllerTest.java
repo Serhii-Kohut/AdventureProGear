@@ -1,4 +1,4 @@
-package com.example.adventureprogearjava.controller;
+package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.entity.enums.Role;

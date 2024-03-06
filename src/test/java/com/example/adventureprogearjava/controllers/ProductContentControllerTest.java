@@ -1,4 +1,4 @@
-package com.example.adventureprogearjava.controller;
+package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.ContentDTO;
 import com.example.adventureprogearjava.exceptions.NoContentException;
@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
-import com.example.adventureprogearjava.controller.ProductContentController;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;

@@ -1,7 +1,6 @@
-package com.example.adventureprogearjava.controller;
+package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
-import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.ProductService;
 import jakarta.validation.Valid;

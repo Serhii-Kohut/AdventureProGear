@@ -1,4 +1,4 @@
-package com.example.adventureprogearjava.controller;
+package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
 import com.example.adventureprogearjava.entity.enums.OrderStatus;

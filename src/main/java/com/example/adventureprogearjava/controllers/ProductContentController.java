@@ -1,7 +1,6 @@
-package com.example.adventureprogearjava.controller;
+package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.ContentDTO;
-import com.example.adventureprogearjava.dto.ProductAttributeDTO;
 import com.example.adventureprogearjava.services.CRUDService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
