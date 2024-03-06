@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.OrdersListDTO;
+import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.impl.CRUDOrdersListServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
@@ -20,9 +21,9 @@ import java.util.Collections;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -94,6 +95,49 @@ public class OrdersListControllerTest {
                         .content(objectMapper.writeValueAsString(validOrderListDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().json(objectMapper.writeValueAsString(validOrderListDTO)));
+    }
+
+    @Test
+    public void createInvalidOrdersListTest() throws Exception {
+        mockMvc.perform(post("/api/order-lists")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidOrderListDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateOrdersListTest() throws Exception {
+        Long orderListId = 1L;
+
+        doNothing().when(ordersListService).update(any(OrdersListDTO.class), eq(orderListId));
+
+        mockMvc.perform(put("/api/order-lists/" + orderListId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(validOrderListDTO)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteOrdersListTest() throws Exception {
+        Long orderListId = 1L;
+
+        doNothing().when(ordersListService).delete(orderListId);
+
+        mockMvc.perform(delete("/api/order-lists/" + orderListId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteNonExistentOrdersListTest() throws Exception {
+        Long nonExistentOrdersListId = -1L;
+
+        doThrow(new ResourceNotFoundException("Order List not found with id " + nonExistentOrdersListId))
+                .when(ordersListService).delete(nonExistentOrdersListId);
+
+        mockMvc.perform(delete("/api/order-lists/" + nonExistentOrdersListId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
 

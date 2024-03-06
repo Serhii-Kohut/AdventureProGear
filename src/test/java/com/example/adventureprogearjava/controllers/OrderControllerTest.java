@@ -124,6 +124,17 @@ public class OrderControllerTest {
     }
 
     @Test
+    public void deleteOrderTest() throws Exception {
+        Long orderId = 1L;
+
+        doNothing().when(crudOrderService).delete(orderId);
+
+        mockMvc.perform(delete("/api/orders/" + orderId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     public void deleteNonExistentOrderTest() throws Exception {
         Long nonExistentOrderId = -1L;
 
