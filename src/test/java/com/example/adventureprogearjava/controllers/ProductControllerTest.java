@@ -124,6 +124,17 @@ class ProductControllerTest {
     }
 
     @Test
+    void createWithInvalidData() throws Exception {
+        ProductDTO invalidDTO = new ProductDTO();
+        String newContentJson = objectMapper.writeValueAsString(invalidDTO);
+        when(crudService.create(any())).thenReturn(invalidDTO);
+        mockMvc.perform(post("/api/v1/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newContentJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void updateProduct() throws Exception {
         ProductDTO newProduct = ProductDTO.builder()
                 .productName("name1")

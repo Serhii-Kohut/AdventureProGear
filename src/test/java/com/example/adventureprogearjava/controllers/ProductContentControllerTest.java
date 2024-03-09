@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.ContentDTO;
+import com.example.adventureprogearjava.dto.ProductAttributeDTO;
 import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.CRUDService;
@@ -76,6 +77,17 @@ class ProductContentControllerTest {
                         .content(newContentJson))
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString(newContentDTO.getSource())));
+    }
+
+    @Test
+    void createWithInvalidData() throws Exception {
+        ContentDTO invalidDTO = new ContentDTO();
+        String newContentJson = objectMapper.writeValueAsString(invalidDTO);
+        when(crudService.create(any())).thenReturn(invalidDTO);
+        mockMvc.perform(post("/api/v1/productContent")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newContentJson))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
