@@ -31,11 +31,12 @@ CREATE SEQUENCE order_list_seq
     start 1
     increment 1;
 
-insert into users (id, name, surname, email, phone_number, role)
-values (nextval('user_seq'), 'Danylo', 'Berkovskyi', 'serhio3347@gmail.com', '+380980648928', 'ADMIN');
+insert into users (id, name, surname, email, phone_number, password, role)
+values (nextval('user_seq'), 'Danylo', 'Berkovskyi', 'serhio3347@gmail.com', '+380980648928', 'Password1@', 'ADMIN');
 
-insert into users (id, name, surname, email, phone_number, role)
-values (nextval('user_seq'), 'Andrii', 'Len', 'len_andrey@gmail.com', '+380972555455', 'USER');
+insert into users (id, name, surname, email, phone_number, password, role)
+values (nextval('user_seq'), 'Andrii', 'Len', 'len_andrey@gmail.com', '+380972555455', 'Password2#', 'USER');
+
 
 insert into products (id, product_name, description, base_price, gender, category)
 values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'MALE', 'T_SHIRTS');

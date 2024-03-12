@@ -47,7 +47,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userDTO = new UserDTO("John", "Doe", "john.doe@example.com",
+        userDTO = new UserDTO("John", "Doe", "john.doe@example.com", "Password1@",
                 "1234567890", true, LocalDate.now(), Role.USER);
     }
 
@@ -102,7 +102,7 @@ public class UserControllerTest {
 
     @Test
     public void createUserWithInvalidDataTest() throws Exception {
-        UserDTO userDTOBad = new UserDTO("John", "Doe", "invalid email",
+        UserDTO userDTOBad = new UserDTO("John", "Doe", "invalid email", "Password invalid",
                 "1234567890", true, LocalDate.now(), Role.USER);
 
         mockMvc.perform(post("/api/users")
