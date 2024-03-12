@@ -80,3 +80,10 @@ CREATE TABLE IF NOT EXISTS public.orders_list
 
 ALTER TABLE users
     ADD COLUMN verified BOOLEAN;
+
+ALTER TABLE users
+    ADD COLUMN password VARCHAR NOT NULL DEFAULT 'tempPassword';
+
+-- ALTER TABLE users
+--     ALTER COLUMN password DROP DEFAULT;
+
