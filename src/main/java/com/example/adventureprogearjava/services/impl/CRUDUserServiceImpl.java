@@ -1,6 +1,8 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.UserDTO;
+import com.example.adventureprogearjava.dto.registrationDto.UserRequestDto;
+import com.example.adventureprogearjava.dto.registrationDto.UserResponseDto;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
@@ -12,10 +14,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
 
     UserRepository userRepository;
     UserMapper userMapper = UserMapper.MAPPER;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDTO> getAll() {
@@ -39,6 +44,15 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
         return users.stream()
                 .map(userMapper::toDTO)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDto getUserByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new NoUsersFoundException("User not found with email: " + email);
+        }
+        return userMapper.userToUserResponseDto(user.get());
     }
 
     @Override
@@ -82,6 +96,29 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
         return userMapper.toDTO(savedUser);
     }
 
+
+    @Transactional
+    public UserResponseDto saveRegisteredUser(UserRequestDto registrationDto) {
+        if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            throw new IllegalArgumentException("Email is already in use");
+        }
+
+        String encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
+
+        User newUser = User
+                .builder()
+                .name(registrationDto.getName())
+                .surname(registrationDto.getSurname())
+                .email(registrationDto.getEmail().toLowerCase())
+                .password(encodedPassword)
+                .role(registrationDto.getRole())
+                .verified(false)
+                .build();
+
+        return userMapper.userToUserResponseDto(userRepository.save(newUser));
+    }
+
+
     @Override
     @Transactional
     public void update(UserDTO userDTO, Long id) {
@@ -99,6 +136,7 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
 
         userToUpdate.setName(userDTO.getName());
         userToUpdate.setEmail(userDTO.getEmail());
+        userToUpdate.setPassword(userDTO.getPassword());
         userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
         userToUpdate.setVerified(userDTO.isVerified());
         userToUpdate.setDate(userDTO.getDate());

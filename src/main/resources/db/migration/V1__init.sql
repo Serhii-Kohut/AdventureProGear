@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS public.users
     email             varchar not null unique,
     phone_number      varchar not null unique,
     registration_date date,
-    role user_role
+    role varchar
 );
 
 CREATE TABLE IF NOT EXISTS public.products
@@ -83,6 +83,12 @@ ALTER TABLE users
 
 ALTER TABLE users
     ADD COLUMN password VARCHAR(255);
+
+ALTER TABLE users
+    ADD COLUMN verification_token VARCHAR(255) UNIQUE;
+
+ALTER TABLE users
+    ADD COLUMN token_expiry_date TIMESTAMP;
 
 
 

@@ -10,18 +10,21 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -54,4 +57,19 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     List<Order> orders;
+
+    @Column(name = "verification_token", unique = true)
+    String verificationToken;
+
+    @Column(name = "token_expiry_date")
+    LocalDateTime tokenExpiryDate;
+
+    public void updateVerificationToken(String newToken, LocalDateTime newExpiryDate) {
+        this.verificationToken = newToken;
+        this.tokenExpiryDate = newExpiryDate;
+    }
+
+    public boolean isVerificationTokenExpired() {
+        return tokenExpiryDate.isBefore(LocalDateTime.now());
+    }
 }
