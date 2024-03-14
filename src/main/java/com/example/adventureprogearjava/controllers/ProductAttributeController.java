@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Tag(name = "ProductAttribute Controller",
-        description = "API operations with product content")
+        description = "API operations with product attributes")
 public class ProductAttributeController {
     CRUDService<ProductAttributeDTO> productAttributeCRUDService;
 
