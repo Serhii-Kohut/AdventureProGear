@@ -11,6 +11,9 @@ import java.util.Locale;
 
 public interface RegistrationService {
     @Transactional
+    UserResponseDto registerUser(RegistrationDto registrationDto);
+
+    @Transactional
     void resendVerificationEmail(UserEmailDto emailDto, HttpServletRequest request);
 
     void sendVerificationEmail(HttpServletRequest request, UserEmailDto activatedUserDto);
