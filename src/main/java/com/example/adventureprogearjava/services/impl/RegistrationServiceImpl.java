@@ -47,8 +47,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public UserResponseDto registerUser(RegistrationDto registrationDto) {
-        if (!userRepository.existsByEmail(registrationDto.getEmail())) {
-            throw new IllegalStateException("No data about user with email: " + registrationDto.getEmail());
+        if (userRepository.existsByEmail(registrationDto.getEmail())) {
+            throw new IllegalStateException("Email " + registrationDto.getEmail() + " is already in use.");
         }
 
         UserRequestDto newUserDto = new UserRequestDto(

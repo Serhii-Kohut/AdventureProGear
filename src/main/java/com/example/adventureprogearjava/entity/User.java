@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     @Column(name = "password", nullable = false)
     String password;
 
-    @Column(name = "phone_number", nullable = false, unique = true)
+    @Column(name = "phone_number", unique = true)
     String phoneNumber;
 
     @Column(name = "verified", nullable = false)

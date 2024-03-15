@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,10 +100,6 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
 
     @Transactional
     public UserResponseDto saveRegisteredUser(UserRequestDto registrationDto) {
-        if (userRepository.existsByEmail(registrationDto.getEmail())) {
-            throw new IllegalArgumentException("Email is already in use");
-        }
-
         String encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
 
         User newUser = User
@@ -111,6 +108,7 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
                 .surname(registrationDto.getSurname())
                 .email(registrationDto.getEmail().toLowerCase())
                 .password(encodedPassword)
+                .date(LocalDate.now())
                 .role(registrationDto.getRole())
                 .verified(false)
                 .build();

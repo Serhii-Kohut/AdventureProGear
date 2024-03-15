@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.users
     name              varchar not null,
     surname           varchar not null,
     email             varchar not null unique,
-    phone_number      varchar not null unique,
+    phone_number      varchar unique,
     registration_date date,
     role varchar
 );
