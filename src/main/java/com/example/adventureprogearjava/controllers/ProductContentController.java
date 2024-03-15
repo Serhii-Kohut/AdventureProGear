@@ -2,6 +2,12 @@ package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.ContentDTO;
 import com.example.adventureprogearjava.services.CRUDService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,32 +21,122 @@ import java.util.List;
 @RequestMapping("api/v1/productContent")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "ProductContent Controller",
+        description = "API operations with product content")
 public class ProductContentController {
     CRUDService<ContentDTO> productContentCRUDService;
 
     @GetMapping
+    @Operation(
+            summary = "Get all product contents",
+            description = "Retrieves all available product content. Content may be image in different" +
+                    "formats: jpg, png, jpeg, webp, e.t.c. "
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation",
+            content = @Content(schema = @Schema(implementation = ContentDTO.class))
+    )
     public List<ContentDTO> getAllProductContent() {
         return productContentCRUDService.getAll();
     }
 
     @GetMapping("/{id}")
-    public ContentDTO getProductContentById(@PathVariable Long id) {
+    @Operation(
+            summary = "Get content by it's own id",
+            description = "Retrieves Content by id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation",
+            content = @Content(schema = @Schema(implementation = ContentDTO.class))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not Found",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    public ContentDTO getProductContentById(
+            @Parameter(
+                    description = "ID of the content",
+                    required = true
+            ) @PathVariable Long id) {
         return productContentCRUDService.getById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ContentDTO createProductContent(@Valid @RequestBody ContentDTO contentDTO){
+    @ApiResponse(
+            responseCode = "201",
+            description = "Successful operation.",
+            content = @Content(schema = @Schema(implementation = ContentDTO.class))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid data",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    @Operation(
+            summary = "Creation of new content",
+            description = "Creation of new content. " + " Content may be image in different" +
+                    "formats: jpg, png, jpeg, webp, e.t.c."
+    )
+    public ContentDTO createProductContent(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Content data, required for creation",
+            required = true,
+            content = @Content(schema = @Schema(implementation = ContentDTO.class))
+    ) @Valid @RequestBody ContentDTO contentDTO) {
         return productContentCRUDService.create(contentDTO);
     }
 
     @PutMapping("/{id}")
-    public void updateProductContent(@PathVariable Long id, @Valid @RequestBody ContentDTO contentDTO){
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation."
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not Found",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid data",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    @Operation(
+            summary = "Update of the content",
+            description = "Update of the content"
+    )
+    public void updateProductContent(@Parameter(
+            description = "ID of the content",
+            required = true
+    ) @PathVariable Long id, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Content data, required for creation",
+            required = true,
+            content = @Content(schema = @Schema(implementation = ContentDTO.class))
+    ) @Valid @RequestBody ContentDTO contentDTO) {
         productContentCRUDService.update(contentDTO, id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProductContent(@PathVariable Long id){
+    @Operation(
+            summary = "Deleting product content by it's own id",
+            description = "Deleting product content by it's own id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation."
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "No content present.",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    public void deleteProductContent(@Parameter(
+            description = "ID of the content",
+            required = true
+    ) @PathVariable Long id) {
         productContentCRUDService.delete(id);
     }
 }
