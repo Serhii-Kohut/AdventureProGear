@@ -33,7 +33,7 @@ public class UserDTO {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password should be valid")
     String password;
 
-    @Pattern(regexp = "(^$|[0-9]{10})", message = "Phone number should be valid")
+    @Pattern(regexp = "(^$|\\+380[0-9]{9})", message = "Phone number should be valid")
     String phoneNumber;
 
     @NotNull(message = "Verified field is mandatory")

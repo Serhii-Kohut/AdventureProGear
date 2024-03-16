@@ -1,5 +1,6 @@
-package com.example.adventureprogearjava.services;
+package com.example.adventureprogearjava.services.impl;
 
+import com.example.adventureprogearjava.services.MailService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.mail.SimpleMailMessage;
