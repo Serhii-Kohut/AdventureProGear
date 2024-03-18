@@ -1,7 +1,9 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
-import com.example.adventureprogearjava.services.impl.CRUDUserServiceImpl;
+import com.example.adventureprogearjava.dto.UserUpdateDTO;
+import com.example.adventureprogearjava.services.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
 
-    CRUDUserServiceImpl crudUserService;
+    UserServiceImpl crudUserService;
 
     @GetMapping
     public List<UserDTO> getAllUsers() {
@@ -44,8 +46,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public void updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable Long id) {
-        crudUserService.update(userDTO, id);
+    public void updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long id) {
+        crudUserService.update(userUpdateDTO, id);
+    }
+
+    @PutMapping("/{id}/password")
+    public void updatePassword(@Valid @RequestBody PasswordUpdateDTO passwordUpdateDTO, @PathVariable Long id) {
+        crudUserService.updatePassword(passwordUpdateDTO, id);
     }
 
     @DeleteMapping("/{id}")

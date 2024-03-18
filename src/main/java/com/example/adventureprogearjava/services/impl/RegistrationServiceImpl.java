@@ -29,14 +29,14 @@ import java.util.Optional;
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RegistrationServiceImpl implements RegistrationService {
-    CRUDUserServiceImpl crudUserService;
+    UserServiceImpl crudUserService;
     ApplicationEventPublisher eventPublisher;
     UserRepository userRepository;
     MessageSource messages;
     VerificationTokenService verificationTokenService;
     AuthMessages authMessages;
 
-    public RegistrationServiceImpl(CRUDUserServiceImpl crudUserService, ApplicationEventPublisher eventPublisher, UserRepository userRepository, MessageSource messageSource, VerificationTokenService verificationTokenService, AuthMessages authMessages) {
+    public RegistrationServiceImpl(UserServiceImpl crudUserService, ApplicationEventPublisher eventPublisher, UserRepository userRepository, MessageSource messageSource, VerificationTokenService verificationTokenService, AuthMessages authMessages) {
         this.crudUserService = crudUserService;
         this.eventPublisher = eventPublisher;
         this.userRepository = userRepository;
