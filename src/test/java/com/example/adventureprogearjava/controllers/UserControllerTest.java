@@ -3,7 +3,7 @@ package com.example.adventureprogearjava.controllers;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.entity.enums.Role;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
-import com.example.adventureprogearjava.services.impl.CRUDUserServiceImpl;
+import com.example.adventureprogearjava.services.impl.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -41,7 +41,7 @@ public class UserControllerTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    CRUDUserServiceImpl crudUserService;
+    UserServiceImpl crudUserService;
 
     UserDTO userDTO;
 

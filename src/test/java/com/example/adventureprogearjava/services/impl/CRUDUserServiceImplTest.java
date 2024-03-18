@@ -26,7 +26,7 @@ public class CRUDUserServiceImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private CRUDUserServiceImpl userService;
+    private UserServiceImpl userService;
 
     private User user;
 

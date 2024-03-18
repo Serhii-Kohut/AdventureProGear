@@ -1,6 +1,9 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
+import com.example.adventureprogearjava.dto.UserUpdateDTO;
+import com.example.adventureprogearjava.services.impl.UserServiceImpl;
 import com.example.adventureprogearjava.services.impl.CRUDUserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,7 +28,7 @@ import java.util.List;
         description = "API operations with users")
 public class UserController {
 
-    CRUDUserServiceImpl crudUserService;
+    UserServiceImpl crudUserService;
 
     @GetMapping
     @Operation(
@@ -89,34 +92,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @ApiResponse(
-            responseCode = "200",
-            description = "Successful operation."
-    )
-    @ApiResponse(
-            responseCode = "404",
-            description = "Not Found",
-            content = @Content(schema = @Schema(implementation = String.class))
-    )
-    @ApiResponse(
-            responseCode = "400",
-            description = "Invalid data",
-            content = @Content(schema = @Schema(implementation = String.class))
-    )
-    @Operation(
-            summary = "Update of the user",
-            description = "Update of the user"
-    )
-    public void updateUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "User data, required for creation",
-            required = true,
-            content = @Content(schema = @Schema(implementation = UserDTO.class))
-    ) @Valid @RequestBody UserDTO userDTO,
-                           @Parameter(
-                                   description = "ID of the user",
-                                   required = true
-                           ) @PathVariable Long id) {
-        crudUserService.update(userDTO, id);
+    public void updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long id) {
+        crudUserService.update(userUpdateDTO, id);
+    }
+
+    @PutMapping("/{id}/password")
+    public void updatePassword(@Valid @RequestBody PasswordUpdateDTO passwordUpdateDTO, @PathVariable Long id) {
+        crudUserService.updatePassword(passwordUpdateDTO, id);
     }
 
     @DeleteMapping("/{id}")

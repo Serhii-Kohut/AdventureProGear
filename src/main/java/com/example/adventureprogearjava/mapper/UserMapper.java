@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.mapper;
 
 import com.example.adventureprogearjava.dto.UserDTO;
+import com.example.adventureprogearjava.dto.registrationDto.UserResponseDto;
 import com.example.adventureprogearjava.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -12,4 +13,8 @@ public interface UserMapper {
     UserDTO toDTO(User user);
 
     User toEntity(UserDTO dto);
+
+    User userResponseDtoToUser(UserResponseDto dto);
+
+    UserResponseDto userToUserResponseDto(User user);
 }
