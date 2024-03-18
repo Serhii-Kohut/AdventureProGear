@@ -11,7 +11,6 @@ import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.exceptions.UserAlreadyExistsException;
 import com.example.adventureprogearjava.mapper.UserMapper;
 import com.example.adventureprogearjava.repositories.UserRepository;
-import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
