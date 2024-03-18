@@ -1,6 +1,8 @@
 package com.example.adventureprogearjava.services.impl;
 
+import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
+import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.dto.registrationDto.UserRequestDto;
 import com.example.adventureprogearjava.dto.registrationDto.UserResponseDto;
 import com.example.adventureprogearjava.entity.User;
@@ -10,6 +12,7 @@ import com.example.adventureprogearjava.exceptions.UserAlreadyExistsException;
 import com.example.adventureprogearjava.mapper.UserMapper;
 import com.example.adventureprogearjava.repositories.UserRepository;
 import com.example.adventureprogearjava.services.CRUDService;
+import com.example.adventureprogearjava.services.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +29,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
+public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper = UserMapper.MAPPER;
@@ -47,6 +50,7 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
                 .toList();
     }
 
+    @Override
     @Transactional(readOnly = true)
     public UserResponseDto getUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -97,7 +101,7 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
         return userMapper.toDTO(savedUser);
     }
 
-
+    @Override
     @Transactional
     public UserResponseDto saveRegisteredUser(UserRequestDto registrationDto) {
         String encodedPassword = passwordEncoder.encode(registrationDto.getPassword());
@@ -116,33 +120,41 @@ public class CRUDUserServiceImpl implements CRUDService<UserDTO> {
         return userMapper.userToUserResponseDto(userRepository.save(newUser));
     }
 
+    @Override
+    @Transactional
+    public void update(UserUpdateDTO userUpdateDTO, Long id) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+
+        if (userUpdateDTO.getName() != null) {
+            existingUser.setName(userUpdateDTO.getName());
+        }
+        if (userUpdateDTO.getSurname() != null) {
+            existingUser.setSurname(userUpdateDTO.getSurname());
+        }
+        if (userUpdateDTO.getEmail() != null) {
+            existingUser.setEmail(userUpdateDTO.getEmail());
+        }
+        if (userUpdateDTO.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(userUpdateDTO.getPhoneNumber());
+        }
+
+        userRepository.save(existingUser);
+    }
 
     @Override
     @Transactional
-    public void update(UserDTO userDTO, Long id) {
-        log.info("Updating user with id: {}", id);
-
+    public void updatePassword(PasswordUpdateDTO passwordUpdateDTO, Long id) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("User not found with id: {}", id);
-                    return new ResourceNotFoundException("User not found with id " + id);
-                });
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
 
-        User userToUpdate = userMapper.toEntity(userDTO);
+        if (passwordUpdateDTO.getPassword() != null) {
+            existingUser.setPassword(passwordEncoder.encode(passwordUpdateDTO.getPassword()));
+        }
 
-        userToUpdate.setId(existingUser.getId());
-
-        userToUpdate.setName(userDTO.getName());
-        userToUpdate.setEmail(userDTO.getEmail());
-        userToUpdate.setPassword(userDTO.getPassword());
-        userToUpdate.setPhoneNumber(userDTO.getPhoneNumber());
-        userToUpdate.setVerified(userDTO.isVerified());
-        userToUpdate.setDate(userDTO.getDate());
-        userToUpdate.setRole(userDTO.getRole());
-
-        userRepository.save(userToUpdate);
-
+        userRepository.save(existingUser);
     }
+
 
     @Override
     public void delete(Long id) {
