@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.UserDTO;
+import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,8 @@ import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-public class CRUDUserServiceImplTest {
+@TestPropertySource(locations = "classpath:application.yml")
+public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
@@ -79,12 +81,12 @@ public class CRUDUserServiceImplTest {
 
     @Test
     public void testUpdate() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("Updated Name");
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setName("Updated Name");
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        userService.update(userDTO, 1L);
+        userService.update(userUpdateDTO, 1L);
 
         verify(userRepository, times(1)).findById(anyLong());
         verify(userRepository, times(1)).save(any(User.class));

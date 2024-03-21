@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.UserDTO;
+import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.entity.enums.Role;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.impl.UserServiceImpl;
@@ -116,7 +117,7 @@ public class UserControllerTest {
     public void updateUserTest() throws Exception {
         Long userId = 1L;
 
-        doNothing().when(crudUserService).update(any(UserDTO.class), eq(userId));
+        doNothing().when(crudUserService).update(any(UserUpdateDTO.class), eq(userId));
 
         mockMvc.perform(put("/api/users/" + userId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +130,7 @@ public class UserControllerTest {
         Long invalidUserId = -1L;
 
         doThrow(new ResourceNotFoundException("User not found with id " + invalidUserId))
-                .when(crudUserService).update(any(UserDTO.class), eq(invalidUserId));
+                .when(crudUserService).update(any(UserUpdateDTO.class), eq(invalidUserId));
 
         mockMvc.perform(put("/api/users/" + invalidUserId)
                         .contentType(MediaType.APPLICATION_JSON)
