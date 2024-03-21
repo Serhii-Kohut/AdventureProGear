@@ -1,103 +1,133 @@
 package com.example.adventureprogearjava.services.impl;
 
+import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
+import com.example.adventureprogearjava.dto.registrationDto.UserRequestDto;
+import com.example.adventureprogearjava.dto.registrationDto.UserResponseDto;
 import com.example.adventureprogearjava.entity.User;
+import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.repositories.UserRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application.yml")
+@Transactional
+@TestPropertySource(locations = "classpath:application-test.yml")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImplTest {
-    @Mock
-    private UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
-    @InjectMocks
-    private UserServiceImpl userService;
+    @Autowired
+    UserServiceImpl userService;
 
-    private User user;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    User user;
 
     @BeforeEach
     public void setUp() {
         user = new User();
-        user.setId(1L);
-        user.setName("Test User");
+        user.setId(11L);
+        user.setName("Danylo");
+        user.setSurname("Test Surname");
+        user.setEmail("test@example.com");
+        user.setPassword(passwordEncoder.encode("password"));
+        userRepository.save(user);
     }
 
     @Test
     public void testGetAll() {
-        List<User> users = new ArrayList<>();
-        users.add(user);
-        when(userRepository.findAll()).thenReturn(users);
-
         List<UserDTO> result = userService.getAll();
-
-        verify(userRepository, times(1)).findAll();
         assertFalse(result.isEmpty());
-        assertEquals(users.size(), result.size());
+        assertEquals(3, result.size());
+    }
+
+    @Test
+    public void testGetUserByEmail() {
+        UserResponseDto result = userService.getUserByEmail("test@example.com");
+        assertNotNull(result);
+        assertEquals(user.getName(), result.getName());
     }
 
     @Test
     public void testGetById() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
         UserDTO result = userService.getById(1L);
-
         assertNotNull(result);
         assertEquals(user.getName(), result.getName());
-
-        verify(userRepository, times(1)).findById(1L);
     }
 
     @Test
     public void testCreate() {
         UserDTO userDTO = new UserDTO();
-        userDTO.setName("Test User");
-        when(userRepository.existsByEmail(anyString())).thenReturn(false);
-        when(userRepository.existsByPhoneNumber(anyString())).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        userDTO.setName("Test User 2");
+        userDTO.setSurname("Best");
+        userDTO.setEmail("test1@example.com");
+        userDTO.setPassword("password2");
 
         UserDTO result = userService.create(userDTO);
 
-        verify(userRepository, times(1)).save(any(User.class));
         assertNotNull(result);
-        assertEquals(user.getName(), result.getName());
+        assertEquals(userDTO.getName(), result.getName());
+    }
+
+    @Test
+    public void testSaveRegisteredUser() {
+        UserRequestDto registrationDto = new UserRequestDto();
+        registrationDto.setName("New User");
+        registrationDto.setSurname("Surname");
+        registrationDto.setEmail("new222@example.com");
+        registrationDto.setPassword("newpassword");
+
+        UserResponseDto result = userService.saveRegisteredUser(registrationDto);
+
+        assertNotNull(result);
+        assertEquals(registrationDto.getName(), result.getName());
     }
 
     @Test
     public void testUpdate() {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setName("Updated Name");
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        when(userRepository.save(any(User.class))).thenReturn(user);
 
         userService.update(userUpdateDTO, 1L);
 
-        verify(userRepository, times(1)).findById(anyLong());
-        verify(userRepository, times(1)).save(any(User.class));
+        UserDTO updatedUser = userService.getById(1L);
+        assertEquals(userUpdateDTO.getName(), updatedUser.getName());
+    }
+
+    @Test
+    public void testUpdatePassword() {
+        PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
+        passwordUpdateDTO.setPassword("updatedpassword");
+
+        userService.updatePassword(passwordUpdateDTO, 1L);
+
+        User updatedUser = userRepository.findById(1L).orElse(null);
+        assertNotNull(updatedUser);
+        assertTrue(passwordEncoder.matches(passwordUpdateDTO.getPassword(), updatedUser.getPassword()));
     }
 
     @Test
     public void testDelete() {
-        doNothing().when(userRepository).deleteById(anyLong());
-
         userService.delete(1L);
-
-        verify(userRepository, times(1)).deleteById(anyLong());
+        assertThrows(ResourceNotFoundException.class, () -> userService.getById(11L));
     }
 
 }
