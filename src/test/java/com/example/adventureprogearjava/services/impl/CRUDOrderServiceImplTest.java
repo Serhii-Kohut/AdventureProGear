@@ -6,9 +6,12 @@ import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.CRUDService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,7 +20,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application.yml")
+@TestPropertySource(locations = "classpath:application-test.yml")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
 public class CRUDOrderServiceImplTest {
     @Autowired
     CRUDService<OrderDTO> orderService;
@@ -88,8 +93,9 @@ public class CRUDOrderServiceImplTest {
         assert(orderService.getAll().size()==3);
         orderService.delete(3L);
         assert(orderService.getAll().size()==2);
-        Exception exception = assertThrows(RuntimeException.class,
+        Exception exception = assertThrows(ResourceNotFoundException.class,
                 () -> orderService.delete(5L));
-        assert (exception.getMessage().equals("No content present!"));
+        assert (exception.getMessage().equals("Order not found with id " + 5));
     }
+
 }
