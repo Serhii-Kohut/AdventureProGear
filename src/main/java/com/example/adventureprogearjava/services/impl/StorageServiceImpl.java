@@ -1,7 +1,6 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ContentDTO;
-import com.example.adventureprogearjava.repositories.ProductContentRepository;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.StorageService;
 import lombok.AccessLevel;
@@ -9,17 +8,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
