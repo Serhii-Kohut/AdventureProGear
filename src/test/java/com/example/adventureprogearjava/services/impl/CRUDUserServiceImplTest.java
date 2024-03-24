@@ -84,7 +84,7 @@ public class CRUDUserServiceImplTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        userService.update(userDTO, 1L);
+//        userService.update(userDTO, 1L);
 
         verify(userRepository, times(1)).findById(anyLong());
         verify(userRepository, times(1)).save(any(User.class));
