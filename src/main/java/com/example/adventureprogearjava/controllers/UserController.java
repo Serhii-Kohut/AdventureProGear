@@ -99,11 +99,29 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Update user",
+            description = "Updates the details of an existing user"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation",
+            content = @Content(schema = @Schema(implementation = UserUpdateDTO.class))
+    )
     public void updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long id) {
         crudUserService.update(userUpdateDTO, id);
     }
 
     @PutMapping("/{id}/password")
+    @Operation(
+            summary = "Update user password",
+            description = "Updates the password of an existing user"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation",
+            content = @Content(schema = @Schema(implementation = PasswordUpdateDTO.class))
+    )
     public void updatePassword(@Valid @RequestBody PasswordUpdateDTO passwordUpdateDTO, @PathVariable Long id) {
         crudUserService.updatePassword(passwordUpdateDTO, id);
     }

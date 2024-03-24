@@ -1,6 +1,8 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
+import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.entity.enums.Role;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.impl.UserServiceImpl;
@@ -48,7 +50,7 @@ public class UserControllerTest {
     @BeforeEach
     public void setUp() {
         userDTO = new UserDTO("John", "Doe", "john.doe@example.com", "Password1@",
-                "1234567890", true, LocalDate.now(), Role.USER);
+                "+380505556953", true, LocalDate.now(), Role.USER);
     }
 
     @Test
@@ -116,7 +118,7 @@ public class UserControllerTest {
     public void updateUserTest() throws Exception {
         Long userId = 1L;
 
-        doNothing().when(crudUserService).update(any(UserDTO.class), eq(userId));
+        doNothing().when(crudUserService).update(any(UserUpdateDTO.class), eq(userId));
 
         mockMvc.perform(put("/api/users/" + userId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,13 +131,30 @@ public class UserControllerTest {
         Long invalidUserId = -1L;
 
         doThrow(new ResourceNotFoundException("User not found with id " + invalidUserId))
-                .when(crudUserService).update(any(UserDTO.class), eq(invalidUserId));
+                .when(crudUserService).update(any(UserUpdateDTO.class), eq(invalidUserId));
 
         mockMvc.perform(put("/api/users/" + invalidUserId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void testUpdatePassword() throws Exception {
+        Long userId = 1L;
+        PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
+        passwordUpdateDTO.setPassword("Password1@");
+
+        doNothing().when(crudUserService).updatePassword(any(PasswordUpdateDTO.class), eq(userId));
+
+        mockMvc.perform(put("/api/users/" + userId + "/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(passwordUpdateDTO)))
+                .andExpect(status().isOk());
+
+        verify(crudUserService, times(1)).updatePassword(passwordUpdateDTO, userId);
+    }
+
 
 
     @Test
