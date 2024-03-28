@@ -18,4 +18,5 @@ public class ContentDTO {
     String source;
     @JsonIgnore
     Long productId;
+    String selfLink;
 }

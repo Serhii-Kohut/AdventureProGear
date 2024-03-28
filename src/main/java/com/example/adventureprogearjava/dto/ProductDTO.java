@@ -31,4 +31,6 @@ public class ProductDTO {
     List<ProductAttributeDTO> attributes;
 
     List<ContentDTO> contents;
+
+    String selfLink;
 }

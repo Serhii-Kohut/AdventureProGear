@@ -44,4 +44,6 @@ public class OrderDTO {
 
     List<OrdersListDTO> ordersLists;
 
+    String selfLink;
+
 }

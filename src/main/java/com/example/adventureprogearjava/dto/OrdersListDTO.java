@@ -26,4 +26,6 @@ public class OrdersListDTO {
     @NotNull
     @Min(0)
     Long quantity;
+
+    String selfLink;
 }
