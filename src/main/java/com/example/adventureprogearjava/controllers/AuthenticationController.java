@@ -36,7 +36,7 @@ public class AuthenticationController {
     public ResponseEntity<RefreshTokenResponseDto> refreshToken(@RequestBody HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto();
+        RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto(authHeader);
 
         RefreshTokenResponseDto refreshTokenResponseDto = authenticationService.refreshToken(refreshTokenRequestDto);
 
