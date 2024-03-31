@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -25,9 +26,18 @@ import java.util.Map;
 public class JwtService {
     JwtProperties jwtProperties;
 
+    public UserDetails getUserDetailsFromToken(String token) {
+        UserDetails userDetails = User.builder()
+                .id(extractId(token))
+                .email(extractEmail(token))
+                .role(extractRole(token))
+                .build();
+        return userDetails;
+    }
+
     public Role extractRole(String token) throws JwtException {
         return Jwts.parser()
-                .json(new JacksonDeserializer<>(Maps.of("role", Role.class).build()))
+                .json(new JacksonDeserializer(Maps.of("role", Role.class).build()))
                 .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
