@@ -29,8 +29,9 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     Gender gender;
 
-    @Enumerated(EnumType.STRING)
-    ProductCategory category;
+    @ManyToOne
+    @JoinColumn(name = "category", nullable = false)
+    Category category;
 
     @OneToMany(mappedBy = "product")
     List<OrdersList> ordersLists;

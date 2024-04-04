@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.services.CRUDService;
@@ -45,7 +46,7 @@ class CRUDProductServiceImplTest {
                 .description("descr")
                 .basePrice(100L)
                 .gender(Gender.MALE)
-                .category(ProductCategory.PANTS)
+                .category(Category.builder().categoryName("PANTS").build())
                 .build();
         ProductDTO created = productService.create(productDTO);
         assert (created.getProductName().equals(productDTO.getProductName()));
@@ -65,7 +66,7 @@ class CRUDProductServiceImplTest {
                 .productName("updatedName")
                 .description("updatedDescr")
                 .basePrice(1L)
-                .category(ProductCategory.PANTS)
+                .category(Category.builder().categoryName("PANTS").build())
                 .build();
         productService.update(productDTO, 6L);
         assert (productService.getById(6L).getProductName()

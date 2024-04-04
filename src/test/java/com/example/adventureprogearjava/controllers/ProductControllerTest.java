@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.exceptions.NoContentException;
@@ -53,7 +54,7 @@ class ProductControllerTest {
                 .productName("name")
                 .description("description")
                 .basePrice(100L)
-                .category(ProductCategory.BAGS)
+                .category(Category.builder().categoryName("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
@@ -111,7 +112,7 @@ class ProductControllerTest {
                 .productName("name1")
                 .description("description1")
                 .basePrice(200L)
-                .category(ProductCategory.BAGS)
+                .category(Category.builder().categoryName("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         String newContentJson = objectMapper.writeValueAsString(newProduct);
@@ -140,7 +141,7 @@ class ProductControllerTest {
                 .productName("name1")
                 .description("description1")
                 .basePrice(200L)
-                .category(ProductCategory.BAGS)
+                .category(Category.builder().categoryName("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         String newContentJson = objectMapper.writeValueAsString(newProduct);
