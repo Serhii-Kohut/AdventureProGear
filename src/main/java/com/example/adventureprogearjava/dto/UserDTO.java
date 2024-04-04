@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.dto;
 
 import com.example.adventureprogearjava.entity.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,7 @@ public class UserDTO {
 
     @NotBlank(message = "Password is mandatory")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password should be valid")
+    @JsonIgnore
     String password;
 
     @Pattern(regexp = "(^$|\\+380[0-9]{9})", message = "Phone number should be valid")
