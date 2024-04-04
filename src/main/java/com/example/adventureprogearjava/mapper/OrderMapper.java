@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface OrderMapper {
     OrderMapper MAPPER = Mappers.getMapper(OrderMapper.class);
 
-    String api = "towering-house-production.up.railway.app/api/orders/";
+    String api = "https://prime-tax-production.up.railway.app/api/orders/";
 
     @Mapping(target = "selfLink", source = "order.id", qualifiedByName = "idToLink")
     OrderDTO toDTO(Order order);

@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface UserMapper {
-    String api = "towering-house-production.up.railway.app/api/users/";
+    String api = "https://prime-tax-production.up.railway.app/api/users/";
 
     UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
 
