@@ -99,7 +99,7 @@ public class UserController {
         return crudUserService.create(userDTO);
     }
 
-    @PutMapping
+    @PutMapping("/me/update")
     @Operation(
             summary = "Update user",
             description = "Updates the details of an existing user"
@@ -113,7 +113,7 @@ public class UserController {
         crudUserService.update(userUpdateDTO, user.getId());
     }
 
-    @PutMapping("/password")
+    @PutMapping("/me/update-password")
     @Operation(
             summary = "Update user password",
             description = "Updates the password of an existing user"

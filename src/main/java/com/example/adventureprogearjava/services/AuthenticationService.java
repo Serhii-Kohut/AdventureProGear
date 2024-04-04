@@ -31,15 +31,6 @@ public class AuthenticationService {
     UserService userService;
     UserMapper userMapper = UserMapper.MAPPER;
 
-    public void authenticate(UserDetails user, HttpServletRequest request) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                user, null, user.getAuthorities());
-
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-    }
-
     public RefreshTokenResponseDto refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         String authHeader = refreshTokenRequestDto.getRefreshToken();
 
