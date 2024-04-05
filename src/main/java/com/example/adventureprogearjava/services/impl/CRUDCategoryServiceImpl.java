@@ -11,10 +11,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +22,8 @@ import java.util.Optional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
+    private final static String api = "towering-house-production.up.railway.app/api/categories/";
+
     CategoryRepository categoryRepository;
 
     CategoryMapper categoryMapper;
@@ -31,21 +31,36 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
     @Override
     public List<CategoryDTO> getAll() {
         log.info("Getting all categories");
-        return categoryRepository.findAll()
+        List<CategoryDTO> categoryDTOS = categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::toDTO)
                 .toList();
+        categoryDTOS.forEach(categoryDTO -> {categoryDTO.setSubcategories(categoryRepository
+                .getAllSubCategories(categoryDTO.getId())
+                .stream()
+                .map(categoryMapper::toDTO)
+                .toList());
+            categoryDTO.setSelfLink(api + categoryDTO.getId());
+        });
+        return categoryDTOS;
     }
 
     @Override
     public CategoryDTO getById(Long id) {
         log.info("Getting category by id");
         Optional<Category> category = categoryRepository.findById(id);
-        if(category.isEmpty()){
+        if (category.isEmpty()) {
             log.warn("Category not found!");
             throw new ResourceNotFoundException("Resource is not available!");
         }
-        return category.map(categoryMapper::toDTO).get();
+        CategoryDTO categoryDTO = category.map(categoryMapper::toDTO).get();
+        categoryDTO.setSubcategories(categoryRepository
+                .getAllSubCategories(categoryDTO.getId())
+                .stream()
+                .map(categoryMapper::toDTO)
+                .toList());
+        categoryDTO.setSelfLink(api + categoryDTO.getId());
+        return categoryDTO;
     }
 
     @Override
@@ -70,7 +85,7 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
     @Override
     public void delete(Long id) {
         log.info("Deleting category by id");
-        if (!categoryRepository.existsById(id)){
+        if (!categoryRepository.existsById(id)) {
             log.warn("No content present!");
             throw new NoContentException("No content present!");
         }
