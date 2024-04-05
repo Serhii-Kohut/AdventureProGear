@@ -21,6 +21,17 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO {
 
+    public UserDTO(String name, String surname, String email, String password, String phoneNumber, boolean verified, LocalDate date, Role role) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.verified = verified;
+        this.date = date;
+        this.role = role;
+    }
+
     @NotBlank(message = "Name is mandatory")
     String name;
 
@@ -45,4 +56,6 @@ public class UserDTO {
     LocalDate date;
 
     Role role;
+
+    String selfLink;
 }

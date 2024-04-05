@@ -31,4 +31,5 @@ public class ProductAttributeDTO {
     Long quantity;
     @JsonIgnore
     Long productId;
+    String selfLink;
 }

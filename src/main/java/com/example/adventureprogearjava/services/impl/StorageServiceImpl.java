@@ -44,7 +44,9 @@ public class StorageServiceImpl implements StorageService {
                 return new ByteArrayResource(data);
             } catch (IOException ex) {
                 log.error("Fatal error. Can't retrieve default file");
-                throw new RuntimeException();
+                return null;
+                //TODO Create an empty directory for files if not exist
+                //TODO Create default file if not exist
             }
         }
     }

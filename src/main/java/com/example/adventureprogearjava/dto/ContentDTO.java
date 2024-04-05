@@ -14,8 +14,14 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ContentDTO {
+    public ContentDTO(String source, Long productId) {
+        this.source = source;
+        this.productId = productId;
+    }
+
     @NotBlank
     String source;
     @JsonIgnore
     Long productId;
+    String selfLink;
 }

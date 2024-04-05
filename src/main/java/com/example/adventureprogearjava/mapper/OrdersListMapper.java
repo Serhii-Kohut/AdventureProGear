@@ -12,8 +12,11 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface OrdersListMapper {
+    String api = "https://prime-tax-production.up.railway.app/api/order-lists/";
+
     OrdersListMapper MAPPER = Mappers.getMapper(OrdersListMapper.class);
 
+    @Mapping(target = "selfLink", source = "ordersList.id", qualifiedByName = "idToLink")
     OrdersListDTO toDTO(OrdersList ordersList);
     @Mapping(source = "orderId", target = "order", qualifiedByName = "orderIdToOrder")
     @Mapping(source = "productId", target = "product", qualifiedByName = "productIdToProduct")
@@ -53,4 +56,8 @@ public interface OrdersListMapper {
         return productAttribute;
     }
 
+    @Named("idToLink")
+    default String getLink(Long id) {
+        return api + id;
+    }
 }

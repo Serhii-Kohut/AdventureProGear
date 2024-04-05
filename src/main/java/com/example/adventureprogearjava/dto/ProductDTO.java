@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.dto;
 
+import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import jakarta.validation.constraints.Min;
@@ -26,9 +27,11 @@ public class ProductDTO {
     Gender gender;
 
     @NotNull(message = "Category is required")
-    ProductCategory category;
+    Category category;
 
     List<ProductAttributeDTO> attributes;
 
     List<ContentDTO> contents;
+
+    String selfLink;
 }

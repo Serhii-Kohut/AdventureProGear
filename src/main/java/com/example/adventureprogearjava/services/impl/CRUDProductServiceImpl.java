@@ -2,8 +2,6 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.Product;
-import com.example.adventureprogearjava.entity.enums.Gender;
-import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.ProductMapper;
@@ -70,7 +68,7 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
             productRepo.update(id, productDTO.getProductName(),
                     productDTO.getDescription(),
                     productDTO.getBasePrice(),
-                    productDTO.getCategory().toString());
+                    productDTO.getCategory().getId());
         }
     }
 
