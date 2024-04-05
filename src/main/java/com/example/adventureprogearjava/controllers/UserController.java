@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.controllers;
 import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
+import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.services.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,9 +16,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,7 @@ public class UserController {
 
     UserServiceImpl crudUserService;
 
-    @GetMapping
+    @GetMapping("/all")
     @Operation(
             summary = "Get all users",
             description = "Retrieves all available users."
@@ -51,7 +52,7 @@ public class UserController {
         return crudUserService.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/me")
     @Operation(
             summary = "Get user by it's own id",
             description = "Retrieves User by id"
@@ -66,11 +67,11 @@ public class UserController {
             description = "Not Found",
             content = @Content(schema = @Schema(implementation = String.class))
     )
-    public UserDTO getUserById(@Parameter(
+    public UserDTO getUser(@Parameter(
             description = "ID of the user",
             required = true
-    ) @PathVariable Long id) {
-        return crudUserService.getById(id);
+    ) @AuthenticationPrincipal User user) {
+        return crudUserService.getById(user.getId());
     }
 
     @PostMapping
@@ -98,7 +99,7 @@ public class UserController {
         return crudUserService.create(userDTO);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/me/update")
     @Operation(
             summary = "Update user",
             description = "Updates the details of an existing user"
@@ -108,11 +109,11 @@ public class UserController {
             description = "Successful operation",
             content = @Content(schema = @Schema(implementation = UserUpdateDTO.class))
     )
-    public void updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long id) {
-        crudUserService.update(userUpdateDTO, id);
+    public void updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal User user) {
+        crudUserService.update(userUpdateDTO, user.getId());
     }
 
-    @PutMapping("/{id}/password")
+    @PutMapping("/me/update-password")
     @Operation(
             summary = "Update user password",
             description = "Updates the password of an existing user"
@@ -122,11 +123,11 @@ public class UserController {
             description = "Successful operation",
             content = @Content(schema = @Schema(implementation = PasswordUpdateDTO.class))
     )
-    public void updatePassword(@Valid @RequestBody PasswordUpdateDTO passwordUpdateDTO, @PathVariable Long id) {
-        crudUserService.updatePassword(passwordUpdateDTO, id);
+    public void updatePassword(@Valid @RequestBody PasswordUpdateDTO passwordUpdateDTO, @AuthenticationPrincipal User user) {
+        crudUserService.updatePassword(passwordUpdateDTO, user.getId());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponse(
             responseCode = "200",
@@ -140,8 +141,8 @@ public class UserController {
     public void deleteUser(@Parameter(
             description = "ID of the user",
             required = true
-    ) @PathVariable Long id) {
-        crudUserService.delete(id);
+    ) @AuthenticationPrincipal User user) {
+        crudUserService.delete(user.getId());
     }
 
 }
