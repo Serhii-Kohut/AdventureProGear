@@ -26,14 +26,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = "UPDATE products set product_name = :name, " +
             "description=:description, base_price = :price," +
-            "category = CAST(:category as category)" +
+            "category = :category " +
             "where id = :id",
             nativeQuery = true)
     void update(@Param("id") Long id,
                 @Param("name") String name,
                 @Param("description") String description,
                 @Param("price") Long price,
-                @Param("category") String category);
+                @Param("category") Long categoryId);
 
     @Modifying
     @Query(value = "UPDATE products set "+
@@ -49,10 +49,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM products where gender= CAST(:gender as gender)", nativeQuery = true)
     List<Product> findByGender(@Param("gender") String gender);
 
-    @Query(value = "SELECT * FROM products where category= CAST(:category as category)", nativeQuery = true)
+    @Query(value = "SELECT * FROM products p join categories c on c.id = p.category where c.category_name = :category", nativeQuery = true)
     List<Product> findByCategory(@Param("category") String category);
 
-    @Query(value = "SELECT * FROM products where category= CAST(:category as category) and gender= CAST(:gender as gender)",
+    @Query(value = "SELECT * FROM products p join categories c on c.id = p.category where c.category_name = :category and p.gender= CAST(:gender as gender)",
             nativeQuery = true)
     List<Product> findByCategoryAndGender(@Param("category") String category, @Param("gender") String gender);
 

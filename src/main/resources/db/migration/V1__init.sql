@@ -1,10 +1,19 @@
 CREATE TYPE gender AS ENUM ('MALE','FEMALE');
 
-CREATE TYPE status AS ENUM('PAID','DELIVERED','CANCELED');
+CREATE TYPE status AS ENUM ('PAID','DELIVERED','CANCELED');
 
-CREATE TYPE user_role AS ENUM('USER', 'ADMIN');
+CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
+--
+-- CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
 
-CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
+CREATE TABLE IF NOT EXISTS public.categories
+(
+    id            bigint primary key,
+    category_name varchar not null unique,
+    category_id   integer
+        constraint subcategory_fk
+            references public.categories
+);
 
 CREATE TABLE IF NOT EXISTS public.users
 (
@@ -14,17 +23,19 @@ CREATE TABLE IF NOT EXISTS public.users
     email             varchar not null unique,
     phone_number      varchar unique,
     registration_date date,
-    role varchar
+    role              varchar
 );
 
 CREATE TABLE IF NOT EXISTS public.products
 (
     id           bigint primary key,
-    product_name varchar not null,
+    product_name varchar  not null,
     description  text,
-    base_price   integer not null,
+    base_price   integer  not null,
     gender       gender,
-    category category not null
+    category   integer
+        constraint category_fk
+            references public.categories
 );
 
 CREATE TABLE IF NOT EXISTS public.product_attributes
@@ -37,7 +48,7 @@ CREATE TABLE IF NOT EXISTS public.product_attributes
     product_id      integer not null
         constraint prodatr_prod_fk
             references public.products,
-    quantity             integer not null
+    quantity        integer not null
 );
 
 CREATE TABLE IF NOT EXISTS public.product_content
@@ -60,7 +71,7 @@ CREATE TABLE IF NOT EXISTS public.orders
     post_address varchar not null,
     comment      text,
     price        int,
-    status status not null
+    status       status  not null
 );
 
 CREATE TABLE IF NOT EXISTS public.orders_list

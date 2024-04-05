@@ -31,27 +31,46 @@ CREATE SEQUENCE order_list_seq
     start 1
     increment 1;
 
+CREATE SEQUENCE categories_seq
+    start 1
+    increment 1;
+
 insert into users (id, name, surname, email, phone_number, password, role)
 values (nextval('user_seq'), 'Danylo', 'Berkovskyi', 'serhio3347@gmail.com', '+380980648928', 'Password1@', 'ADMIN');
 
 insert into users (id, name, surname, email, phone_number, password, role)
 values (nextval('user_seq'), 'Andrii', 'Len', 'len_andrey@gmail.com', '+380972555455', 'Password2#', 'USER');
 
+insert into categories(id, category_name)
+values (nextval('categories_seq'), 'SHOES');
+insert into categories(id, category_name)
+values (nextval('categories_seq'), 'T-SHIRT');
+insert into categories(id, category_name)
+values (nextval('categories_seq'), 'PANTS');
+insert into categories(id, category_name)
+values (nextval('categories_seq'), 'HEADWEARS');
+insert into categories(id, category_name)
+values (nextval('categories_seq'), 'HIKING_EQUIPMENT');
+insert into categories(id, category_name, category_id)
+values (nextval('categories_seq'), 'BAGS', 5);
+
+
+
 
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'MALE', 'T_SHIRTS');
+values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'MALE', 2);
 
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 175, 'FEMALE', 'T_SHIRTS');
+values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 175, 'FEMALE', 2);
 
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'FEMALE', 'SHOES');
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'FEMALE', 1);
 
 insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'MALE', 'SHOES');
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'MALE', 1);
 
 insert into products (id, product_name, description, base_price, category)
-values (nextval('product_seq'), 'Butcher knife', 'Common knife', 120, 'HIKING_EQUIPMENT');
+values (nextval('product_seq'), 'Butcher knife', 'Common knife', 120, 5);
 
 insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_1');
 insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_2');
