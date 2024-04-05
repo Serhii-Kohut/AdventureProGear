@@ -2,7 +2,6 @@ package com.example.adventureprogearjava.dto;
 
 import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
-import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -3,7 +3,6 @@ package com.example.adventureprogearjava.controllers;
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
-import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.CRUDService;

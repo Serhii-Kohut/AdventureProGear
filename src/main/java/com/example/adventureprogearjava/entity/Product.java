@@ -1,7 +1,6 @@
 package com.example.adventureprogearjava.entity;
 
 import com.example.adventureprogearjava.entity.enums.Gender;
-import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

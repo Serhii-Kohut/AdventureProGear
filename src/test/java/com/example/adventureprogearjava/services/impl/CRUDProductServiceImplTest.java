@@ -3,7 +3,6 @@ package com.example.adventureprogearjava.services.impl;
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
-import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.services.CRUDService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
