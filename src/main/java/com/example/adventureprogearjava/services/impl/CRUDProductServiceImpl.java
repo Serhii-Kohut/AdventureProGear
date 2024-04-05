@@ -68,7 +68,7 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
             productRepo.update(id, productDTO.getProductName(),
                     productDTO.getDescription(),
                     productDTO.getBasePrice(),
-                    productDTO.getCategory().toString());
+                    productDTO.getCategory().getId());
         }
     }
 
