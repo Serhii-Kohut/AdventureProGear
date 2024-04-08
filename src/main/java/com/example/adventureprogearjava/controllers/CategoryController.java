@@ -89,7 +89,7 @@ public class CategoryController {
         return categoryService.getCategoryByName(name);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("subcategory/{id}")
     @Operation(
             summary = "Get subcategories by category id",
             description = "Retrieves all subcategories by category id"
