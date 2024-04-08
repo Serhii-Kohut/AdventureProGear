@@ -2,7 +2,6 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.enums.Gender;
-import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.mapper.ProductMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.services.ProductService;
@@ -83,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Getting products by price and category");
         return productRepo.findByBasePriceBetween(priceFrom, priceTo)
                 .stream()
-                .filter(product -> product.getCategory().equals(ProductCategory.valueOf(category)))
+                .filter(product -> product.getCategory().getCategoryName().equals(category))
                 .map(mapper::toDto)
                 .toList();
     }
@@ -93,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Getting products by price and category and gender");
         return productRepo.findByBasePriceBetween(priceFrom, priceTo)
                 .stream()
-                .filter(product -> product.getCategory().equals(ProductCategory.valueOf(category)))
+                .filter(product -> product.getCategory().getCategoryName().equals(category))
                 .filter(product -> product.getGender().equals(Gender.valueOf(gender)))
                 .map(mapper::toDto)
                 .toList();

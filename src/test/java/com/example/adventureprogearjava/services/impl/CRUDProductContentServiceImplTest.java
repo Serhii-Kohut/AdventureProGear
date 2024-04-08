@@ -1,11 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ContentDTO;
-import com.example.adventureprogearjava.dto.ProductAttributeDTO;
-import com.example.adventureprogearjava.dto.ProductDTO;
-import com.example.adventureprogearjava.entity.enums.ProductCategory;
 import com.example.adventureprogearjava.services.CRUDService;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @TestPropertySource(locations= "classpath:application.yml")
