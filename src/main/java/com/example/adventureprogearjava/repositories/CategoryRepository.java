@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Modifying
@@ -34,4 +35,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "join categories c on c.category_id = categories.id " +
             "where categories.id = :id", nativeQuery = true)
     List<Category> getAllSubCategories(@Param("id") Long id);
+
+    Optional<Category> getCategoryByCategoryName(String name);
 }
