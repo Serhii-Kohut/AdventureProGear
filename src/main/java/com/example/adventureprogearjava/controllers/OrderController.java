@@ -1,8 +1,6 @@
 package com.example.adventureprogearjava.controllers;
 
-import com.example.adventureprogearjava.dto.ContentDTO;
 import com.example.adventureprogearjava.dto.OrderDTO;
-import com.example.adventureprogearjava.dto.ProductAttributeDTO;
 import com.example.adventureprogearjava.services.impl.CRUDOrderServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
