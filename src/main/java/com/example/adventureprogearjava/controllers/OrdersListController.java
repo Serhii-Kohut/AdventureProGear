@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class OrdersListController {
     CRUDOrdersListServiceImpl ordersListService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(
             summary = "Get all order lists",
             description = "Retrieves all available order lists. Order list contains info about " +
