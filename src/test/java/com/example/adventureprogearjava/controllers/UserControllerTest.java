@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.config.JwtProperties;
 import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
@@ -7,6 +8,9 @@ import com.example.adventureprogearjava.entity.enums.Role;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.services.impl.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -42,10 +49,29 @@ public class UserControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @Autowired
+    JwtProperties jwtProperties;
+
     @MockBean
     UserServiceImpl crudUserService;
 
     UserDTO userDTO;
+
+    private String createMockJWT(String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
+        claims.put("type", "test");
+        claims.put("id", 1);
+
+        return Jwts.builder()
+                .setSubject("mockUser")
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getAccessTokenExpiration()))
+                .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getSecretKey())))
+                .compact();
+    }
+
 
     @BeforeEach
     public void setUp() {
@@ -54,40 +80,55 @@ public class UserControllerTest {
     }
 
     @Test
+    public void getAllUsers_Unauthorized_401() throws Exception {
+        this.mockMvc.perform(get("/api/users/all"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void getAllUsers_Forbidden_403() throws Exception {
+        String jwt = createMockJWT("USER");
+        this.mockMvc.perform(get("/api/users/all")
+                        .header("Authorization", "Bearer " + jwt))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void getAllUsers_Success_200() throws Exception {
+        String jwt = createMockJWT("ADMIN");
+        this.mockMvc.perform(get("/api/users/all")
+                        .header("Authorization", "Bearer " + jwt))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void getAllUsersTest() throws Exception {
         List<UserDTO> users = Collections.singletonList(userDTO);
 
         when(crudUserService.getAll()).thenReturn(users);
 
-        mockMvc.perform(get("/api/users")
+        String jwt = createMockJWT("ADMIN"); // generate a mock JWT with role "ADMIN"
+
+        mockMvc.perform(get("/api/users/all")
+                        .header("Authorization", "Bearer " + jwt) // include the JWT in the "Authorization" header
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is(userDTO.getName())));
     }
 
+
     @Test
-    public void getUserByIdTest() throws Exception {
-        Long userId = 1L;
+    public void getUserTest() throws Exception {
+        when(crudUserService.getById(any())).thenReturn(userDTO);
 
-        when(crudUserService.getById(userId)).thenReturn(userDTO);
+        String jwt = createMockJWT("USER"); // generate a mock JWT with role "USER"
 
-        mockMvc.perform(get("/api/users/" + userId)
+        mockMvc.perform(get("/api/users/me")
+                        .header("Authorization", "Bearer " + jwt) // include the JWT in the "Authorization" header
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(userDTO)));
-    }
-
-    @Test
-    public void getUserWithInvalidIdTest() throws Exception {
-        Long invalidUserId = -1L;
-
-        when(crudUserService.getById(invalidUserId))
-                .thenThrow(new ResourceNotFoundException("User not found with id " + invalidUserId));
-
-        mockMvc.perform(get("/api/users/" + invalidUserId)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(jsonPath("$.name", is(userDTO.getName())));
     }
 
 
@@ -154,7 +195,6 @@ public class UserControllerTest {
 
         verify(crudUserService, times(1)).updatePassword(passwordUpdateDTO, userId);
     }
-
 
 
     @Test
