@@ -38,6 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        if (request.getServletPath().startsWith("/swagger-ui") || request.getServletPath().startsWith("/v3/api-docs")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (endpointMaster.isHandlerNotExist(request)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
 
