@@ -15,10 +15,4 @@ public class UserCreatedEvent extends ApplicationEvent {
         super(source);
         this.userCreateDTO = userCreateDTO;
     }
-
-    public UserCreateDTO getUserCreateDTO(){
-        return userCreateDTO;
-    }
-
-
 }
