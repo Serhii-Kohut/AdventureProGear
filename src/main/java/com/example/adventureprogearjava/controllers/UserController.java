@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
+import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.entity.User;
@@ -20,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -76,7 +78,31 @@ public class UserController {
         return crudUserService.getById(user.getId());
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @Operation(
+            summary = "Get user by id",
+            description = "Retrieves User by id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation",
+            content = @Content(schema = @Schema(implementation = UserDTO.class))
+    )
+    @ApiResponse(
+            responseCode = "404",
+            description = "Not Found",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    public UserDTO getUserById(@Parameter(
+            description = "ID of the user",
+            required = true
+    ) @PathVariable Long id) {
+        return crudUserService.getById(id);
+    }
+
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(
             responseCode = "201",
@@ -92,13 +118,13 @@ public class UserController {
             summary = "Creation of new user",
             description = "Creation of new user"
     )
-    public UserDTO createUser(@Valid
-                              @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                                      description = "User data, required for creation",
-                                      required = true,
-                                      content = @Content(schema = @Schema(implementation = UserDTO.class))
-                              ) @RequestBody UserDTO userDTO) {
-        return crudUserService.create(userDTO);
+    public UserCreateDTO createUser(@Valid
+                                    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                                            description = "User data, required for creation",
+                                            required = true,
+                                            content = @Content(schema = @Schema(implementation = UserCreateDTO.class))
+                                    ) @RequestBody UserCreateDTO userCreateDTO) {
+        return crudUserService.create(userCreateDTO);
     }
 
     @PutMapping("/me/update")

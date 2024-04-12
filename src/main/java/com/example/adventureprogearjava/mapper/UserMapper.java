@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.mapper;
 
+import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.registrationDto.UserResponseDto;
 import com.example.adventureprogearjava.entity.User;
@@ -12,7 +13,11 @@ public interface UserMapper {
 
     UserDTO toDTO(User user);
 
+    UserCreateDTO toDTOForCreate(User user);
+
     User toEntity(UserDTO dto);
+
+    User toEntityFromCreateDto(UserCreateDTO dto);
 
     User userResponseDtoToUser(UserResponseDto dto);
 
