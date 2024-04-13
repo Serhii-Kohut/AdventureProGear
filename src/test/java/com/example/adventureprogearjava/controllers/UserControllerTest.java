@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.config.JwtProperties;
 import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
+import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.entity.enums.Role;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -35,7 +37,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @SpringBootTest
@@ -131,54 +134,111 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name", is(userDTO.getName())));
     }
 
-
     @Test
     public void createUserTest() throws Exception {
-        when(crudUserService.create(any(UserDTO.class))).thenReturn(userDTO);
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setName(userDTO.getName());
+        userCreateDTO.setSurname(userDTO.getSurname());
+        userCreateDTO.setEmail(userDTO.getEmail());
+        userCreateDTO.setPassword(userDTO.getPassword());
+        userCreateDTO.setDate(userDTO.getDate());
+        userCreateDTO.setRole(userDTO.getRole());
+
+        when(crudUserService.create(any(UserCreateDTO.class))).thenReturn(userCreateDTO);
+
+        String jwt = createMockJWT("ADMIN");
 
         mockMvc.perform(post("/api/users")
+                        .header("Authorization", "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTO)))
+                        .content(objectMapper.writeValueAsString(userCreateDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is(userDTO.getName())));
+                .andExpect(jsonPath("$.name", is(userDTO.getName())))
+                .andExpect(jsonPath("$.surname", is(userDTO.getSurname())))
+                .andExpect(jsonPath("$.email", is(userDTO.getEmail())));
     }
 
     @Test
     public void createUserWithInvalidDataTest() throws Exception {
         UserDTO userDTOBad = new UserDTO("John", "Doe", "invalid email", "Password invalid",
                 "1234567890", true, LocalDate.now(), Role.USER);
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setName(userDTOBad.getName());
+        userCreateDTO.setSurname(userDTOBad.getSurname());
+        userCreateDTO.setEmail(userDTOBad.getEmail());
+        userCreateDTO.setPassword(userDTOBad.getPassword());
+        userCreateDTO.setDate(userDTOBad.getDate());
+        userCreateDTO.setRole(userDTOBad.getRole());
+
+        when(crudUserService.create(any(UserCreateDTO.class))).thenReturn(userCreateDTO);
+
+        String jwt = createMockJWT("ADMIN");
 
         mockMvc.perform(post("/api/users")
+                        .header("Authorization", "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTOBad)))
+                        .content(objectMapper.writeValueAsString(userCreateDTO)))
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void createUserTestWithInvalidRole() throws Exception {
+        UserCreateDTO userCreateDTO = new UserCreateDTO();
+
+        userCreateDTO.setName(userDTO.getName());
+        userCreateDTO.setSurname(userDTO.getSurname());
+        userCreateDTO.setEmail(userDTO.getEmail());
+        userCreateDTO.setPassword(userDTO.getPassword());
+
+        when(crudUserService.create(any(UserCreateDTO.class))).thenReturn(userCreateDTO);
+
+        String jwt = createMockJWT("USER");
+
+        mockMvc.perform(post("/api/users")
+                        .header("Authorization", "Bearer " + jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userCreateDTO)))
+                .andExpect(status().isForbidden());
+    }
 
     @Test
     public void updateUserTest() throws Exception {
-        Long userId = 1L;
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setName(userDTO.getName());
+        userUpdateDTO.setSurname(userDTO.getSurname());
+        userUpdateDTO.setEmail(userDTO.getEmail());
 
-        doNothing().when(crudUserService).update(any(UserUpdateDTO.class), eq(userId));
+        doNothing().when(crudUserService).update(any(UserUpdateDTO.class), anyLong());
 
-        mockMvc.perform(put("/api/users/" + userId)
+        String jwt = createMockJWT("USER");
+
+        mockMvc.perform(put("/api/users/me/update")
+                        .header("Authorization", "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTO)))
+                        .content(objectMapper.writeValueAsString(userUpdateDTO)))
                 .andExpect(status().isOk());
     }
 
+
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     public void updateUserWithInvalidIdTest() throws Exception {
-        Long invalidUserId = -1L;
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setName(userDTO.getName());
+        userUpdateDTO.setSurname(userDTO.getSurname());
+        userUpdateDTO.setEmail(userDTO.getEmail());
 
-        doThrow(new ResourceNotFoundException("User not found with id " + invalidUserId))
-                .when(crudUserService).update(any(UserUpdateDTO.class), eq(invalidUserId));
+        doThrow(new ResourceNotFoundException("User not found")).when(crudUserService).update(any(UserUpdateDTO.class), anyLong());
 
-        mockMvc.perform(put("/api/users/" + invalidUserId)
+        String jwt = createMockJWT("USER");
+
+        mockMvc.perform(put("/api/users/me/update")
+                        .header("Authorization", "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTO)))
+                        .content(objectMapper.writeValueAsString(userUpdateDTO)))
                 .andExpect(status().isNotFound());
     }
+
 
     @Test
     public void testUpdatePassword() throws Exception {
@@ -188,7 +248,10 @@ public class UserControllerTest {
 
         doNothing().when(crudUserService).updatePassword(any(PasswordUpdateDTO.class), eq(userId));
 
-        mockMvc.perform(put("/api/users/" + userId + "/password")
+        String jwt = createMockJWT("USER");
+
+        mockMvc.perform(put("/api/users/me/update-password")
+                        .header("Authorization", "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(passwordUpdateDTO)))
                 .andExpect(status().isOk());
@@ -198,15 +261,19 @@ public class UserControllerTest {
 
 
     @Test
-    public void deleteUserTest() throws Exception {
-        Long nonExistentUserId = -1L;
+    public void testDeleteUser() throws Exception {
+        Long userId = 1L; // Визначте ID користувача для тестування
 
-        doThrow(new ResourceNotFoundException("User not found with id " + nonExistentUserId))
-                .when(crudUserService).delete(nonExistentUserId);
+        doNothing().when(crudUserService).delete(userId);
 
-        mockMvc.perform(delete("/api/users/" + nonExistentUserId)
+        String jwt = createMockJWT("USER"); // Переконайтеся, що цей метод створює дійсний JWT з відповідним userId
+
+        mockMvc.perform(delete("/api/users")
+                        .header("Authorization", "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNoContent());
+
+        verify(crudUserService, times(1)).delete(userId);
     }
 
 }
