@@ -14,6 +14,7 @@ public interface OrderMapper {
     String api = "https://prime-tax-production.up.railway.app/api/orders/";
 
     @Mapping(target = "selfLink", source = "order.id", qualifiedByName = "idToLink")
+    @Mapping(target = "userId", source = "order.user.id")
     OrderDTO toDTO(Order order);
 
     @Mapping(target = "status", source = "orderDTO.status")
