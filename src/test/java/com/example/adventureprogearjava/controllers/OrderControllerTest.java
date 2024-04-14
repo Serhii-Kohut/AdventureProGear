@@ -59,9 +59,6 @@ public class OrderControllerTest {
     CRUDOrderServiceImpl crudOrderService;
 
     @Mock
-    UserRepository userRepository;
-
-    @Mock
     OrderRepository orderRepository;
 
     @Mock
