@@ -8,7 +8,6 @@ import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
-import com.example.adventureprogearjava.repositories.UserRepository;
 import com.example.adventureprogearjava.services.impl.CRUDOrderServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
