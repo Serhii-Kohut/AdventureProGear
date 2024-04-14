@@ -262,11 +262,11 @@ public class UserControllerTest {
 
     @Test
     public void testDeleteUser() throws Exception {
-        Long userId = 1L; // Визначте ID користувача для тестування
+        Long userId = 1L;
 
         doNothing().when(crudUserService).delete(userId);
 
-        String jwt = createMockJWT("USER"); // Переконайтеся, що цей метод створює дійсний JWT з відповідним userId
+        String jwt = createMockJWT("USER");
 
         mockMvc.perform(delete("/api/users")
                         .header("Authorization", "Bearer " + jwt)
