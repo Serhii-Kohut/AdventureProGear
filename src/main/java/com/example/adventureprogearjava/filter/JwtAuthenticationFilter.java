@@ -29,8 +29,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return endpointMaster.isEndpointMatchedWithPattern(request, "/api/public/**");
+        return endpointMaster.isEndpointMatchedWithPattern(request, "/api/public/**")
+                || endpointMaster.isEndpointMatchedWithPattern(request, "/api/v1/products/**");
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

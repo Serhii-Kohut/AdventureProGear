@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services;
 
 import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
+import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.dto.registrationDto.UserRequestDto;
@@ -15,7 +16,7 @@ public interface UserService {
 
     UserDTO getById(Long id);
 
-    UserDTO create(UserDTO userDTO);
+    UserCreateDTO create(UserCreateDTO userCreateDTO);
 
     UserResponseDto saveRegisteredUser(UserRequestDto registrationDto);
 

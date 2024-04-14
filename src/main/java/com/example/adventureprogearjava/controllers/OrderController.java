@@ -1,8 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
-import com.example.adventureprogearjava.dto.ContentDTO;
 import com.example.adventureprogearjava.dto.OrderDTO;
-import com.example.adventureprogearjava.dto.ProductAttributeDTO;
+import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.services.impl.CRUDOrderServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class OrderController {
     CRUDOrderServiceImpl orderService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(
             summary = "Get all orders",
             description = "Retrieves all available orders. Orders contains user information" +
@@ -49,6 +51,20 @@ public class OrderController {
     )
     public List<OrderDTO> getAllOrders() {
         return orderService.getAll();
+    }
+
+    @GetMapping("/me")
+    @Operation(
+            summary = "Get all orders by the logged in user",
+            description = "Retrieves all orders by the logged in user"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation",
+            content = @Content(schema = @Schema(implementation = OrderDTO.class))
+    )
+    public List<OrderDTO> getAllOrdersByMe(@AuthenticationPrincipal User user) {
+        return orderService.getAllOrdersByMe(user);
     }
 
     @GetMapping("/{id}")
@@ -69,8 +85,8 @@ public class OrderController {
     public OrderDTO getOrderById(@Parameter(
             description = "ID of the order",
             required = true
-    ) @PathVariable Long id) {
-        return orderService.getById(id);
+    ) @PathVariable Long id, @AuthenticationPrincipal User user) {
+        return orderService.getOrderById(id, user.getId());
     }
 
     @PostMapping
@@ -94,8 +110,8 @@ public class OrderController {
             required = true,
             content = @Content(schema = @Schema(implementation = OrderDTO.class))
     )
-                                @Valid @RequestBody OrderDTO orderDTO) {
-        return orderService.create(orderDTO);
+                                @Valid @RequestBody OrderDTO orderDTO, @AuthenticationPrincipal User user) {
+        return orderService.createOrder(orderDTO, user);
     }
 
     @PutMapping("/{id}")
@@ -126,8 +142,8 @@ public class OrderController {
                             @Parameter(
                                     description = "ID of the order",
                                     required = true
-                            ) @PathVariable Long id) {
-        orderService.update(orderDTO, id);
+                            ) @PathVariable Long id, @AuthenticationPrincipal User user) {
+        orderService.updateOrder(orderDTO, id, user);
     }
 
     @DeleteMapping("/{id}")
@@ -148,8 +164,8 @@ public class OrderController {
     public void deleteOrder(@Parameter(
             description = "ID of the order",
             required = true
-    ) @PathVariable Long id) {
-        orderService.delete(id);
+    ) @PathVariable Long id, @AuthenticationPrincipal User user) {
+        orderService.deleteOrder(id, user);
     }
 
 }

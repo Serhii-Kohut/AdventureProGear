@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/public/**")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("api/v1/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll())
 
