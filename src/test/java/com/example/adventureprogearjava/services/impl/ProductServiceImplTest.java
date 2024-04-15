@@ -21,7 +21,7 @@ class ProductServiceImplTest {
         String productName = "T-Shirt";
         List<ProductDTO> dtos = productService.getProductsByName(productName);
         assert (!dtos.isEmpty());
-        dtos = dtos.stream().filter(productDTO -> !productDTO.getProductName()
+        dtos = dtos.stream().filter(productDTO -> !productDTO.getProductNameEn()
                 .equals(productName)).toList();
         assert (dtos.isEmpty());
     }
@@ -42,7 +42,7 @@ class ProductServiceImplTest {
         List<ProductDTO> dtos = productService.getProductsByCategory(category);
         assert (!dtos.isEmpty());
         dtos = dtos.stream().filter(productDTO -> !productDTO.getCategory()
-                .getCategoryName().equals(category)).toList();
+                .getCategoryNameEn().equals(category)).toList();
         assert (dtos.isEmpty());
     }
 
@@ -52,7 +52,7 @@ class ProductServiceImplTest {
         String gender = "FEMALE";
         List<ProductDTO> dtos = productService.getProductsByCategoryAndGender(category, gender);
         assert (!dtos.isEmpty());
-        dtos = dtos.stream().filter(productDTO -> !productDTO.getCategory().getCategoryName()
+        dtos = dtos.stream().filter(productDTO -> !productDTO.getCategory().getCategoryNameEn()
                         .equals(category))
                 .filter(productDTO -> !productDTO.getGender()
                         .equals(Gender.valueOf(gender)))
@@ -99,7 +99,7 @@ class ProductServiceImplTest {
                 .filter(productDTO -> !(productDTO.getBasePrice() >= priceFrom &&
                         productDTO.getBasePrice() <= priceTo))
                 .filter(productDTO -> !productDTO.getCategory()
-                        .getCategoryName().equals(category))
+                        .getCategoryNameEn().equals(category))
                 .toList();
         assert (dtos.isEmpty());
     }
@@ -116,7 +116,7 @@ class ProductServiceImplTest {
                 .filter(productDTO -> !(productDTO.getBasePrice() >= priceFrom &&
                         productDTO.getBasePrice() <= priceTo))
                 .filter(productDTO -> !productDTO.getCategory()
-                        .getCategoryName().equals(category))
+                        .getCategoryNameEn().equals(category))
                 .filter(productDTO -> !productDTO.getGender()
                         .equals(Gender.valueOf(gender)))
                 .toList();

@@ -50,10 +50,12 @@ class ProductControllerTest {
     public void setUp() {
         objectMapper = new ObjectMapper();
         productDTO = ProductDTO.builder()
-                .productName("name")
-                .description("description")
+                .productNameEn("name")
+                .descriptionEn("description")
+                .productNameUa("name")
+                .descriptionUa("description")
                 .basePrice(100L)
-                .category(Category.builder().categoryName("BAGS").build())
+                .category(Category.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
@@ -66,7 +68,7 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/v1/products"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(productDTO
-                        .getProductName())));
+                        .getProductNameEn())));
     }
 
     @Test
@@ -77,7 +79,7 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/v1/products?category=lol"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(productDTO
-                        .getProductName())));
+                        .getProductNameEn())));
     }
 
     @Test
@@ -89,7 +91,7 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/v1/products/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(productDTO
-                        .getProductName())));
+                        .getProductNameEn())));
         mockMvc.perform(get("/api/v1/products/-1"))
                 .andExpect(status().isNotFound());
     }
@@ -102,16 +104,18 @@ class ProductControllerTest {
         mockMvc.perform(get("/api/v1/products/name/name"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(productDTO
-                        .getProductName())));
+                        .getProductNameEn())));
     }
 
     @Test
     void createProduct() throws Exception {
         ProductDTO newProduct = ProductDTO.builder()
-                .productName("name1")
-                .description("description1")
-                .basePrice(200L)
-                .category(Category.builder().categoryName("BAGS").build())
+                .productNameEn("name1")
+                .descriptionEn("description1")
+                .productNameUa("name1")
+                .descriptionUa("description1")
+                .basePrice(100L)
+                .category(Category.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         String newContentJson = objectMapper.writeValueAsString(newProduct);
@@ -120,7 +124,8 @@ class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newContentJson))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString(newProduct.getProductName())));
+                .andExpect(content().string(containsString(newProduct
+                        .getProductNameEn())));
     }
 
     @Test
@@ -137,10 +142,12 @@ class ProductControllerTest {
     @Test
     void updateProduct() throws Exception {
         ProductDTO newProduct = ProductDTO.builder()
-                .productName("name1")
-                .description("description1")
-                .basePrice(200L)
-                .category(Category.builder().categoryName("BAGS").build())
+                .productNameEn("name1")
+                .descriptionEn("description1")
+                .productNameUa("name1")
+                .descriptionUa("description1")
+                .basePrice(100L)
+                .category(Category.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         String newContentJson = objectMapper.writeValueAsString(newProduct);

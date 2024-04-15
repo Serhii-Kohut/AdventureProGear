@@ -65,8 +65,10 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
             if (productDTO.getGender() != null) {
                 productRepo.updateGender(id, productDTO.getGender().toString());
             }
-            productRepo.update(id, productDTO.getProductName(),
-                    productDTO.getDescription(),
+            productRepo.update(id, productDTO.getProductNameEn(),
+                    productDTO.getProductNameUa(),
+                    productDTO.getDescriptionEn(),
+                    productDTO.getDescriptionUa(),
                     productDTO.getBasePrice(),
                     productDTO.getCategory().getId());
         }
@@ -83,8 +85,10 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
     }
 
     private void insertProduct(ProductDTO productDTO) {
-        productRepo.insertProduct(productDTO.getProductName(),
-                productDTO.getDescription(),
+        productRepo.insertProduct(productDTO.getProductNameEn(),
+                productDTO.getProductNameUa(),
+                productDTO.getDescriptionEn(),
+                productDTO.getDescriptionUa(),
                 productDTO.getBasePrice(),
                 productDTO.getCategory().toString(),
                 productDTO.getGender().toString());
