@@ -33,7 +33,7 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
         log.info("Getting all categories");
         List<CategoryDTO> categoryDTOS = categoryRepository.findAll()
                 .stream()
-                .filter(category -> category.getCategory() != null)
+                .filter(category -> category.getCategory() == null)
                 .map(categoryMapper::toDTO)
                 .toList();
         categoryDTOS.forEach(categoryDTO -> {

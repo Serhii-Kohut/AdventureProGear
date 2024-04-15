@@ -1,11 +1,13 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
+import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.dto.registrationDto.UserRequestDto;
 import com.example.adventureprogearjava.dto.registrationDto.UserResponseDto;
 import com.example.adventureprogearjava.entity.User;
+import com.example.adventureprogearjava.event.UserCreatedEvent;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.exceptions.UserAlreadyExistsException;
@@ -16,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,7 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserMapper userMapper = UserMapper.MAPPER;
     PasswordEncoder passwordEncoder;
+    ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public List<UserDTO> getAll() {
@@ -75,29 +79,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO create(UserDTO userDTO) {
+    public UserCreateDTO create(UserCreateDTO userCreateDTO) {
         log.info("Creating new user.");
 
-        if (userDTO == null) {
+        if (userCreateDTO == null) {
             throw new IllegalArgumentException("UserDTO cannot be null");
         }
 
-        if (userDTO.getEmail() != null && userRepository.existsByEmail(userDTO.getEmail())) {
-            log.warn("User with email {} already exists", userDTO.getEmail());
+        if (userCreateDTO.getEmail() != null && userRepository.existsByEmail(userCreateDTO.getEmail())) {
+            log.warn("User with email {} already exists", userCreateDTO.getEmail());
 
-            throw new UserAlreadyExistsException("User with email " + userDTO.getEmail() + " already exists");
+            throw new UserAlreadyExistsException("User with email " + userCreateDTO.getEmail() + " already exists");
         }
 
-        if (userDTO.getPhoneNumber() != null && userRepository.existsByPhoneNumber(userDTO.getPhoneNumber())) {
-            log.warn("User with phone number {} already exists", userDTO.getPhoneNumber());
+/*        if (userCreateDTO.getPhoneNumber() != null && userRepository.existsByPhoneNumber(userCreateDTO.getPhoneNumber())) {
+            log.warn("User with phone number {} already exists", userCreateDTO.getPhoneNumber());
 
-            throw new UserAlreadyExistsException("User with phone number " + userDTO.getPhoneNumber() + " already exists");
-        }
+            throw new UserAlreadyExistsException("User with phone number " + userCreateDTO.getPhoneNumber() + " already exists");
+        }*/
 
-        User user = userMapper.toEntity(userDTO);
+        User user = userMapper.toEntityFromCreateDto(userCreateDTO);
+        user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
         User savedUser = userRepository.save(user);
 
-        return userMapper.toDTO(savedUser);
+        applicationEventPublisher.publishEvent(new UserCreatedEvent(this, userMapper.toDTOForCreate(savedUser)));
+
+        return userMapper.toDTOForCreate(savedUser);
     }
 
     @Override

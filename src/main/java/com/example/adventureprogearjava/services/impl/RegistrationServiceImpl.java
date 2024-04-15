@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.config.AuthMessages;
 import com.example.adventureprogearjava.config.OnRegistrationCompleteEvent;
+import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.registrationDto.RegistrationDto;
 import com.example.adventureprogearjava.dto.registrationDto.UserEmailDto;
 import com.example.adventureprogearjava.dto.registrationDto.UserRequestDto;
@@ -10,6 +11,7 @@ import com.example.adventureprogearjava.dto.registrationDto.VerificationTokenDto
 import com.example.adventureprogearjava.dto.registrationDto.VerificationTokenMessageDto;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.Role;
+import com.example.adventureprogearjava.event.UserCreatedEvent;
 import com.example.adventureprogearjava.repositories.UserRepository;
 import com.example.adventureprogearjava.services.RegistrationService;
 import com.example.adventureprogearjava.services.VerificationTokenService;
@@ -18,9 +20,12 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -111,5 +116,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         return new VerificationTokenMessageDto(true, authMessages.getConfirmed(), HttpStatus.OK);
 
     }
+
+    @EventListener
+    public void handleUserCreatedEvent(UserCreatedEvent event) {
+        UserCreateDTO userDTO = event.getUserCreateDTO();
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        resendVerificationEmail(new UserEmailDto(userDTO.getEmail()), request);
+    }
+
 
 }
