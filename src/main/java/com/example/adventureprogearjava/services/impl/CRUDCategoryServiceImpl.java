@@ -69,7 +69,7 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
     @Transactional
     public CategoryDTO create(CategoryDTO categoryDTO) {
         log.info("Creating new category.");
-        categoryRepository.insertCategory(categoryDTO.getCategoryName());
+        categoryRepository.insertCategory(categoryDTO.getCategoryNameEn(), categoryDTO.getCategoryNameUa());
         return categoryDTO;
     }
 
@@ -81,7 +81,7 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
             log.warn("Product not found!");
             throw new ResourceNotFoundException("Resource is not available!");
         }
-        categoryRepository.updateCategory(categoryDTO.getCategoryName(), id);
+        categoryRepository.updateCategory(categoryDTO.getCategoryNameEn(), categoryDTO.getCategoryNameUa(), id);
     }
 
     @Override

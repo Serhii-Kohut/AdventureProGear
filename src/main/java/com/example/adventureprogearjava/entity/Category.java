@@ -13,8 +13,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity {
-    @Column(name = "category_name")
-    String categoryName;
+    @Column(name = "category_name_en")
+    String categoryNameEn;
+    @Column(name = "category_name_ua")
+    String categoryNameUa;
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;

@@ -16,7 +16,9 @@ public class CategoryDTO {
     @JsonIgnore
     Long id;
     @NotBlank
-    String categoryName;
+    String categoryNameUa;
+    @NotBlank
+    String categoryNameEn;
     List<CategoryDTO> subcategories;
     String selfLink;
 

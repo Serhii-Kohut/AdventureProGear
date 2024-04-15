@@ -16,11 +16,17 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product extends BaseEntity {
 
-    @Column(name = "product_name", nullable = false)
-    String productName;
+    @Column(name = "product_name_ua", nullable = false)
+    String productNameUa;
 
-    @Column
-    String description;
+    @Column(name = "product_name_en", nullable = false)
+    String productNameEn;
+
+    @Column(name = "descritpion_en", nullable = false)
+    String descriptionEn;
+
+    @Column(name = "descritpion_ua", nullable = false)
+    String descriptionUa;
 
     @Column(name = "base_price", nullable = false)
     Long basePrice;

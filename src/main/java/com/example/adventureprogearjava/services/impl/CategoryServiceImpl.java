@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO getCategoryByName(String name) {
         log.info("Getting category by name");
-        Optional<Category> category = categoryRepository.getCategoryByCategoryName(name);
+        Optional<Category> category = categoryRepository.getCategoryByCategoryNameEn(name);
         if (category.isEmpty()) {
             log.warn("Category not found!");
             throw new ResourceNotFoundException("Resource is not available!");
@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
             log.warn("Category not found!");
             throw new ResourceNotFoundException("Cannot found category with id: " + id);
         } else {
-            categoryRepository.insertSubCategory(categoryDTO.getCategoryName(), id);
+            categoryRepository.insertSubCategory(categoryDTO.getCategoryNameEn(), categoryDTO.getCategoryNameUa(), id);
         }
         return categoryDTO;
     }

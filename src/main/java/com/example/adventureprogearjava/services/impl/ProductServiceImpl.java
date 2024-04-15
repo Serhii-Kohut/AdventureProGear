@@ -82,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Getting products by price and category");
         return productRepo.findByBasePriceBetween(priceFrom, priceTo)
                 .stream()
-                .filter(product -> product.getCategory().getCategoryName().equals(category))
+                .filter(product -> product.getCategory().getCategoryNameEn().equals(category))
                 .map(mapper::toDto)
                 .toList();
     }
@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Getting products by price and category and gender");
         return productRepo.findByBasePriceBetween(priceFrom, priceTo)
                 .stream()
-                .filter(product -> product.getCategory().getCategoryName().equals(category))
+                .filter(product -> product.getCategory().getCategoryNameEn().equals(category))
                 .filter(product -> product.getGender().equals(Gender.valueOf(gender)))
                 .map(mapper::toDto)
                 .toList();

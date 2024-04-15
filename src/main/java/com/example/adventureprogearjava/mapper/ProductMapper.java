@@ -10,8 +10,6 @@ import org.mapstruct.Named;
 public interface ProductMapper {
     String api = "https://prime-tax-production.up.railway.app/api/v1/products/";
 
-    @Mapping(target = "productName", source = "product.productName")
-    @Mapping(target = "description", source = "product.description")
     @Mapping(target = "basePrice", source = "product.basePrice")
     @Mapping(target = "gender", source = "product.gender")
     @Mapping(target = "category", source = "product.category")
@@ -20,8 +18,6 @@ public interface ProductMapper {
     @Mapping(target = "selfLink", source = "product.id", qualifiedByName = "idToLink")
     ProductDTO toDto(Product product);
 
-    @Mapping(target = "productName", source = "dto.productName")
-    @Mapping(target = "description", source = "dto.description")
     @Mapping(target = "basePrice", source = "dto.basePrice")
     @Mapping(target = "gender", source = "dto.gender")
     @Mapping(target = "category", source = "dto.category")
