@@ -22,10 +22,10 @@ public class Product extends BaseEntity {
     @Column(name = "product_name_en", nullable = false)
     String productNameEn;
 
-    @Column(name = "descritpion_en", nullable = false)
+    @Column(name = "description_en", nullable = false)
     String descriptionEn;
 
-    @Column(name = "descritpion_ua", nullable = false)
+    @Column(name = "description_ua", nullable = false)
     String descriptionUa;
 
     @Column(name = "base_price", nullable = false)
