@@ -9,7 +9,8 @@ CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
 CREATE TABLE IF NOT EXISTS public.categories
 (
     id            bigint primary key,
-    category_name varchar not null unique,
+    category_name_ua varchar not null unique,
+    category_name_en varchar not null unique,
     category_id   integer
         constraint subcategory_fk
             references public.categories
@@ -29,8 +30,10 @@ CREATE TABLE IF NOT EXISTS public.users
 CREATE TABLE IF NOT EXISTS public.products
 (
     id           bigint primary key,
-    product_name varchar  not null,
-    description  text,
+    product_name_en varchar  not null,
+    product_name_ua varchar  not null,
+    description_en  text,
+    description_ua  text,
     base_price   integer  not null,
     gender       gender,
     category   integer
