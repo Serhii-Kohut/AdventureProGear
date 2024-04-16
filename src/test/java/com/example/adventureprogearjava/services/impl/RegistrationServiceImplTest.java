@@ -59,7 +59,6 @@ public class RegistrationServiceImplTest {
     @Test
     @Transactional
     public void resendVerificationEmailTest() {
-        // Спочатку створюємо користувача
         RegistrationDto registrationDto = new RegistrationDto();
         registrationDto.setEmail("test@test.com");
         registrationDto.setName("Test");
@@ -78,7 +77,7 @@ public class RegistrationServiceImplTest {
     @Test
     @Transactional
     public void sendVerificationEmailTest() {
-        // Спочатку створюємо користувача
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         RegistrationDto registrationDto = new RegistrationDto();
         registrationDto.setEmail("test@test.com");
         registrationDto.setName("Test");
@@ -116,7 +115,6 @@ public class RegistrationServiceImplTest {
     @Test
     @Transactional
     public void confirmUserRegistrationTest() {
-        // Спочатку створюємо користувача
         RegistrationDto registrationDto = new RegistrationDto();
         registrationDto.setEmail("test@test.com");
         registrationDto.setName("Test");

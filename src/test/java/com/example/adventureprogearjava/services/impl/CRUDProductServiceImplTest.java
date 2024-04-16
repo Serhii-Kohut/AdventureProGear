@@ -29,7 +29,7 @@ class CRUDProductServiceImplTest {
     @Test
     void getById() {
         ProductDTO dtoById = productService.getById(1L);
-        assert (dtoById.getProductName().equals("T-Shirt"));
+        assert (dtoById.getProductNameEn().equals("T-Shirt"));
         Exception exception = assertThrows(RuntimeException.class,
                 () -> productService.getById(7L));
         assert (exception.getMessage().equals("Resource is not available!"));
@@ -41,14 +41,16 @@ class CRUDProductServiceImplTest {
     void create() {
         ProductDTO productDTO = ProductDTO
                 .builder()
-                .productName("name")
-                .description("descr")
+                .productNameEn("name")
+                .descriptionEn("descr")
+                .productNameUa("name")
+                .descriptionUa("descr")
                 .basePrice(100L)
                 .gender(Gender.MALE)
-                .category(Category.builder().categoryName("PANTS").build())
+                .category(Category.builder().categoryNameEn("PANTS").categoryNameUa("PANTS").build())
                 .build();
         ProductDTO created = productService.create(productDTO);
-        assert (created.getProductName().equals(productDTO.getProductName()));
+        assert (created.getProductNameEn().equals(productDTO.getProductNameEn()));
         assert(productService.getAll().size()==6);
     }
 
@@ -58,18 +60,21 @@ class CRUDProductServiceImplTest {
     @Sql(value = {"classpath:delete_product_after.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void update() {
-        assert(productService.getById(6L).getProductName()
+        assert(productService.getById(6L).getProductNameEn()
                 .equals("Test"));
         ProductDTO productDTO = ProductDTO
                 .builder()
-                .productName("updatedName")
-                .description("updatedDescr")
-                .basePrice(1L)
-                .category(Category.builder().categoryName("PANTS").build())
+                .productNameEn("updatedName")
+                .descriptionEn("updatedDescr")
+                .productNameUa("updatedName")
+                .descriptionUa("updatedDescr")
+                .basePrice(100L)
+                .gender(Gender.MALE)
+                .category(Category.builder().categoryNameEn("PANTS").categoryNameUa("PANTS").build())
                 .build();
         productService.update(productDTO, 6L);
-        assert (productService.getById(6L).getProductName()
-                .equals(productDTO.getProductName()));
+        assert (productService.getById(6L).getProductNameEn()
+                .equals(productDTO.getProductNameEn()));
     }
 
 

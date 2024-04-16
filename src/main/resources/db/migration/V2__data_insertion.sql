@@ -41,36 +41,36 @@ values (nextval('user_seq'), 'Danylo', 'Berkovskyi', 'serhio3347@gmail.com', '+3
 insert into users (id, name, surname, email, phone_number, password, role)
 values (nextval('user_seq'), 'Andrii', 'Len', 'len_andrey@gmail.com', '+380972555455', 'Password2#', 'USER');
 
-insert into categories(id, category_name)
-values (nextval('categories_seq'), 'SHOES');
-insert into categories(id, category_name)
-values (nextval('categories_seq'), 'T-SHIRT');
-insert into categories(id, category_name)
-values (nextval('categories_seq'), 'PANTS');
-insert into categories(id, category_name)
-values (nextval('categories_seq'), 'HEADWEARS');
-insert into categories(id, category_name)
-values (nextval('categories_seq'), 'HIKING_EQUIPMENT');
-insert into categories(id, category_name, category_id)
-values (nextval('categories_seq'), 'BAGS', 5);
+insert into categories(id, category_name_en, category_name_ua)
+values (nextval('categories_seq'), 'Shoes', 'Взуття');
+insert into categories(id, category_name_en, category_name_ua)
+values (nextval('categories_seq'), 'T-shirt', 'Футболки');
+insert into categories(id, category_name_en, category_name_ua)
+values (nextval('categories_seq'), 'Pants', 'Штани');
+insert into categories(id, category_name_en, category_name_ua)
+values (nextval('categories_seq'), 'Headwears', 'Головні убори');
+insert into categories(id, category_name_en, category_name_ua)
+values (nextval('categories_seq'), 'Hiking_equipment', 'Похідне обладнання');
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'BAGS', 'Рюкзаки', 5);
 
 
 
 
-insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 200, 'MALE', 2);
+insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
+values (nextval('product_seq'), 'T-Shirt', 'Футболка', 'Common shirt', 'Звичайна футболка', 200, 'MALE', 2);
 
-insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Common shirt', 175, 'FEMALE', 2);
+insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
+values (nextval('product_seq'), 'T-Shirt', 'Футболка','Common shirt', 'Звичайна футболка', 175, 'FEMALE', 2);
 
-insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'FEMALE', 1);
+insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Кросівки для походів', 'Best choice for your feet', 'Найкращий вибір для вашої стопи', 350, 'FEMALE', 1);
 
-insert into products (id, product_name, description, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Best choice for your feet', 350, 'MALE', 1);
+insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Кросівки для походів', 'Best choice for your feet', 'Найкращий вибір для вашої стопи', 350, 'MALE', 1);
 
-insert into products (id, product_name, description, base_price, category)
-values (nextval('product_seq'), 'Butcher knife', 'Common knife', 120, 5);
+insert into products (id,  product_name_en, product_name_ua, description_en, description_ua , base_price, category)
+values (nextval('product_seq'), 'Butcher knife', 'Ніж', 'Common knife', 'Звичайний ніж', 120, 5);
 
 insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_1');
 insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_2');

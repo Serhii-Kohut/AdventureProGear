@@ -12,29 +12,32 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Modifying
-    @Query(value = "insert into categories (id, category_name)\n" +
-            "            values (nextval('categories_seq'), :name);",
+    @Query(value = "insert into categories (id, category_name_en,category_name_ua )\n" +
+            "            values (nextval('categories_seq'), :nameEn, :nameUa);",
             nativeQuery = true)
-    void insertCategory(@Param("name") String name);
+    void insertCategory(@Param("nameEn") String nameEn,
+                        @Param("nameUa") String nameUa);
 
     @Modifying
-    @Query(value = "UPDATE categories SET category_name = :name " +
+    @Query(value = "UPDATE categories SET category_name_en = :nameEn, category_name_ua = :nameUa " +
             "WHERE id = :id",
             nativeQuery = true)
-    void updateCategory(@Param("name") String name,
+    void updateCategory(@Param("nameEn") String nameEn,
+                        @Param("nameUa") String nameUa,
                         @Param("id") Long id);
 
     @Modifying
-    @Query(value = "insert into categories (id, category_name, category_id)\n" +
-            "            values (nextval('categories_seq'), :name, :category_id);",
+    @Query(value = "insert into categories (id, category_name_en, category_name_ua, category_id)\n" +
+            "            values (nextval('categories_seq'), :nameEn, :nameUa, :category_id);",
             nativeQuery = true)
-    void insertSubCategory(@Param("name") String name,
+    void insertSubCategory(@Param("nameEn") String nameEn,
+                           @Param("nameUa") String nameUa,
                            @Param("category_id") Long categoryId);
 
-    @Query(value = "select c.id,c.category_name, c.category_id from categories " +
+    @Query(value = "select c.id,c.category_name_en, c.category_name_ua, c.category_id from categories " +
             "join categories c on c.category_id = categories.id " +
             "where categories.id = :id", nativeQuery = true)
     List<Category> getAllSubCategories(@Param("id") Long id);
 
-    Optional<Category> getCategoryByCategoryName(String name);
+    Optional<Category> getCategoryByCategoryNameEn(String name);
 }

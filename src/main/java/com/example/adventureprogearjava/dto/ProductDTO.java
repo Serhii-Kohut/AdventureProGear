@@ -17,9 +17,14 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDTO {
     @NotBlank(message = "Name is mandatory")
-    String productName;
+    String productNameUa;
 
-    String description;
+    String productNameEn;
+
+    String descriptionUa;
+
+    String descriptionEn;
+
     @Min(value = 0, message = "Price cannot be negative or blank")
     Long basePrice;
 

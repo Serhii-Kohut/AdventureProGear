@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
+import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
 import com.example.adventureprogearjava.dto.registrationDto.UserRequestDto;
@@ -75,13 +76,13 @@ public class UserServiceImplTest {
 
     @Test
     public void testCreate() {
-        UserDTO userDTO = new UserDTO();
+        UserCreateDTO userDTO = new UserCreateDTO();
         userDTO.setName("Test User 2");
         userDTO.setSurname("Best");
         userDTO.setEmail("test1@example.com");
         userDTO.setPassword("password2");
 
-        UserDTO result = userService.create(userDTO);
+        UserCreateDTO result = userService.create(userDTO);
 
         assertNotNull(result);
         assertEquals(userDTO.getName(), result.getName());

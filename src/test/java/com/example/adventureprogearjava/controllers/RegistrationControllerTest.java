@@ -63,7 +63,6 @@ public class RegistrationControllerTest {
     @Test
     @Transactional
     public void resendVerificationEmailTest() throws Exception {
-        // Спочатку створюємо користувача
         RegistrationDto registrationDto = new RegistrationDto();
         registrationDto.setEmail("test@test.com");
         registrationDto.setName("Test");
