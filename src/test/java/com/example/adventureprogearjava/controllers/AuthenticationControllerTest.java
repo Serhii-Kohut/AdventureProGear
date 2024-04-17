@@ -63,8 +63,6 @@ public class AuthenticationControllerTest {
     @WithMockUser
     public void loginTest() throws Exception {
         AuthenticationRequestDto requestDto = new AuthenticationRequestDto();
-        requestDto.setEmail("testUser@example.com");
-        requestDto.setPassword("testPassword");
 
         AuthenticationResponseDto responseDto = new AuthenticationResponseDto();
         responseDto.setAccessToken("mockAccessToken");
