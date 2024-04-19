@@ -178,7 +178,7 @@ public class OrderControllerTest {
     @Test
     public void updateOrderTest() throws Exception {
         Long orderId = 1L;
-        Long userId = 1L; // Визначте ID користувача для тестування
+        Long userId = 1L;
 
         User user = new User();
         user.setId(userId);
