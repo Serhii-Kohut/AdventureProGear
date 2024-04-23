@@ -21,5 +21,4 @@ public class CategoryDTO {
     String categoryNameEn;
     List<CategoryDTO> subcategories;
     String selfLink;
-
 }

@@ -8,7 +8,7 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface SectionMapper {
-    String api = "https://prime-tax-production.up.railway.app/api/orders/";
+    String api = "https://prime-tax-production.up.railway.app/api/public/sections";
 
     @Mapping(target = "selfLink", source = "section.id", qualifiedByName = "idToLink")
     SectionDTO toDto(Section section);
