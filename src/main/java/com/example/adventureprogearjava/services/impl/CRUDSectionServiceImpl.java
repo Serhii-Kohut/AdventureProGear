@@ -8,6 +8,7 @@ import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.SectionMapper;
 import com.example.adventureprogearjava.repositories.SectionRepository;
 import com.example.adventureprogearjava.services.CRUDService;
+import com.example.adventureprogearjava.services.CategoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,8 @@ public class CRUDSectionServiceImpl implements CRUDService<SectionDTO> {
 
     SectionMapper sectionMapper;
 
+    CategoryService categoryService;
+
     @Override
     public List<SectionDTO> getAll() {
         log.info("Getting all sections with categories");
@@ -34,6 +37,7 @@ public class CRUDSectionServiceImpl implements CRUDService<SectionDTO> {
                 .findAll()
                 .stream()
                 .map(sectionMapper::toDto)
+                .map(this::joinAllCategories)
                 .toList();
     }
 
@@ -77,5 +81,10 @@ public class CRUDSectionServiceImpl implements CRUDService<SectionDTO> {
             throw new NoContentException("No content present!");
         }
         sectionRepository.deleteById(id);
+    }
+
+    private SectionDTO joinAllCategories(SectionDTO sectionDTO) {
+        sectionDTO.setCategories(categoryService.getAllSubCategories(sectionDTO.getId()));
+        return sectionDTO;
     }
 }
