@@ -46,6 +46,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<CategoryDTO> getAllCategoriesBySection(Long id) {
+        log.info("Getting all categories by Section");
+        List<CategoryDTO> categoryDTOS = categoryRepository.getAllCategoriesBySection(id)
+                .stream()
+                .filter(category -> category.getCategory() == null)
+                .map(mapper::toDTO)
+                .toList();
+        categoryDTOS.forEach(categoryDTO -> {
+            categoryDTO.setSubcategories(categoryRepository
+                    .getAllSubCategories(categoryDTO.getId())
+                    .stream()
+                    .map(mapper::toDTO)
+                    .map(this::addLinkForSubcategory)
+                    .toList());
+            categoryDTO.setSelfLink(api + categoryDTO.getId());
+        });
+        return categoryDTOS;
+    }
+
+    @Override
     public List<CategoryDTO> getAllSubCategories(Long id) {
         log.info("Getting all subcategories");
         List<CategoryDTO> subCategoryList = categoryRepository
@@ -71,6 +91,11 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             categoryRepository.insertSubCategory(categoryDTO.getCategoryNameEn(), categoryDTO.getCategoryNameUa(), id);
         }
+        return categoryDTO;
+    }
+
+    private CategoryDTO addLinkForSubcategory(CategoryDTO categoryDTO) {
+        categoryDTO.setSelfLink(api + categoryDTO.getId());
         return categoryDTO;
     }
 }

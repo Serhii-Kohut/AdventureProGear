@@ -7,6 +7,8 @@ import java.util.List;
 public interface CategoryService {
     CategoryDTO getCategoryByName(String name);
 
+    List<CategoryDTO> getAllCategoriesBySection(Long id);
+
     List<CategoryDTO> getAllSubCategories(Long id);
 
     CategoryDTO createSubcategory(Long id, CategoryDTO categoryDTO);
