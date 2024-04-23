@@ -20,4 +20,7 @@ public class Category extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;
+    @ManyToOne
+    @JoinColumn(name = "section_id", nullable = false)
+    Section section;
 }
