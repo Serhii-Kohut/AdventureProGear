@@ -10,8 +10,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.type.internal.ImmutableNamedBasicTypeImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .stream()
                 .map(mapper::toDTO)
                 .toList();
-        if(!categoryRepository.existsById(id)){
+        if (!categoryRepository.existsById(id)) {
             log.warn("Category not found!");
             throw new ResourceNotFoundException("Cannot found category with id: " + id);
         }
@@ -84,8 +84,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
+    public CategoryDTO createCategoryWithSection(Long sectionId, CategoryDTO categoryDTO) {
+        log.info("Creating Category with section");
+        categoryRepository.insertCategoryWithSection(categoryDTO.getCategoryNameEn(),
+                categoryDTO.getCategoryNameUa(), sectionId);
+        return categoryDTO;
+    }
+
+    @Override
+    @Transactional
     public CategoryDTO createSubcategory(Long id, CategoryDTO categoryDTO) {
-        if(!categoryRepository.existsById(id)){
+        if (!categoryRepository.existsById(id)) {
             log.warn("Category not found!");
             throw new ResourceNotFoundException("Cannot found category with id: " + id);
         } else {

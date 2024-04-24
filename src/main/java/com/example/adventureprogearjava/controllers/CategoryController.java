@@ -113,7 +113,7 @@ public class CategoryController {
         return categoryService.getAllSubCategories(id);
     }
 
-    @PostMapping("")
+    @PostMapping("/{id}")
     @ApiResponse(
             responseCode = "201",
             description = "Successful operation.",
@@ -134,11 +134,16 @@ public class CategoryController {
                     required = true,
                     content = @Content(schema = @Schema(implementation = CategoryDTO.class))
             )
+            @Parameter(
+                    description = "ID of the section",
+                    required = true
+            )
+            @PathVariable("id") Long id,
             @RequestBody CategoryDTO categoryDTO) {
-        return categoryCRUDService.create(categoryDTO);
+        return categoryService.createCategoryWithSection(id, categoryDTO);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/subcategory/{id}")
     @ApiResponse(
             responseCode = "201",
             description = "Successful operation.",

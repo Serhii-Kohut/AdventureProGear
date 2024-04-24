@@ -19,6 +19,14 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                         @Param("nameUa") String nameUa);
 
     @Modifying
+    @Query(value = "insert into categories (id, category_name_en,category_name_ua, section_id )\n" +
+            "            values (nextval('categories_seq'), :nameEn, :nameUa, :sectionId);",
+            nativeQuery = true)
+    void insertCategoryWithSection(@Param("nameEn") String nameEn,
+                                   @Param("nameUa") String nameUa,
+                                   @Param("sectionId") Long sectionId);
+
+    @Modifying
     @Query(value = "UPDATE categories SET category_name_en = :nameEn, category_name_ua = :nameUa " +
             "WHERE id = :id",
             nativeQuery = true)

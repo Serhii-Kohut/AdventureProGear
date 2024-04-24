@@ -23,4 +23,5 @@ public class SectionDTO {
     String sectionIcon;
     List<CategoryDTO> categories;
     String selfLink;
+    String categoryCreationLink;
 }

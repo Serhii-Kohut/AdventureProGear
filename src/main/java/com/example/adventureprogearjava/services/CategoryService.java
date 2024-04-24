@@ -11,5 +11,7 @@ public interface CategoryService {
 
     List<CategoryDTO> getAllSubCategories(Long id);
 
+    CategoryDTO createCategoryWithSection(Long sectionId, CategoryDTO categoryDTO);
+
     CategoryDTO createSubcategory(Long id, CategoryDTO categoryDTO);
 }
