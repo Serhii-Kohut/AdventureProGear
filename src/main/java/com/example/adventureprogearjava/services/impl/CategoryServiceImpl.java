@@ -10,8 +10,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.type.internal.ImmutableNamedBasicTypeImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryServiceImpl implements CategoryService {
-    private final static String api = "towering-house-production.up.railway.app/api/categories/";
+    private final static String api = "https://prime-tax-production.up.railway.app/api/public/categories/";
 
     CategoryRepository categoryRepository;
 
@@ -46,6 +46,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<CategoryDTO> getAllCategoriesBySection(Long id) {
+        log.info("Getting all categories by Section");
+        List<CategoryDTO> categoryDTOS = categoryRepository.getAllCategoriesBySection(id)
+                .stream()
+                .filter(category -> category.getCategory() == null)
+                .map(mapper::toDTO)
+                .toList();
+        categoryDTOS.forEach(categoryDTO -> {
+            categoryDTO.setSubcategories(categoryRepository
+                    .getAllSubCategories(categoryDTO.getId())
+                    .stream()
+                    .map(mapper::toDTO)
+                    .map(this::addLinkForSubcategory)
+                    .toList());
+            categoryDTO.setSelfLink(api + categoryDTO.getId());
+        });
+        return categoryDTOS;
+    }
+
+    @Override
     public List<CategoryDTO> getAllSubCategories(Long id) {
         log.info("Getting all subcategories");
         List<CategoryDTO> subCategoryList = categoryRepository
@@ -53,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .stream()
                 .map(mapper::toDTO)
                 .toList();
-        if(!categoryRepository.existsById(id)){
+        if (!categoryRepository.existsById(id)) {
             log.warn("Category not found!");
             throw new ResourceNotFoundException("Cannot found category with id: " + id);
         }
@@ -64,13 +84,28 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
+    public CategoryDTO createCategoryWithSection(Long sectionId, CategoryDTO categoryDTO) {
+        log.info("Creating Category with section");
+        categoryRepository.insertCategoryWithSection(categoryDTO.getCategoryNameEn(),
+                categoryDTO.getCategoryNameUa(), sectionId);
+        return categoryDTO;
+    }
+
+    @Override
+    @Transactional
     public CategoryDTO createSubcategory(Long id, CategoryDTO categoryDTO) {
-        if(!categoryRepository.existsById(id)){
+        if (!categoryRepository.existsById(id)) {
             log.warn("Category not found!");
             throw new ResourceNotFoundException("Cannot found category with id: " + id);
         } else {
             categoryRepository.insertSubCategory(categoryDTO.getCategoryNameEn(), categoryDTO.getCategoryNameUa(), id);
         }
+        return categoryDTO;
+    }
+
+    private CategoryDTO addLinkForSubcategory(CategoryDTO categoryDTO) {
+        categoryDTO.setSelfLink(api + categoryDTO.getId());
         return categoryDTO;
     }
 }

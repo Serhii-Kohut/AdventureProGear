@@ -19,6 +19,14 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                         @Param("nameUa") String nameUa);
 
     @Modifying
+    @Query(value = "insert into categories (id, category_name_en,category_name_ua, section_id )\n" +
+            "            values (nextval('categories_seq'), :nameEn, :nameUa, :sectionId);",
+            nativeQuery = true)
+    void insertCategoryWithSection(@Param("nameEn") String nameEn,
+                                   @Param("nameUa") String nameUa,
+                                   @Param("sectionId") Long sectionId);
+
+    @Modifying
     @Query(value = "UPDATE categories SET category_name_en = :nameEn, category_name_ua = :nameUa " +
             "WHERE id = :id",
             nativeQuery = true)
@@ -34,10 +42,14 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                            @Param("nameUa") String nameUa,
                            @Param("category_id") Long categoryId);
 
-    @Query(value = "select c.id,c.category_name_en, c.category_name_ua, c.category_id from categories " +
+    @Query(value = "select c.id,c.category_name_en, c.category_name_ua, c.category_id, c.section_id from categories " +
             "join categories c on c.category_id = categories.id " +
             "where categories.id = :id", nativeQuery = true)
     List<Category> getAllSubCategories(@Param("id") Long id);
+
+    @Query(value = "select * from categories" +
+            " where categories.section_id = :id", nativeQuery = true)
+    List<Category> getAllCategoriesBySection(@Param("id") Long id);
 
     Optional<Category> getCategoryByCategoryNameEn(String name);
 }

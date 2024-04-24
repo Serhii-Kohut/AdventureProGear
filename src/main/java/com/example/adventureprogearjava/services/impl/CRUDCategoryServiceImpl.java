@@ -22,7 +22,7 @@ import java.util.Optional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
-    private final static String api = "towering-house-production.up.railway.app/api/categories/";
+    private final static String api = "https://prime-tax-production.up.railway.app/api/public/categories/";
 
     CategoryRepository categoryRepository;
 
@@ -41,6 +41,7 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
                     .getAllSubCategories(categoryDTO.getId())
                     .stream()
                     .map(categoryMapper::toDTO)
+                    .map(this::addLinkForSubcategory)
                     .toList());
             categoryDTO.setSelfLink(api + categoryDTO.getId());
         });
@@ -60,9 +61,9 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
                 .getAllSubCategories(categoryDTO.getId())
                 .stream()
                 .map(categoryMapper::toDTO)
+                .map(this::addLinkForSubcategory)
                 .toList());
-        categoryDTO.setSelfLink(api + categoryDTO.getId());
-        return categoryDTO;
+        return addLinkForSubcategory(categoryDTO);
     }
 
     @Override
@@ -92,5 +93,10 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
             throw new NoContentException("No content present!");
         }
         categoryRepository.deleteById(id);
+    }
+
+    private CategoryDTO addLinkForSubcategory(CategoryDTO categoryDTO) {
+        categoryDTO.setSelfLink(api + categoryDTO.getId());
+        return categoryDTO;
     }
 }

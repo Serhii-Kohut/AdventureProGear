@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,4 +21,7 @@ public class Category extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     Category category;
+    @ManyToOne
+    @JoinColumn(name = "section_id")
+    Section section;
 }
