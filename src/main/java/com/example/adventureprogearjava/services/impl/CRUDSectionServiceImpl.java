@@ -84,7 +84,7 @@ public class CRUDSectionServiceImpl implements CRUDService<SectionDTO> {
     }
 
     private SectionDTO joinAllCategories(SectionDTO sectionDTO) {
-        sectionDTO.setCategories(categoryService.getAllSubCategories(sectionDTO.getId()));
+        sectionDTO.setCategories(categoryService.getAllCategoriesBySection(sectionDTO.getId()));
         return sectionDTO;
     }
 }

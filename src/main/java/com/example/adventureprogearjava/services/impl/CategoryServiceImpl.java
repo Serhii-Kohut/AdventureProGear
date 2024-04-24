@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryServiceImpl implements CategoryService {
-    private final static String api = "towering-house-production.up.railway.app/api/categories/";
+    private final static String api = "https://prime-tax-production.up.railway.app/api/public/categories/";
 
     CategoryRepository categoryRepository;
 
