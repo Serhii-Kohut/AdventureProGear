@@ -1,4 +1,4 @@
-package com.example.adventureprogearjava.config;
+package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.registrationDto.VerificationTokenMessageDto;
 import com.example.adventureprogearjava.services.UserService;
