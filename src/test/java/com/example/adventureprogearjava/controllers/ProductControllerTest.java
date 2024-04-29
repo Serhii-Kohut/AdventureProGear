@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.dto.CategoryDTO;
 import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
@@ -55,7 +56,7 @@ class ProductControllerTest {
                 .productNameUa("name")
                 .descriptionUa("description")
                 .basePrice(100L)
-                .category(Category.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
+                .category(CategoryDTO.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
@@ -115,7 +116,7 @@ class ProductControllerTest {
                 .productNameUa("name1")
                 .descriptionUa("description1")
                 .basePrice(100L)
-                .category(Category.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
+                .category(CategoryDTO.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         String newContentJson = objectMapper.writeValueAsString(newProduct);
@@ -147,7 +148,7 @@ class ProductControllerTest {
                 .productNameUa("name1")
                 .descriptionUa("description1")
                 .basePrice(100L)
-                .category(Category.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
+                .category(CategoryDTO.builder().categoryNameEn("BAGS").categoryNameUa("BAGS").build())
                 .gender(Gender.MALE)
                 .build();
         String newContentJson = objectMapper.writeValueAsString(newProduct);
