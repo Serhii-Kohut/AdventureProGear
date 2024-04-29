@@ -4,6 +4,7 @@ import com.example.adventureprogearjava.dto.PasswordUpdateDTO;
 import com.example.adventureprogearjava.dto.UserCreateDTO;
 import com.example.adventureprogearjava.dto.UserDTO;
 import com.example.adventureprogearjava.dto.UserUpdateDTO;
+import com.example.adventureprogearjava.dto.registrationDto.UserEmailDto;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.services.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -140,6 +142,21 @@ public class UserController {
     public void updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal User user) {
         crudUserService.update(userUpdateDTO, user.getId());
     }
+
+    @PutMapping("/me/update-email")
+    @Operation(
+            summary = "Update user email",
+            description = "Updates the email of an existing user and sends a confirmation email"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation",
+            content = @Content(schema = @Schema(implementation = UserUpdateDTO.class))
+    )
+    public void updateEmail(@Valid @RequestBody UserEmailDto userEmailDto, @AuthenticationPrincipal User user, HttpServletRequest request) {
+        crudUserService.updateEmail(userEmailDto, user.getId(), request);
+    }
+
 
     @PutMapping("/me/update-password")
     @Operation(
