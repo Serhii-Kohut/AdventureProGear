@@ -46,7 +46,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void updateGender(@Param("id") Long id,
                 @Param("gender") String gender);
 
-    @Query(value = "select * from products where starts_with(lower(product_name), lower(:name))",
+    @Query(value = "select * from products where starts_with(lower(product_name_en), lower(:name)) or starts_with(lower(product_name_ua), lower(:name))",
             nativeQuery = true)
     List<Product> findByProductName(@Param("name") String name);
 
