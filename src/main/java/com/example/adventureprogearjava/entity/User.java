@@ -58,6 +58,15 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "role")
     Role role;
 
+    @Column(name = "street_and_house_number")
+    String streetAndHouseNumber;
+
+    @Column(name = "city")
+    String city;
+
+    @Column(name = "postal_code")
+    String postalCode;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     List<Order> orders;
 

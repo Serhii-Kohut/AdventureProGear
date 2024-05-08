@@ -21,4 +21,8 @@ public class UserUpdateDTO {
 
     @Pattern(regexp = "(^$|\\+380[0-9]{9})", message = "Phone number should be valid")
     String phoneNumber;
+
+    String streetAndHouseNumber;
+    String city;
+    String postalCode;
 }

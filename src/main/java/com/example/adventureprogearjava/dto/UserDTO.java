@@ -54,4 +54,8 @@ public class UserDTO {
     LocalDate date;
 
     Role role;
+
+    String streetAndHouseNumber;
+    String city;
+    String postalCode;
 }

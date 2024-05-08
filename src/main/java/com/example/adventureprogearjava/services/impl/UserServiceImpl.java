@@ -155,20 +155,22 @@ public class UserServiceImpl implements UserService {
             existingUser.setSurname(userUpdateDTO.getSurname());
         }
 
-/*        if (userUpdateDTO.getEmail() != null) {
-            Optional<User> userWithEmail = userRepository.findByEmail(userUpdateDTO.getEmail());
-            if (userWithEmail.isPresent() && !userWithEmail.get().getId().equals(id)) {
-                throw new IllegalArgumentException("Email is already in use");
-            }
-            existingUser.setEmail(userUpdateDTO.getEmail());
-        }*/
-
         if (userUpdateDTO.getPhoneNumber() != null) {
             Optional<User> userWithPhone = userRepository.findByPhoneNumber(userUpdateDTO.getPhoneNumber());
             if (userWithPhone.isPresent() && !userWithPhone.get().getId().equals(id)) {
                 throw new IllegalArgumentException("Phone number is already in use");
             }
             existingUser.setPhoneNumber(userUpdateDTO.getPhoneNumber());
+        }
+
+        if (userUpdateDTO.getStreetAndHouseNumber() != null) {
+            existingUser.setStreetAndHouseNumber(userUpdateDTO.getStreetAndHouseNumber());
+        }
+        if (userUpdateDTO.getCity() != null) {
+            existingUser.setCity(userUpdateDTO.getCity());
+        }
+        if (userUpdateDTO.getPostalCode() != null) {
+            existingUser.setPostalCode(userUpdateDTO.getPostalCode());
         }
 
         userRepository.save(existingUser);

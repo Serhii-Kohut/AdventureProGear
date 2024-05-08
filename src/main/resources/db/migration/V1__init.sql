@@ -104,5 +104,15 @@ ALTER TABLE users
 ALTER TABLE users
     ADD COLUMN token_expiry_date TIMESTAMP;
 
+ALTER TABLE users
+    ADD COLUMN street_and_house_number VARCHAR(255);
+
+ALTER TABLE users
+    ADD COLUMN city VARCHAR(255);
+
+ALTER TABLE users
+    ADD COLUMN postal_code VARCHAR(10);
+
+
 
 
