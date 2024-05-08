@@ -180,6 +180,14 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new NoUsersFoundException("User not found with id " + id));
 
+        if (!passwordEncoder.matches(userEmailDto.getPassword(), existingUser.getPassword())) {
+            throw new IllegalArgumentException("Entered password does not match the current password");
+        }
+
+        if (!userEmailDto.getPassword().equals(userEmailDto.getConfirmPassword())) {
+            throw new IllegalArgumentException("Password do not match");
+        }
+
         if (userEmailDto.getEmail() != null && !userEmailDto.getEmail().equals(existingUser.getEmail())) {
             Optional<User> userWithEmail = userRepository.findByEmail(userEmailDto.getEmail());
 
@@ -191,13 +199,14 @@ public class UserServiceImpl implements UserService {
 
             existingUser.setEmail(userEmailDto.getEmail());
             existingUser.setVerified(false);
-            sendEmailUpdateConfirmation(request, new UserEmailDto(existingUser.getEmail()));
+            sendEmailUpdateConfirmation(request, new UserEmailDto(existingUser.getEmail(), null, null));
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is not changed");
         }
+
+        existingUser.setPassword(passwordEncoder.encode(userEmailDto.getPassword()));
         userRepository.save(existingUser);
     }
-
 
 
     @Override

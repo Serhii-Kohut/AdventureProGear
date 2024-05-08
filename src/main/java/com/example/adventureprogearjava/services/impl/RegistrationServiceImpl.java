@@ -85,7 +85,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public UserResponseDto completeRegistration(RegistrationDto registrationDto, HttpServletRequest request) {
         UserResponseDto newUserResponseDto = registerUser(registrationDto);
 
-        sendVerificationEmail(request, new UserEmailDto(newUserResponseDto.getEmail()));
+        sendVerificationEmail(request, new UserEmailDto(newUserResponseDto.getEmail(), null, null));
 
         return newUserResponseDto;
     }
@@ -121,7 +121,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     public void handleUserCreatedEvent(UserCreatedEvent event) {
         UserCreateDTO userDTO = event.getUserCreateDTO();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        resendVerificationEmail(new UserEmailDto(userDTO.getEmail()), request);
+        resendVerificationEmail(new UserEmailDto(userDTO.getEmail(), null, null), request);
     }
 
 
