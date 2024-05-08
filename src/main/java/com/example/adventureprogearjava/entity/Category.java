@@ -13,6 +13,15 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_seq")
+    @SequenceGenerator(name = "categories_seq", sequenceName = "categories_seq", allocationSize = 1)
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
+
     @Column(name = "category_name_en")
     String categoryNameEn;
     @Column(name = "category_name_ua")

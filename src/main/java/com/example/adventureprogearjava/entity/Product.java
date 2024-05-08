@@ -16,6 +16,14 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
+    @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 1)
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
+
     @Column(name = "product_name_ua", nullable = false)
     String productNameUa;
 
