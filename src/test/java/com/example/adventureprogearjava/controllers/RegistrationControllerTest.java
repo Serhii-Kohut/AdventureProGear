@@ -72,7 +72,7 @@ public class RegistrationControllerTest {
 
         registrationService.completeRegistration(registrationDto, request);
 
-        UserEmailDto userEmailDto = new UserEmailDto("test@test.com");
+        UserEmailDto userEmailDto = new UserEmailDto("test@test.com", null, null);
 
         mockMvc.perform(post("/api/public/registration/resend")
                         .contentType(MediaType.APPLICATION_JSON)
