@@ -35,24 +35,62 @@ CREATE SEQUENCE categories_seq
     start 1
     increment 1;
 
+CREATE SEQUENCE section_seq
+    start 1
+    increment 1;
+
+insert into sections(id, sectioncaption_en, sectioncaption_ua, sectionicon)
+values (nextval('sections_seq'), 'Footwear', 'Взуття', 'icon1');
+
+insert into sections(id, sectioncaption_en, sectioncaption_ua, sectionicon)
+values (nextval('sections_seq'), 'Clothing', 'Одяг', 'icon2');
+
+insert into sections(id, sectioncaption_en, sectioncaption_ua, sectionicon)
+values (nextval('sections_seq'), 'Headwears', 'Головні убори', 'icon3');
+
+insert into sections(id, sectioncaption_en, sectioncaption_ua, sectionicon)
+values (nextval('sections_seq'), 'Outdoor Equipment', 'Похідне обладнання', 'icon4');
+
+
 insert into users (id, name, surname, email, phone_number, password, role)
 values (nextval('user_seq'), 'Danylo', 'Berkovskyi', 'serhio3347@gmail.com', '+380980648928', 'Password1@', 'ADMIN');
 
 insert into users (id, name, surname, email, phone_number, password, role)
 values (nextval('user_seq'), 'Andrii', 'Len', 'len_andrey@gmail.com', '+380972555455', 'Password2#', 'USER');
 
-insert into categories(id, category_name_en, category_name_ua)
-values (nextval('categories_seq'), 'Shoes', 'Взуття');
-insert into categories(id, category_name_en, category_name_ua)
-values (nextval('categories_seq'), 'T-shirt', 'Футболки');
-insert into categories(id, category_name_en, category_name_ua)
-values (nextval('categories_seq'), 'Pants', 'Штани');
-insert into categories(id, category_name_en, category_name_ua)
-values (nextval('categories_seq'), 'Headwears', 'Головні убори');
-insert into categories(id, category_name_en, category_name_ua)
-values (nextval('categories_seq'), 'Hiking_equipment', 'Похідне обладнання');
 insert into categories(id, category_name_en, category_name_ua, category_id)
-values (nextval('categories_seq'), 'BAGS', 'Рюкзаки', 5);
+values (nextval('categories_seq'), 'Sneakers', 'Кросівки', 1);
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Boots', 'Чоботи', 1);
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Sandals', 'Сандалі', 1);
+
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'T-shirts', 'Футболки', 2);
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Jeans', 'Джинси', 2);
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Shorts', 'Шорти', 2);
+
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Hats', 'Кепки', 3);
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Caps', 'Шапки', 3);
+
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Tents', 'Палатки', 4);
+
+insert into categories(id, category_name_en, category_name_ua, category_id)
+values (nextval('categories_seq'), 'Sleeping bags', 'Спальні мішки', 4);
+
 
 
 
