@@ -19,6 +19,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductAttribute extends BaseEntity {
 
+    @Transient
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_attr_seq")
     @SequenceGenerator(name = "product_attr_seq", sequenceName = "product_attr_seq", allocationSize = 1)
     Long sequenceId;

@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductContent extends BaseEntity {
 
+    @Transient
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_content_seq")
     @SequenceGenerator(name = "product_content_seq", sequenceName = "product_content_seq", allocationSize = 1)
     Long sequenceId;
