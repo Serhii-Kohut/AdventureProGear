@@ -19,13 +19,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductAttribute extends BaseEntity {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_attr_seq")
     @SequenceGenerator(name = "product_attr_seq", sequenceName = "product_attr_seq", allocationSize = 1)
-    @Override
-    public Long getId() {
-        return super.getId();
-    }
+    Long sequenceId;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)

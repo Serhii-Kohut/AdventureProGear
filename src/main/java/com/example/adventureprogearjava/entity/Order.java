@@ -35,13 +35,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order extends BaseEntity {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
     @SequenceGenerator(name = "order_seq", sequenceName = "order_seq", allocationSize = 1)
-    @Override
-    public Long getId() {
-        return super.getId();
-    }
+    Long sequenceId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

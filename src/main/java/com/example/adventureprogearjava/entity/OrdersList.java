@@ -25,13 +25,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrdersList extends BaseEntity {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_list_seq")
     @SequenceGenerator(name = "order_list_seq", sequenceName = "order_list_seq", allocationSize = 1)
-    @Override
-    public Long getId() {
-        return super.getId();
-    }
+    Long sequenceId;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)

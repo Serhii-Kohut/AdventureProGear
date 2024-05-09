@@ -25,13 +25,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductContent extends BaseEntity {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_content_seq")
     @SequenceGenerator(name = "product_content_seq", sequenceName = "product_content_seq", allocationSize = 1)
-    @Override
-    public Long getId() {
-        return super.getId();
-    }
+    Long sequenceId;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
