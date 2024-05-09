@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.dto;
 
+import com.example.adventureprogearjava.entity.Category;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -12,13 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDTO {
+public class SectionDTO {
     @JsonIgnore
     Long id;
-    @NotBlank
-    String categoryNameUa;
-    @NotBlank
-    String categoryNameEn;
-    List<CategoryDTO> subcategories;
+    @NotBlank(message = "Section name should be defined")
+    String sectionCaptionEn;
+    @NotBlank(message = "Section name should be defined")
+    String sectionCaptionUa;
+    String sectionIcon;
+    List<CategoryDTO> categories;
     String selfLink;
+    String categoryCreationLink;
 }
