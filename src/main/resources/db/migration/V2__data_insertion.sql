@@ -35,7 +35,7 @@ CREATE SEQUENCE categories_seq
     start 1
     increment 1;
 
-CREATE SEQUENCE section_seq
+CREATE SEQUENCE sections_seq
     start 1
     increment 1;
 
@@ -58,38 +58,38 @@ values (nextval('user_seq'), 'Danylo', 'Berkovskyi', 'serhio3347@gmail.com', '+3
 insert into users (id, name, surname, email, phone_number, password, role)
 values (nextval('user_seq'), 'Andrii', 'Len', 'len_andrey@gmail.com', '+380972555455', 'Password2#', 'USER');
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Sneakers', 'Кросівки', 1);
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Boots', 'Чоботи', 1);
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Sandals', 'Сандалі', 1);
 
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'T-shirts', 'Футболки', 2);
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Jeans', 'Джинси', 2);
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Shorts', 'Шорти', 2);
 
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Hats', 'Кепки', 3);
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Caps', 'Шапки', 3);
 
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
+insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Tents', 'Палатки', 4);
 
 insert into categories(id, category_name_en, category_name_ua, category_id)
-values (nextval('categories_seq'), 'Sleeping bags', 'Спальні мішки', 4);
+values (nextval('categories_seq'), 'Sleeping bags', 'Спальні мішки', 9);
 
 
 

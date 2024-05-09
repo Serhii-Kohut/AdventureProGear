@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS public.categories
         constraint subcategory_fk
             references public.categories,
     section_id       integer
-        constraint subcategory_fk
+        constraint section_fk
             references public.sections
 );
 
