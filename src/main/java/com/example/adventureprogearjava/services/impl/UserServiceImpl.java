@@ -211,6 +211,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(existingUser);
     }
 
+    @Override
+    @Transactional
+    public void updatePassword(PasswordUpdateDTO passwordUpdateDTO, Long id) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new NoUsersFoundException("User not found with id " + id));
+
+        if (passwordUpdateDTO.getPassword() != null) {
+            existingUser.setPassword(passwordEncoder.encode(passwordUpdateDTO.getPassword()));
+        }
+
+        userRepository.save(existingUser);
+    }
+
 
     @Override
     public void delete(Long id) {
