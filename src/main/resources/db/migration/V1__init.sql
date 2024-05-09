@@ -5,15 +5,30 @@ CREATE TYPE status AS ENUM ('PAID','DELIVERED','CANCELED');
 CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
 --
 -- CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
+create table if not exists sections
+(
+    id                bigint  not null
+        constraint sections_pkey
+            primary key,
+    sectioncaption_en varchar not null,
+    sectioncaption_ua varchar not null,
+    sectionicon       varchar
+);
+
+alter table sections
+    owner to postgres;
 
 CREATE TABLE IF NOT EXISTS public.categories
 (
-    id            bigint primary key,
+    id               bigint primary key,
     category_name_ua varchar not null unique,
     category_name_en varchar not null unique,
-    category_id   integer
+    category_id      integer
         constraint subcategory_fk
-            references public.categories
+            references public.categories,
+    section_id       integer
+        constraint subcategory_fk
+            references public.sections
 );
 
 CREATE TABLE IF NOT EXISTS public.users
@@ -29,14 +44,14 @@ CREATE TABLE IF NOT EXISTS public.users
 
 CREATE TABLE IF NOT EXISTS public.products
 (
-    id           bigint primary key,
-    product_name_en varchar  not null,
-    product_name_ua varchar  not null,
+    id              bigint primary key,
+    product_name_en varchar not null,
+    product_name_ua varchar not null,
     description_en  text,
     description_ua  text,
-    base_price   integer  not null,
-    gender       gender,
-    category   integer
+    base_price      integer not null,
+    gender          gender,
+    category        integer
         constraint category_fk
             references public.categories
 );
