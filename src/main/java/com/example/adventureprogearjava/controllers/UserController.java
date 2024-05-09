@@ -151,7 +151,7 @@ public class UserController {
     @ApiResponse(
             responseCode = "200",
             description = "Successful operation",
-            content = @Content(schema = @Schema(implementation = UserUpdateDTO.class))
+            content = @Content(schema = @Schema(implementation = UserEmailDto.class))
     )
     public void updateEmail(@Valid @RequestBody UserEmailDto userEmailDto, @AuthenticationPrincipal User user, HttpServletRequest request) {
         crudUserService.updateEmail(userEmailDto, user.getId(), request);

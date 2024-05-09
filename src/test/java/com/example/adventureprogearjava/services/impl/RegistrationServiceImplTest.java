@@ -68,7 +68,7 @@ public class RegistrationServiceImplTest {
 
         registrationService.completeRegistration(registrationDto, request);
 
-        UserEmailDto userEmailDto = new UserEmailDto("test@test.com");
+        UserEmailDto userEmailDto = new UserEmailDto("test@test.com", null, null);
 
         assertDoesNotThrow(() -> registrationService.resendVerificationEmail(userEmailDto, request));
     }
@@ -87,7 +87,7 @@ public class RegistrationServiceImplTest {
 
         registrationService.completeRegistration(registrationDto, request);
 
-        UserEmailDto userEmailDto = new UserEmailDto("test@test.com");
+        UserEmailDto userEmailDto = new UserEmailDto("test@test.com", null, null);
 
         assertDoesNotThrow(() -> registrationService.sendVerificationEmail(request, userEmailDto));
     }

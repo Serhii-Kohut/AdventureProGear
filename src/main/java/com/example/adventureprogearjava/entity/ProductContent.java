@@ -2,8 +2,12 @@ package com.example.adventureprogearjava.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,6 +24,14 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductContent extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_content_seq")
+    @SequenceGenerator(name = "product_content_seq", sequenceName = "product_content_seq", allocationSize = 1)
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)

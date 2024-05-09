@@ -155,14 +155,6 @@ public class UserServiceImpl implements UserService {
             existingUser.setSurname(userUpdateDTO.getSurname());
         }
 
-/*        if (userUpdateDTO.getEmail() != null) {
-            Optional<User> userWithEmail = userRepository.findByEmail(userUpdateDTO.getEmail());
-            if (userWithEmail.isPresent() && !userWithEmail.get().getId().equals(id)) {
-                throw new IllegalArgumentException("Email is already in use");
-            }
-            existingUser.setEmail(userUpdateDTO.getEmail());
-        }*/
-
         if (userUpdateDTO.getPhoneNumber() != null) {
             Optional<User> userWithPhone = userRepository.findByPhoneNumber(userUpdateDTO.getPhoneNumber());
             if (userWithPhone.isPresent() && !userWithPhone.get().getId().equals(id)) {
@@ -171,14 +163,33 @@ public class UserServiceImpl implements UserService {
             existingUser.setPhoneNumber(userUpdateDTO.getPhoneNumber());
         }
 
+        if (userUpdateDTO.getStreetAndHouseNumber() != null) {
+            existingUser.setStreetAndHouseNumber(userUpdateDTO.getStreetAndHouseNumber());
+        }
+        if (userUpdateDTO.getCity() != null) {
+            existingUser.setCity(userUpdateDTO.getCity());
+        }
+        if (userUpdateDTO.getPostalCode() != null) {
+            existingUser.setPostalCode(userUpdateDTO.getPostalCode());
+        }
+
         userRepository.save(existingUser);
     }
 
-    @Override
+
+  @Override
     @Transactional
     public void updateEmail(UserEmailDto userEmailDto, Long id, HttpServletRequest request) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new NoUsersFoundException("User not found with id " + id));
+
+        if (!passwordEncoder.matches(userEmailDto.getPassword(), existingUser.getPassword())) {
+            throw new IllegalArgumentException("Entered password does not match the current password");
+        }
+
+        if (!userEmailDto.getPassword().equals(userEmailDto.getConfirmPassword())) {
+            throw new IllegalArgumentException("Password do not match");
+        }
 
         if (userEmailDto.getEmail() != null && !userEmailDto.getEmail().equals(existingUser.getEmail())) {
             Optional<User> userWithEmail = userRepository.findByEmail(userEmailDto.getEmail());
@@ -191,25 +202,12 @@ public class UserServiceImpl implements UserService {
 
             existingUser.setEmail(userEmailDto.getEmail());
             existingUser.setVerified(false);
-            sendEmailUpdateConfirmation(request, new UserEmailDto(existingUser.getEmail()));
+            sendEmailUpdateConfirmation(request, new UserEmailDto(existingUser.getEmail(), null, null));
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is not changed");
         }
-        userRepository.save(existingUser);
-    }
 
-
-
-    @Override
-    @Transactional
-    public void updatePassword(PasswordUpdateDTO passwordUpdateDTO, Long id) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new NoUsersFoundException("User not found with id " + id));
-
-        if (passwordUpdateDTO.getPassword() != null) {
-            existingUser.setPassword(passwordEncoder.encode(passwordUpdateDTO.getPassword()));
-        }
-
+        existingUser.setPassword(passwordEncoder.encode(userEmailDto.getPassword()));
         userRepository.save(existingUser);
     }
 

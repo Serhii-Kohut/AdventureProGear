@@ -18,4 +18,10 @@ public class UserEmailDto {
     @NotBlank(message = "Email should not be blank")
     @Email(message = "Email should be valid")
     String email;
+
+    @NotBlank
+    String password;
+
+    @NotBlank
+    String confirmPassword;
 }

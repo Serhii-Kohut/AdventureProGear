@@ -43,5 +43,8 @@ public class UserCreateDTO {
 
     Role role;
 
+    String streetAndHouseNumber;
+    String city;
+    String postalCode;
 
 }
