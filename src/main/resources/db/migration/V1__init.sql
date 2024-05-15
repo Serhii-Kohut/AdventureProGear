@@ -128,6 +128,8 @@ ALTER TABLE users
 ALTER TABLE users
     ADD COLUMN postal_code VARCHAR(10);
 
+ALTER TABLE users
+    ADD COLUMN password_reset_token VARCHAR(255);
 
 
 

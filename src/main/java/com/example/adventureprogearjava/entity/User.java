@@ -76,6 +76,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "token_expiry_date")
     LocalDateTime tokenExpiryDate;
 
+    @Column(name = "password_reset_token")
+    String passwordResetToken;
+
     public void updateVerificationToken(String newToken, LocalDateTime newExpiryDate) {
         this.verificationToken = newToken;
         this.tokenExpiryDate = newExpiryDate;
