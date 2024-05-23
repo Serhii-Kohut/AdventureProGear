@@ -30,7 +30,9 @@ public class PasswordResetListener implements ApplicationListener<OnPasswordRese
         String token = user.getPasswordResetToken();
 
         String subject = environment.getProperty("email.reset.subject", "Password Reset Request");
-        String url = "https://prime-tax-production.up.railway.app/reset-password?token=" + token;
+
+        String url = "https://disciplined-truth-production.up.railway.app/reset-password?token=" + token;
+
         String message = environment.getProperty("email.reset.body", "To reset your password, click the following link:") + "\r\n" + url;
 
         mailService.sendEmail(user.getEmail(), subject, message);
