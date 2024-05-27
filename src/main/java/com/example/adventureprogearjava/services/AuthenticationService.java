@@ -50,7 +50,7 @@ public class AuthenticationService {
 
             return refreshTokenResponseDto;
         } else {
-            throw new UserIsNotActiveException("User account is not valid");
+            throw new UserIsNotActiveException("Your account is not active");
         }
     }
 
@@ -68,10 +68,10 @@ public class AuthenticationService {
 
                 return authenticationResponseDto;
             } else {
-                throw new BadCredentialsException("Wrong password");
+                throw new BadCredentialsException("The password is incorrect. Please check and try again");
             }
         } else {
-            throw new UserIsNotActiveException("User account is not valid");
+            throw new UserIsNotActiveException("Your account is not active");
         }
     }
 }

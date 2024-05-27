@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
-            throw new NoUsersFoundException("User not found with email: " + email);
+            throw new NoUsersFoundException("The email address '" + email + "' is not registered. Please register");
         }
         return userMapper.userToUserResponseDto(user.get());
     }
