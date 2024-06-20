@@ -6,6 +6,7 @@ import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
 import com.example.adventureprogearjava.exceptions.NoOrdersListFoundException;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.PasswordMismatchException;
+import com.example.adventureprogearjava.exceptions.PostNotFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.exceptions.UserAlreadyExistsException;
 import com.example.adventureprogearjava.exceptions.UserIsNotActiveException;
@@ -119,4 +120,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PostNotFoundException.class)
+    public Map<String, String> handlerPostNotFoundException(PostNotFoundException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage", ex.getMessage());
+        return errorMap;
+    }
 }
