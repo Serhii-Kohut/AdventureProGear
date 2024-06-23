@@ -18,7 +18,7 @@ public class ContentDTO {
         this.source = source;
         this.productId = productId;
     }
-
+    Long id;
     @NotBlank
     String source;
     @JsonIgnore

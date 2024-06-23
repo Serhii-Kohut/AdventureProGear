@@ -21,6 +21,7 @@ import java.util.List;
 public class ProductAttributeDTO {
     //    @NotNull(message = "Cannot add product attribute for not existent product")
 //    Long productId;
+    Long id;
     String size;
     String color;
     String additional;

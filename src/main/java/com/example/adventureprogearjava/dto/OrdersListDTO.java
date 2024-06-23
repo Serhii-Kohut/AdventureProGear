@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrdersListDTO {
+    Long id;
     @NotNull
     Long orderId;
 

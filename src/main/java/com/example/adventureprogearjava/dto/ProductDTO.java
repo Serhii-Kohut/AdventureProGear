@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDTO {
+    Long id;
     @NotBlank(message = "Name is mandatory")
     String productNameUa;
 

@@ -14,7 +14,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SectionDTO {
-    @JsonIgnore
     Long id;
     @NotBlank(message = "Section name should be defined")
     String sectionCaptionEn;

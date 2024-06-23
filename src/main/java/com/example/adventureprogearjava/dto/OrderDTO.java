@@ -20,8 +20,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDTO {
-
-    @NotNull
+    Long id;
     Long userId;
 
     @NotNull

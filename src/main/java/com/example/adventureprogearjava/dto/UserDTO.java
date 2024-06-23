@@ -29,6 +29,7 @@ public class UserDTO {
         this.date = date;
         this.role = role;
     }
+    Long id;
 
     @NotBlank(message = "Name is mandatory")
     String name;

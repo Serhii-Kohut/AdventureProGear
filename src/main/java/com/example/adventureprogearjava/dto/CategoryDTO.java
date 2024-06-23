@@ -13,7 +13,6 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryDTO {
-    @JsonIgnore
     Long id;
     @NotBlank
     String categoryNameUa;
