@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.services.impl;
 import com.example.adventureprogearjava.dto.OrderDTO;
 import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.User;
+import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,9 +89,21 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO, User user) {
         log.info("Creating new order.");
+
+        orderDTO.setUserId(user.getId());
+
+        if (orderDTO.getOrderDate() == null) {
+            orderDTO.setOrderDate(LocalDateTime.now());
+        }
+        if (orderDTO.getStatus() == null) {
+            orderDTO.setStatus(OrderStatus.PAID);
+        }
+
         insertOrder(orderDTO);
+
         return orderDTO;
     }
+
 
 /*    @Override
     @Transactional
