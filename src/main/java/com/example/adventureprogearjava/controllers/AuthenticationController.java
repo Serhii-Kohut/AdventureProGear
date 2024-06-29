@@ -67,15 +67,8 @@ public class AuthenticationController {
             summary = "Refresh token of a user",
             description = "Refresh token of a user"
     )
-    public ResponseEntity<RefreshTokenResponseDto> refreshToken(@RequestBody HttpServletRequest request) {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        RefreshTokenRequestDto refreshTokenRequestDto = new RefreshTokenRequestDto(authHeader);
-
+    public ResponseEntity<RefreshTokenResponseDto> refreshToken(@RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
         RefreshTokenResponseDto refreshTokenResponseDto = authenticationService.refreshToken(refreshTokenRequestDto);
-
-        return ResponseEntity.ok()
-                .body(refreshTokenResponseDto);
+        return ResponseEntity.ok().body(refreshTokenResponseDto);
     }
 }
-
