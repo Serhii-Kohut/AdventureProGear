@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -24,5 +25,9 @@ public class PostDTO {
 
     @NotBlank
     String content;
+
+    @Column(name = "image")
+    String imageUrl;
+
 
 }

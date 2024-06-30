@@ -43,5 +43,7 @@ public class Post extends BaseEntity {
     @Column(name = "content")
     String content;
 
+    @Column(name = "image")
+    String imageUrl;
 
 }
