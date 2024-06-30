@@ -39,6 +39,10 @@ CREATE SEQUENCE sections_seq
     start 1
     increment 1;
 
+CREATE SEQUENCE post_seq
+    START 1
+    INCREMENT 1;
+
 insert into sections(id, sectioncaption_en, sectioncaption_ua, sectionicon)
 values (nextval('sections_seq'), 'Footwear', 'Взуття', 'icon1');
 
@@ -188,3 +192,9 @@ insert into orders_list (id, order_id, product_id, product_attribute_id, quantit
 values (nextval('order_list_seq'), 2, 1, 1, 3);
 insert into orders_list (id, order_id, product_id, quantity)
 values (nextval('order_list_seq'), 1, 5, 1);
+
+
+INSERT INTO public.post (id, user_id, title, content, image)
+VALUES
+    (nextval('post_seq'), 1, 'First Post', 'This is the content of the first post.', 'https://example.com/image1.jpg'),
+    (nextval('post_seq'), 2, 'Second Post', 'This is the content of the second post.', 'https://example.com/image2.jpg');

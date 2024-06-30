@@ -131,5 +131,15 @@ ALTER TABLE users
 ALTER TABLE users
     ADD COLUMN password_reset_token VARCHAR(255);
 
+CREATE TABLE IF NOT EXISTS public.post
+(
+    id         bigint primary key,
+    user_id    bigint not null,
+    title      varchar,
+    content    text,
+    image      varchar,
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
 
 
