@@ -131,5 +131,29 @@ ALTER TABLE users
 ALTER TABLE users
     ADD COLUMN password_reset_token VARCHAR(255);
 
+CREATE TABLE IF NOT EXISTS public.post
+(
+    id         bigint primary key,
+    user_id    bigint not null,
+    title      varchar,
+    content    text,
+    image      varchar,
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+
+CREATE TYPE reaction_type AS ENUM ('LIKE', 'DISLIKE', 'LAUGH', 'SAD', 'ANGRY');
+
+CREATE TABLE IF NOT EXISTS public.reactions
+(
+    id          bigint primary key DEFAULT nextval('reaction_seq'),
+    type        reaction_type not null,
+    post_id     bigint not null,
+    user_id     bigint not null,
+    CONSTRAINT fk_post
+        FOREIGN KEY (post_id) REFERENCES public.post(id),
+    CONSTRAINT fk_user
+        FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
 
 
