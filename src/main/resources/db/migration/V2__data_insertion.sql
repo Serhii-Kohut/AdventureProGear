@@ -43,9 +43,7 @@ CREATE SEQUENCE post_seq
     START 1
     INCREMENT 1;
 
-CREATE SEQUENCE reaction_seq
-    START 1
-    INCREMENT 1;
+
 
 insert into sections(id, sectioncaption_en, sectioncaption_ua, sectionicon)
 values (nextval('sections_seq'), 'Footwear', 'Взуття', 'icon1');
@@ -208,5 +206,4 @@ VALUES
     (nextval('reaction_seq'), 'LIKE', 1, 1),
     (nextval('reaction_seq'), 'DISLIKE', 1, 2),
     (nextval('reaction_seq'), 'LAUGH', 2, 1),
-    (nextval('reaction_seq'), 'SAD', 2, 2),
-    (nextval('reaction_seq'), 'ANGRY', 2, 3);
+    (nextval('reaction_seq'), 'SAD', 2, 2);

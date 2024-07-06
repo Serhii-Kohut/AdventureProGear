@@ -144,6 +144,10 @@ CREATE TABLE IF NOT EXISTS public.post
 
 CREATE TYPE reaction_type AS ENUM ('LIKE', 'DISLIKE', 'LAUGH', 'SAD', 'ANGRY');
 
+CREATE SEQUENCE reaction_seq
+    START 1
+    INCREMENT 1;
+
 CREATE TABLE IF NOT EXISTS public.reactions
 (
     id          bigint primary key DEFAULT nextval('reaction_seq'),
