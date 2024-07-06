@@ -96,7 +96,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
             orderDTO.setOrderDate(LocalDateTime.now());
         }
         if (orderDTO.getStatus() == null) {
-            orderDTO.setStatus(OrderStatus.PAID);
+            orderDTO.setStatus(OrderStatus.NEW);
         }
 
         insertOrder(orderDTO);
