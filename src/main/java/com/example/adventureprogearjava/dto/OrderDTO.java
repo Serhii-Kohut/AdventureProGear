@@ -21,10 +21,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDTO {
 
-    @NotNull
     Long userId;
 
-    @NotNull
     LocalDateTime orderDate;
 
     @NotBlank
@@ -39,7 +37,7 @@ public class OrderDTO {
     @Min(0)
     Long price;
 
-    @NotNull
+   // @NotNull
     OrderStatus status;
 
     List<OrdersListDTO> ordersLists;
