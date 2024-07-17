@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.PostDTO;
+import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.exceptions.PostNotFoundException;
 import com.example.adventureprogearjava.services.impl.PostServiceImpl;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/public/blog/posts")
+@RequestMapping("/api/blog/posts")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PostController {
@@ -39,8 +41,8 @@ public class PostController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void addNewPost(@NotNull @Valid PostDTO postDTO) throws PostNotFoundException {
-        postService.addNewPost(postDTO);
+    public PostDTO addNewPost(@Valid @RequestBody PostDTO postDTO, @AuthenticationPrincipal User user) throws PostNotFoundException {
+        return postService.addNewPost(postDTO, user);
     }
 
     @PutMapping("/{postId}")
