@@ -4,6 +4,7 @@ import com.example.adventureprogearjava.dto.PostDTO;
 import com.example.adventureprogearjava.entity.Post;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.exceptions.PostNotFoundException;
+import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.PostMapper;
 import com.example.adventureprogearjava.repositories.PostRepository;
 import com.example.adventureprogearjava.repositories.UserRepository;
@@ -56,19 +57,17 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public void updatePost(Long postId, PostDTO postDTO) throws PostNotFoundException {
+    @Transactional
+    public void updatePost(Long postId, PostDTO postDTO, User user) {
         log.info("Updating post with id: {}", postId);
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException("Post not found with id " + postId));
 
-        User author = userRepository.findById(postDTO.getUser_id())
-                .orElseThrow(() -> new PostNotFoundException("User not found with id " + postDTO.getUser_id()));
-
-        post.setPostTitle(postDTO.getPostTitle());
-        post.setAuthor(author);
-        post.setContent(postDTO.getContent());
-
-        postRepository.save(post);
+        if (!postRepository.existsById(postId)) {
+            log.warn("Post not found!");
+            throw new ResourceNotFoundException("Post not found with id " + postId);
+        } else {
+            postRepository.update(postId, user.getId(), postDTO.getPostTitle(),
+                    postDTO.getContent(), postDTO.getImageUrl());
+        }
 
     }
 

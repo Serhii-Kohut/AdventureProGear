@@ -41,14 +41,14 @@ public class PostController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public PostDTO addNewPost(@Valid @RequestBody PostDTO postDTO, @AuthenticationPrincipal User user) throws PostNotFoundException {
+    public PostDTO addNewPost(@Valid @RequestBody PostDTO postDTO, @AuthenticationPrincipal User user) {
         return postService.addNewPost(postDTO, user);
     }
 
     @PutMapping("/{postId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void updatePost(@PathVariable("postId") Long postId, @RequestBody PostDTO postDTO) throws PostNotFoundException {
-        postService.updatePost(postId, postDTO);
+    public void updatePost(@PathVariable("postId") Long postId, @RequestBody PostDTO postDTO, @AuthenticationPrincipal User user) {
+        postService.updatePost(postId, postDTO, user);
     }
 
     @DeleteMapping("/{postId}")
