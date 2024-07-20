@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.exceptions.handler;
 
+import com.example.adventureprogearjava.exceptions.InvalidReactionTypeException;
 import com.example.adventureprogearjava.exceptions.InvalidTokenException;
 import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
@@ -126,5 +127,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put("errorMessage", ex.getMessage());
         return errorMap;
+    }
+
+    @ExceptionHandler(InvalidReactionTypeException.class)
+    public ResponseEntity<String> handleInvalidReactionTypeException(InvalidReactionTypeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }

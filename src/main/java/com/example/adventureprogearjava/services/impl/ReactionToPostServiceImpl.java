@@ -5,8 +5,8 @@ import com.example.adventureprogearjava.entity.Post;
 import com.example.adventureprogearjava.entity.ReactionToPost;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.ReactionType;
+import com.example.adventureprogearjava.exceptions.InvalidReactionTypeException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
-import com.example.adventureprogearjava.mapper.ReactionMapper;
 import com.example.adventureprogearjava.repositories.PostRepository;
 import com.example.adventureprogearjava.repositories.ReactionToPostRepository;
 import com.example.adventureprogearjava.repositories.UserRepository;
@@ -15,10 +15,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +33,6 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
     UserRepository userRepository;
     PostRepository postRepository;
 
-    ReactionMapper reactionMapper = Mappers.getMapper(ReactionMapper.class);
-
     @Override
     @Transactional
     public ReactionToPostDTO addReaction(Long postId, Long userId, ReactionType reactionType) {
@@ -44,36 +42,26 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
         User user = userRepository.findById(userId).orElseThrow(()
                 -> new ResourceNotFoundException("User not found"));
 
-        Optional<ReactionToPost> optionalExistingReaction = reactionToPostRepository.findByPostAndUser(post, user);
-
-        if (optionalExistingReaction.isPresent()) {
-            ReactionToPost existingReaction = optionalExistingReaction.get();
-            existingReaction.setReactionType(reactionType);
-            existingReaction.setPost(post);
-
-            log.info("Updated reaction on post {} for user {} ", postId, userId);
-
-            ReactionToPostDTO reactionDto = reactionMapper.reactionToDto(existingReaction);
-            reactionDto.setPostId(postId);
-            reactionDto.setUserId(userId);
-            return reactionDto;
-
-        } else {
-            ReactionToPost reaction = new ReactionToPost();
-            reaction.setUser(user);
-            reaction.setPost(post);
-            reaction.setReactionType(reactionType);
-
-            reactionToPostRepository.save(reaction);
-
-            log.info("Added new reaction on post {} for user {} ", postId, userId);
-
-            ReactionToPostDTO reactionDto = reactionMapper.reactionToDto(reaction);
-            reactionDto.setPostId(postId);
-            reactionDto.setUserId(userId);
-            return reactionDto;
+        if (!isValidReactionType(reactionType)) {
+            throw new InvalidReactionTypeException("Invalid reaction type: " + reactionType);
         }
 
+        Optional<ReactionToPost> optionalExistingReaction = reactionToPostRepository.findByPostAndUser(post, user);
+
+        ReactionToPostDTO reactionDto = new ReactionToPostDTO();
+        reactionDto.setReactionType(reactionType);
+        reactionDto.setPostId(postId);
+        reactionDto.setUserId(userId);
+
+        if (optionalExistingReaction.isPresent()) {
+                updateReaction(reactionDto);
+            log.info("Updated reaction on post {} for user {} ", postId, userId);
+        } else {
+            insertReaction(reactionDto);
+            log.info("Inserted new reaction on post {} for user {} ", postId, userId);
+        }
+
+        return reactionDto;
     }
 
     @Override
@@ -114,4 +102,26 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
             log.info("No reaction found on post {} for user {} ", postId, userId);
         }
     }
+
+    private void insertReaction(ReactionToPostDTO reactionToPostDTO) {
+        reactionToPostRepository.insertReaction(
+                reactionToPostDTO.getReactionType().toString(),
+                reactionToPostDTO.getPostId(),
+                reactionToPostDTO.getUserId()
+        );
+    }
+
+    private void updateReaction(ReactionToPostDTO reactionToPostDTO) {
+        reactionToPostRepository.updateReaction(
+                reactionToPostDTO.getPostId(),
+                reactionToPostDTO.getReactionType().toString(),
+                reactionToPostDTO.getPostId(),
+                reactionToPostDTO.getUserId()
+        );
+    }
+
+    private boolean isValidReactionType(ReactionType reactionType) {
+        return Arrays.asList(ReactionType.values()).contains(reactionType);
+    }
+
 }
