@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,8 +30,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return endpointMaster.isEndpointMatchedWithPattern(request, "/api/public/**")
-                || endpointMaster.isEndpointMatchedWithPattern(request, "/api/v1/products/**");
+        return request.getMethod().equals(HttpMethod.GET.name()) &&
+                endpointMaster.isEndpointMatchedWithPattern(request, "/api/blog/posts/**") ||
+                endpointMaster.isEndpointMatchedWithPattern(request, "/api/public/**") ||
+                endpointMaster.isEndpointMatchedWithPattern(request, "/api/v1/products/**");
     }
 
 
