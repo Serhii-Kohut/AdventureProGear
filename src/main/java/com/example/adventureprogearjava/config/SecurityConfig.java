@@ -59,6 +59,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth ->
                         auth
+                                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/blog/reactions/{postId}/count")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/blog/posts/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/blog/posts/**")).hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/public/**")).permitAll()
