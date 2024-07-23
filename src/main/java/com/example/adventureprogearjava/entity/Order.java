@@ -34,7 +34,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Order extends BaseEntity{
+public class Order extends BaseEntity {
 
     @Transient
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
