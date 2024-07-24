@@ -4,6 +4,11 @@ import com.example.adventureprogearjava.dto.ReactionToPostDTO;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.ReactionType;
 import com.example.adventureprogearjava.services.impl.ReactionToPostServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,24 +34,61 @@ public class ReactionToPostController {
 
     @PostMapping("/{postId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReactionToPostDTO addReaction(@PathVariable Long postId,
-                                         @RequestBody ReactionType reactionType,
+    @Operation(summary = "Creating or updating Reaction of post.",
+            description = "Creating or updating Reaction of post.")
+    @ApiResponse(
+            responseCode = "201",
+            description = "Reaction created.",
+            content = @Content(schema = @Schema(implementation = ReactionToPostDTO.class))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Invalid data",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    public ReactionToPostDTO addReaction(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Reaction.",
+            required = true,
+            content = @Content(schema = @Schema(implementation = ReactionType.class)))
+                                         @PathVariable Long postId, @RequestBody ReactionType reactionType,
                                          @AuthenticationPrincipal User user) {
-
         return reactionToPostService.addReaction(postId, user.getId(), reactionType);
     }
 
     @GetMapping("/{postId}/count")
-    public Map<ReactionType, Long> countReactions(@PathVariable Long postId) {
+    @Operation(summary = "Counting all reactions of post.",
+            description = "Counting all reactions of post.")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Successful operation.",
+            content = @Content(schema = @Schema(implementation = Map.class))
+    )
+    @ApiResponse(
+            responseCode = "400",
+            description = "Post not found",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    public Map<ReactionType, Long> countReactions(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "ID of Post.",
+            required = true) @PathVariable Long postId) {
         return reactionToPostService.countReaction(postId);
     }
 
     @DeleteMapping("/{postId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeReaction(@PathVariable Long postId,
-                               @AuthenticationPrincipal User user) {
-
+    @Operation(
+            summary = "Deleting Reaction of post.",
+            description = "Deleting Reaction of post."
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "No content present.",
+            content = @Content(schema = @Schema(implementation = String.class))
+    )
+    public void removeReaction(@Parameter(
+            description = "ID of Post.",
+            required = true
+    ) @PathVariable Long postId, @AuthenticationPrincipal User user) {
         reactionToPostService.removeReaction(postId, user.getId());
     }
-
 }
