@@ -38,7 +38,7 @@ public class ReactionToPostController {
             description = "Creating or updating Reaction of post.")
     @ApiResponse(
             responseCode = "201",
-            description = "Reaction created.",
+            description = "Reaction created." ,
             content = @Content(schema = @Schema(implementation = ReactionToPostDTO.class))
     )
     @ApiResponse(
