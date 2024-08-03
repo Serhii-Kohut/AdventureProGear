@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-  @Override
+    @Override
     @Transactional
     public void updateEmail(UserEmailDto userEmailDto, Long id, HttpServletRequest request) {
         User existingUser = userRepository.findById(id)
@@ -218,9 +218,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NoUsersFoundException("User not found with id " + id));
 
         if (passwordUpdateDTO.getPassword() != null) {
+            if (!passwordUpdateDTO.getPassword().equals(passwordUpdateDTO.getConfirmPassword())) {
+                throw new IllegalArgumentException("Passwords do not match");
+            }
             existingUser.setPassword(passwordEncoder.encode(passwordUpdateDTO.getPassword()));
         }
-
         userRepository.save(existingUser);
     }
 

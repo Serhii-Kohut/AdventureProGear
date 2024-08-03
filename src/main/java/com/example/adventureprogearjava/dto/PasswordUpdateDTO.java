@@ -16,4 +16,7 @@ public class PasswordUpdateDTO {
     @NotBlank(message = "Password is mandatory")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password should be valid")
     String password;
+
+    @NotBlank(message = "Confirm Password is mandatory")
+    String confirmPassword;
 }
