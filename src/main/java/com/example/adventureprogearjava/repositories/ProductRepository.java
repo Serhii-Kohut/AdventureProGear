@@ -53,7 +53,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM products where gender= CAST(:gender as gender)", nativeQuery = true)
     List<Product> findByGender(@Param("gender") String gender);
 
-    @Query(value = "SELECT * FROM products p join categories c on c.id = p.category where c.category_name_en = :category", nativeQuery = true)
+    @Query(value = "SELECT p.*, c.id as category_id, c.category_name_en " +
+            "FROM products p " +
+            "JOIN categories c ON c.id = p.category " +
+            "WHERE c.category_name_en = :category",
+            nativeQuery = true)
     List<Product> findByCategory(@Param("category") String category);
 
     @Query(value = "SELECT p.*, c.id as category_id " +
