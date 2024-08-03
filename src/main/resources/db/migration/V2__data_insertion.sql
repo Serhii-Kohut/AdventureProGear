@@ -102,10 +102,10 @@ values (nextval('categories_seq'), 'Sleeping bags', 'Спальні мішки',
 
 
 insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Футболка', 'Common shirt', 'Звичайна футболка', 200, 'MALE', 2);
+values (nextval('product_seq'), 'T-Shirt', 'Футболка', 'Common shirt', 'Звичайна футболка', 200, 'MALE', 4);
 
 insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Футболка','Common shirt', 'Звичайна футболка', 175, 'FEMALE', 2);
+values (nextval('product_seq'), 'T-Shirt', 'Футболка','Common shirt', 'Звичайна футболка', 175, 'FEMALE', 4);
 
 insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
 values (nextval('product_seq'), 'Sneakers Hike Model', 'Кросівки для походів', 'Best choice for your feet', 'Найкращий вибір для вашої стопи', 350, 'FEMALE', 1);
