@@ -206,7 +206,6 @@ public class UserControllerTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setName(userDTO.getName());
         userUpdateDTO.setSurname(userDTO.getSurname());
-        userUpdateDTO.setEmail(userDTO.getEmail());
 
         doNothing().when(crudUserService).update(any(UserUpdateDTO.class), anyLong());
 
@@ -226,7 +225,6 @@ public class UserControllerTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setName(userDTO.getName());
         userUpdateDTO.setSurname(userDTO.getSurname());
-        userUpdateDTO.setEmail(userDTO.getEmail());
 
         doThrow(new ResourceNotFoundException("User not found")).when(crudUserService).update(any(UserUpdateDTO.class), anyLong());
 
