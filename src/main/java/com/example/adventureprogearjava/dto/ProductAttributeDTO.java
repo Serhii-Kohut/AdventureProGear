@@ -19,8 +19,8 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductAttributeDTO {
-    //    @NotNull(message = "Cannot add product attribute for not existent product")
-//    Long productId;
+    @NotNull(message = "Cannot add product attribute for not existent product")
+    Long productId;
     String size;
     String color;
     String additional;
@@ -29,7 +29,5 @@ public class ProductAttributeDTO {
     @NotNull
     @Min(0)
     Long quantity;
-    @JsonIgnore
-    Long productId;
     String selfLink;
 }
