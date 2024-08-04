@@ -32,7 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             nativeQuery = true)
     void update(@Param("id") Long id,
                 @Param("nameEn") String nameEn,
-                @Param("nameEn") String nameUa,
+                @Param("nameUa") String nameUa,
                 @Param("descriptionEn") String descriptionEn,
                 @Param("descriptionUa") String descriptionUa,
 
@@ -53,12 +53,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM products where gender= CAST(:gender as gender)", nativeQuery = true)
     List<Product> findByGender(@Param("gender") String gender);
 
-    @Query(value = "SELECT * FROM products p join categories c on c.id = p.category where c.category_name_en = :category", nativeQuery = true)
+    @Query(value = "SELECT p.*, c.id as category_id, c.category_name_en " +
+            "FROM products p " +
+            "JOIN categories c ON c.id = p.category " +
+            "WHERE c.category_name_en = :category",
+            nativeQuery = true)
     List<Product> findByCategory(@Param("category") String category);
 
-    @Query(value = "SELECT * FROM products p join categories c on c.id = p.category where c.category_name_en = :category and p.gender= CAST(:gender as gender)",
+    @Query(value = "SELECT p.*, c.id as category_id " +
+            "FROM products p " +
+            "JOIN categories c ON c.id = p.category " +
+            "WHERE c.category_name_en = :category " +
+            "AND p.gender = CAST(:gender as gender)",
             nativeQuery = true)
     List<Product> findByCategoryAndGender(@Param("category") String category, @Param("gender") String gender);
-
     List<Product> findByBasePriceBetween(Long from, Long to);
 }
