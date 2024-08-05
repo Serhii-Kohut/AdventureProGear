@@ -74,12 +74,9 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling
-
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 .accessDeniedHandler(customAccessDeniedHandler))
-                                .accessDeniedHandler(customAccessDeniedHandler)
-                                .authenticationEntryPoint(authenticationEntryPoint))
- (bug/fix/productAttributeController :)
+                            
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
