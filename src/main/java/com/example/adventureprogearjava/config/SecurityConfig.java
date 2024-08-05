@@ -65,6 +65,8 @@ public class SecurityConfig {
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/blog/posts/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/blog/posts/**")).hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/public/productAttributes")).hasAuthority("ROLE_ADMIN")
+                                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/productAttributes/**")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/productAttributes/**")).hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/public/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll()
@@ -73,7 +75,6 @@ public class SecurityConfig {
                         exceptionHandling
                                 .authenticationEntryPoint(authenticationEntryPoint)
                                 .accessDeniedHandler(customAccessDeniedHandler))
-
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
