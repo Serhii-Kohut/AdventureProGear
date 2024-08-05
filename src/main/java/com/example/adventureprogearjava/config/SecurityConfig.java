@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.config;
 
+import com.example.adventureprogearjava.exceptions.CustomAccessDeniedHandler;
 import com.example.adventureprogearjava.filter.JwtAuthenticationFilter;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ import java.util.List;
 public class SecurityConfig {
     JwtAuthenticationFilter jwtAuthenticationFilter;
     AuthenticationEntryPoint authenticationEntryPoint;
+    CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -62,15 +64,16 @@ public class SecurityConfig {
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/blog/reactions/{postId}/count")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/blog/posts/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/blog/posts/**")).hasAuthority("ROLE_ADMIN")
+                                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/public/productAttributes")).hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/public/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll()
                 )
-
-
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(authenticationEntryPoint));
+                        exceptionHandling
+                                .accessDeniedHandler(customAccessDeniedHandler)
+                                .authenticationEntryPoint(authenticationEntryPoint))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

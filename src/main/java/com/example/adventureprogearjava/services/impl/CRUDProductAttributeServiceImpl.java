@@ -6,6 +6,7 @@ import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.ProductAttributeMapper;
 import com.example.adventureprogearjava.repositories.ProductAttributeRepository;
+import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.services.CRUDService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CRUDProductAttributeServiceImpl implements CRUDService<ProductAttributeDTO> {
     ProductAttributeRepository productAttributeRepo;
-
+    ProductRepository productRepository;
     ProductAttributeMapper productAttributeMapper;
 
     @Override
@@ -49,6 +50,9 @@ public class CRUDProductAttributeServiceImpl implements CRUDService<ProductAttri
     @Transactional
     public ProductAttributeDTO create(ProductAttributeDTO productAttributeDTO) {
         log.info("Creating new productAttribute.");
+        if (!productRepository.existsById(productAttributeDTO.getProductId())) {
+            throw new ResourceNotFoundException("Product with ID " + productAttributeDTO.getProductId() + " not found.");
+        }
         productAttributeRepo.insertProductAttr(productAttributeDTO.getSize(),
                 productAttributeDTO.getColor(),
                 productAttributeDTO.getAdditional(),
