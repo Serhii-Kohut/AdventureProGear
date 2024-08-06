@@ -38,6 +38,7 @@ public class SectionsController {
     @PostMapping("")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> createSection(@RequestBody SectionDTO sectionDTO) throws SectionsAccessDeniedException {
+    public ResponseEntity<String> createSection(@RequestBody SectionDTO sectionDTO) throws SectionsAccessDeniedException{
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             throw new SectionsAccessDeniedException("Only admins are allowed to create sections.");
