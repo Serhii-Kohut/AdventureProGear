@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
+import com.example.adventureprogearjava.dto.OrdersListDTO;
 import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.OrderStatus;
@@ -9,8 +10,10 @@ import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
+import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.repositories.UserRepository;
 import com.example.adventureprogearjava.services.CRUDOrderService;
+import com.example.adventureprogearjava.services.MailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +34,8 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
     OrderRepository orderRepository;
     UserRepository userRepository;
     OrderMapper orderMapper = OrderMapper.MAPPER;
+    private final MailService mailService;
+    private final ProductRepository productRepository;
 
     @Override
     public List<OrderDTO> getAll() {
@@ -90,20 +96,50 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
     public OrderDTO createOrder(OrderDTO orderDTO, User user) {
         log.info("Creating new order.");
 
-        orderDTO.setUserId(user.getId());
+        Order order = orderMapper.toEntity(orderDTO);
+        order.setUser(user);
 
         if (orderDTO.getOrderDate() == null) {
-            orderDTO.setOrderDate(LocalDateTime.now());
+            order.setOrderDate(LocalDateTime.now());
         }
         if (orderDTO.getStatus() == null) {
-            orderDTO.setStatus(OrderStatus.NEW);
+            order.setStatus(OrderStatus.NEW);
         }
 
-        insertOrder(orderDTO);
+        Order savedOrder = orderRepository.save(order);
+        orderDTO.setId(savedOrder.getId());
+        orderDTO.setUserId(user.getId());
+
+        sendOrderConfirmation(orderDTO, user);
 
         return orderDTO;
     }
 
+    private void sendOrderConfirmation(OrderDTO savedOrderDTO, User user) {
+        Order savedOrder = orderRepository.findById(savedOrderDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + savedOrderDTO.getId()));
+
+        String subject = "Order Confirmation - Order # " + savedOrder.getId();
+        StringBuilder message = new StringBuilder();
+        message.append("Thank you for your order!\n")
+                .append("Order Details:\n")
+                .append("Order ID: ").append(savedOrder.getId()).append("\n")
+                .append("Order Date: ").append(savedOrder.getOrderDate()).append("\n")
+                .append("City: ").append(savedOrder.getCity()).append("\n")
+                .append("Post Address: ").append(savedOrder.getPostAddress()).append("\n")
+                .append("Comment: ").append(savedOrder.getComment()).append("\n")
+                .append("Price: ").append(savedOrder.getPrice()).append("\n")
+                .append("Status: ").append(savedOrder.getStatus()).append("\n")
+                .append("\nItems:\n");
+
+        for (OrdersListDTO item : savedOrderDTO.getOrdersLists()) {
+            String productName = productRepository.getProductNameById(item.getProductId());
+            message.append("- Product: ").append(productName)
+                    .append(", Quantity: ").append(item.getQuantity()).append("\n");
+        }
+
+        mailService.sendEmail(user.getEmail(), subject, message.toString());
+    }
 
 /*    @Override
     @Transactional
@@ -136,8 +172,6 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
                     orderDTO.getPostAddress(), orderDTO.getPrice(), orderDTO.getStatus().toString(), orderDTO.getUserId());
         }
     }
-
-
     @Override
     public void deleteOrder(Long id, User user) {
         log.info("Deleting order with id: {}", id);
@@ -149,17 +183,5 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
                 });
 
         orderRepository.delete(order);
-    }
-
-    private void insertOrder(OrderDTO orderDTO) {
-        orderRepository.insertOrder(
-                orderDTO.getCity(),
-                orderDTO.getComment(),
-                orderDTO.getOrderDate(),
-                orderDTO.getPostAddress(),
-                orderDTO.getPrice(),
-                orderDTO.getStatus().toString(),
-                orderDTO.getUserId()
-        );
     }
 }

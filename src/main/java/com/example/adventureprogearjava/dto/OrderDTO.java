@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.dto;
 
 import com.example.adventureprogearjava.entity.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +21,10 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDTO {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    Long id;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long userId;
 
     LocalDateTime orderDate;
@@ -37,7 +41,7 @@ public class OrderDTO {
     @Min(0)
     Long price;
 
-   // @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     OrderStatus status;
 
     List<OrdersListDTO> ordersLists;

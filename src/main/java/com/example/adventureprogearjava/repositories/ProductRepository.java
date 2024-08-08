@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -73,4 +72,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByBasePriceLessThanEqual(Long priceTo);
 
     List<Product> findByBasePriceGreaterThanEqual(Long priceFrom);
+
+    @Query("SELECT p.descriptionEn FROM Product p WHERE p.id = :productId")
+    String getProductNameById(@Param("productId") Long productId);
 }
