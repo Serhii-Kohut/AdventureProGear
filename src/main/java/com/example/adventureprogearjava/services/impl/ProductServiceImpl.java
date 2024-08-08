@@ -1,7 +1,6 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
-import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.mapper.ProductMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;

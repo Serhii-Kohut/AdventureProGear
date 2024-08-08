@@ -108,11 +108,9 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         Order savedOrder = orderRepository.save(order);
         orderDTO.setId(savedOrder.getId());
         orderDTO.setUserId(user.getId());
-
         sendOrderConfirmation(orderDTO, user.getId());
         return orderDTO;
     }
-
     private void sendOrderConfirmation(OrderDTO savedOrderDTO, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
@@ -130,6 +128,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
                 .append("Ми зв'яжемося з вами, як тільки воно буде підтверджено. Ви можете слідкувати за статусом вашого замовлення у своєму особистому кабінеті на нашому сайті.\n\n")
                 .append("З найкращими побажаннями,\n")
                 .append("Команда Adventure Pro Gear\n\n");
+        
         for (OrdersListDTO item : savedOrderDTO.getOrdersLists()) {
             String productName = productRepository.getProductNameById(item.getProductId());
             message.append("- Product: ").append(productName)
