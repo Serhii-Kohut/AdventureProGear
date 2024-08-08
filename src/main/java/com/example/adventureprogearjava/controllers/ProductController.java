@@ -68,7 +68,19 @@ public class ProductController {
                     required = false
             )
             @RequestParam(required = false) Long priceTo) {
+        if (priceFrom != null && priceTo == null) {
+            return productService.getProductsByPriceFrom(priceFrom);
+        }
+
+        if (priceTo != null && priceFrom == null) {
+            return productService.getProductsByPriceTo(priceTo);
+        }
+
         if (gender != null && category != null
+                && (priceFrom != null && priceTo != null))
+            return productService
+                    .getProductsByPriceAndCategoryAndGender(priceFrom, priceTo, category, gender);
+        else if (gender != null && category != null
                 && (priceFrom != null && priceTo != null))
             return productService
                     .getProductsByPriceAndCategoryAndGender(priceFrom, priceTo, category, gender);
@@ -88,7 +100,9 @@ public class ProductController {
             return productService.getProductsByGender(gender);
         else if (category != null)
             return productService.getProductsByCategory(category);
+
         return productCRUDService.getAll();
+
     }
 
     @GetMapping("/{id}")
@@ -132,7 +146,7 @@ public class ProductController {
                                                       description = "Name of the product to filter by name",
                                                       required = true
                                               )
-                                                      String name) {
+                                              String name) {
         return productService.getProductsByName(name);
     }
 

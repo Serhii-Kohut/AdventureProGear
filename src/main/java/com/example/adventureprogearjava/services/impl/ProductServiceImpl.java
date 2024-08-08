@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.mapper.ProductMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;
@@ -97,4 +98,24 @@ public class ProductServiceImpl implements ProductService {
                 .map(mapper::toDto)
                 .toList();
     }
+
+    @Override
+    public List<ProductDTO> getProductsByPriceTo(Long priceTo) {
+        log.info("Getting products with price up to {}", priceTo);
+        return productRepo.findByBasePriceLessThanEqual(priceTo)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<ProductDTO> getProductsByPriceFrom(Long priceFrom) {
+        log.info("Getting products with price from {}", priceFrom);
+        return productRepo.findByBasePriceGreaterThanEqual(priceFrom)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+
 }

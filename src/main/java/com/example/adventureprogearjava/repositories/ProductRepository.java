@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -68,4 +69,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             nativeQuery = true)
     List<Product> findByCategoryAndGender(@Param("category") String category, @Param("gender") String gender);
     List<Product> findByBasePriceBetween(Long from, Long to);
+
+    List<Product> findByBasePriceLessThanEqual(Long priceTo);
+
+    List<Product> findByBasePriceGreaterThanEqual(Long priceFrom);
 }

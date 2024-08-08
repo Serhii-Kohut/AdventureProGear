@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.entity.Product;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface ProductService {
     List<ProductDTO> getProductsByPriceAndCategory(Long priceFrom, Long priceTo, String category);
 
     List<ProductDTO> getProductsByPriceAndCategoryAndGender(Long priceFrom, Long priceTo, String category, String gender);
+    List<ProductDTO> getProductsByPriceTo(Long priceTo);
+
+    List<ProductDTO> getProductsByPriceFrom(Long priceFrom);
 }
