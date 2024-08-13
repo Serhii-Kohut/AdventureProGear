@@ -68,4 +68,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             nativeQuery = true)
     List<Product> findByCategoryAndGender(@Param("category") String category, @Param("gender") String gender);
     List<Product> findByBasePriceBetween(Long from, Long to);
+
+    List<Product> findByBasePriceLessThanEqual(Long priceTo);
+
+    List<Product> findByBasePriceGreaterThanEqual(Long priceFrom);
+
+    @Query("SELECT p.descriptionEn FROM Product p WHERE p.id = :productId")
+    String getProductNameById(@Param("productId") Long productId);
 }

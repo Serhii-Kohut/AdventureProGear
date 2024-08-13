@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS public.orders
     post_address varchar not null,
     comment      text,
     price        int,
-    status       status  not null
+    status       varchar  not null
 );
 
 CREATE TABLE IF NOT EXISTS public.orders_list
