@@ -14,7 +14,5 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.getWriter().write("\n" +
                 "Access denied");
-        response.getWriter().write("The creation of products is allowed only for admins");
-        response.getWriter().write("Access  denied");
     }
 }
