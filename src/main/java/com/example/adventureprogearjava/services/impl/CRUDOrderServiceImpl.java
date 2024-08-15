@@ -110,11 +110,28 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         orderDTO.setId(savedOrder.getId());
         orderDTO.setUserId(user.getId());
 
+        sendOrderConfirmation(orderDTO, user.getId());
         sendOrderConfirmation(orderDTO, user);
 
         return orderDTO;
     }
 
+    private void sendOrderConfirmation(OrderDTO savedOrderDTO, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
+
+        Order savedOrder = orderRepository.findById(savedOrderDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + savedOrderDTO.getId()));
+
+
+        String subject = "Дякуємо за ваше замовлення!";
+        StringBuilder message = new StringBuilder();
+        message.append("Шановний(а) ").append(user.getName()).append(",\n\n")
+                .append("Дякуємо за ваше замовлення №").append(savedOrder.getId())
+                .append(" у нашому інтернет-магазині Adventure Pro Gear. Ваше замовлення отримано і буде оброблене найближчим часом.\n\n")
+                .append("Ми зв'яжемося з вами, як тільки воно буде підтверджено. Ви можете слідкувати за статусом вашого замовлення у своєму особистому кабінеті на нашому сайті.\n\n")
+                .append("З найкращими побажаннями,\n")
+                .append("Команда Adventure Pro Gear\n\n");
     private void sendOrderConfirmation(OrderDTO savedOrderDTO, User user) {
         Order savedOrder = orderRepository.findById(savedOrderDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + savedOrderDTO.getId()));

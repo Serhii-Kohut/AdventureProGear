@@ -13,6 +13,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write("The creation of products is allowed only for admins");
+        response.getWriter().write("\n" +
+                "Access denied");
     }
 }
