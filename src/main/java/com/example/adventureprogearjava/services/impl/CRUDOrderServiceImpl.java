@@ -111,6 +111,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         orderDTO.setUserId(user.getId());
 
         sendOrderConfirmation(orderDTO, user.getId());
+        sendOrderConfirmation(orderDTO, user);
 
         return orderDTO;
     }
@@ -131,6 +132,22 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
                 .append("Ми зв'яжемося з вами, як тільки воно буде підтверджено. Ви можете слідкувати за статусом вашого замовлення у своєму особистому кабінеті на нашому сайті.\n\n")
                 .append("З найкращими побажаннями,\n")
                 .append("Команда Adventure Pro Gear\n\n");
+    private void sendOrderConfirmation(OrderDTO savedOrderDTO, User user) {
+        Order savedOrder = orderRepository.findById(savedOrderDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + savedOrderDTO.getId()));
+
+        String subject = "Order Confirmation - Order # " + savedOrder.getId();
+        StringBuilder message = new StringBuilder();
+        message.append("Thank you for your order!\n")
+                .append("Order Details:\n")
+                .append("Order ID: ").append(savedOrder.getId()).append("\n")
+                .append("Order Date: ").append(savedOrder.getOrderDate()).append("\n")
+                .append("City: ").append(savedOrder.getCity()).append("\n")
+                .append("Post Address: ").append(savedOrder.getPostAddress()).append("\n")
+                .append("Comment: ").append(savedOrder.getComment()).append("\n")
+                .append("Price: ").append(savedOrder.getPrice()).append("\n")
+                .append("Status: ").append(savedOrder.getStatus()).append("\n")
+                .append("\nItems:\n");
 
         for (OrdersListDTO item : savedOrderDTO.getOrdersLists()) {
             String productName = productRepository.getProductNameById(item.getProductId());
