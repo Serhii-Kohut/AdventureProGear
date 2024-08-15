@@ -9,9 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,12 +33,7 @@ public class SectionsController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> createSection(@RequestBody SectionDTO sectionDTO) throws SectionsAccessDeniedException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            throw new SectionsAccessDeniedException("Only admins are allowed to create sections.");
-        }
+    public ResponseEntity<String> createSection(@RequestBody SectionDTO sectionDTO) {
         try {
             crudService.create(sectionDTO);
             return ResponseEntity.status(HttpStatus.OK).body("Section created successfully");
