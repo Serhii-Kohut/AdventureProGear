@@ -117,6 +117,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
 
+
         Order savedOrder = orderRepository.findById(savedOrderDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + savedOrderDTO.getId()));
 
