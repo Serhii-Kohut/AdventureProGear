@@ -1,7 +1,6 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.SectionDTO;
-import com.example.adventureprogearjava.exceptions.SectionsAccessDeniedException;
 import com.example.adventureprogearjava.services.CRUDService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
