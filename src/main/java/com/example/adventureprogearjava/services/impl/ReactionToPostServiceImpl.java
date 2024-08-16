@@ -54,7 +54,7 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
         reactionDto.setUserId(userId);
 
         if (optionalExistingReaction.isPresent()) {
-                updateReaction(reactionDto);
+            updateReaction(reactionDto);
             log.info("Updated reaction on post {} for user {} ", postId, userId);
         } else {
             insertReaction(reactionDto);
@@ -113,7 +113,6 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
 
     private void updateReaction(ReactionToPostDTO reactionToPostDTO) {
         reactionToPostRepository.updateReaction(
-                reactionToPostDTO.getPostId(),
                 reactionToPostDTO.getReactionType().toString(),
                 reactionToPostDTO.getPostId(),
                 reactionToPostDTO.getUserId()
