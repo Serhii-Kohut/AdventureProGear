@@ -31,8 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getMethod().equals(HttpMethod.GET.name()) &&
-                endpointMaster.isEndpointMatchedWithPattern(request, "/api/productAttributes/**") ||
                 endpointMaster.isEndpointMatchedWithPattern(request, "/api/blog/posts/**") ||
+                endpointMaster.isEndpointMatchedWithPattern(request, "/api/productAttributes/**") ||
                 endpointMaster.isEndpointMatchedWithPattern(request, "/api/blog/reactions/{postId}/count") ||
                 endpointMaster.isEndpointMatchedWithPattern(request, "/api/public/**") ||
                 endpointMaster.isEndpointMatchedWithPattern(request, "/api/v1/products/**");
