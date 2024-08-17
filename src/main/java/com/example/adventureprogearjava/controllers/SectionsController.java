@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class SectionsController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> createSection(@RequestBody SectionDTO sectionDTO) {
         try {
             crudService.create(sectionDTO);
@@ -42,12 +44,14 @@ public class SectionsController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void updateSection(@PathVariable("id") Long id,
                               @RequestBody SectionDTO sectionDTO){
         crudService.update(sectionDTO, id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteSection(@PathVariable("id") Long id){
         crudService.delete(id);
     }
