@@ -46,7 +46,7 @@ public class UserController {
     @GetMapping("/all")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(
-            summary = "Get all users",
+            summary = "Get all users. Available for ADMIN.",
             description = "Retrieves all available users."
     )
     @ApiResponse(
@@ -60,8 +60,8 @@ public class UserController {
 
     @GetMapping("/me")
     @Operation(
-            summary = "Get user by it's own id",
-            description = "Retrieves User by id"
+            summary = "Get info about me",
+            description = "Retrieves info about me"
     )
     @ApiResponse(
             responseCode = "200",
@@ -74,7 +74,7 @@ public class UserController {
             content = @Content(schema = @Schema(implementation = String.class))
     )
     public UserDTO getUser(@Parameter(
-            description = "ID of the user",
+            description = "Info about me",
             required = true
     ) @AuthenticationPrincipal User user) {
         return crudUserService.getById(user.getId());
@@ -83,7 +83,7 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(
-            summary = "Get user by id",
+            summary = "Get user by id. Available for ADMIN.",
             description = "Retrieves User by id"
     )
     @ApiResponse(
@@ -117,7 +117,7 @@ public class UserController {
             content = @Content(schema = @Schema(implementation = String.class))
     )
     @Operation(
-            summary = "Creation of new user",
+            summary = "Creation of new user.Available for ADMIN.",
             description = "Creation of new user"
     )
     public UserCreateDTO createUser(@Valid
@@ -131,8 +131,8 @@ public class UserController {
 
     @PutMapping("/me/update")
     @Operation(
-            summary = "Update user",
-            description = "Updates the details of an existing user"
+            summary = "Update my info: name, surname, phoneNumber, streetAndHouseNumber, city, postalCode.",
+            description = "Updates my details."
     )
     @ApiResponse(
             responseCode = "200",
@@ -145,7 +145,7 @@ public class UserController {
 
     @PutMapping("/me/update-email")
     @Operation(
-            summary = "Update user email",
+            summary = "Update my email",
             description = "Updates the email of an existing user and sends a confirmation email"
     )
     @ApiResponse(
@@ -160,7 +160,7 @@ public class UserController {
 
     @PutMapping("/me/update-password")
     @Operation(
-            summary = "Update user password",
+            summary = "Update my password",
             description = "Updates the password of an existing user"
     )
     @ApiResponse(
@@ -182,6 +182,10 @@ public class UserController {
             responseCode = "204",
             description = "No content present.",
             content = @Content(schema = @Schema(implementation = String.class))
+    )
+    @Operation(
+            summary = "Delete my own account.",
+            description = "Deleting of user."
     )
     public void deleteUser(@Parameter(
             description = "ID of the user",

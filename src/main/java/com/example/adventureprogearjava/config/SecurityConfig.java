@@ -67,8 +67,10 @@ public class SecurityConfig {
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/api/productAttributes/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.POST, "/api/productAttributes/**")).hasAuthority("ROLE_ADMIN")
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/public/**")).permitAll()
+                                .requestMatchers(mvcMatcherBuilder.pattern("/api/public/**")).permitAll()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).authenticated()
                                 .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll()
+
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling

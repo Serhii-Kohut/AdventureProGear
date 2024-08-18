@@ -10,6 +10,7 @@ import org.mapstruct.Named;
 public interface ProductMapper {
     String api = "https://prime-tax-production.up.railway.app/api/public/products/";
 
+    @Mapping(target = "productId", source = "product.id")
     @Mapping(target = "basePrice", source = "product.basePrice")
     @Mapping(target = "gender", source = "product.gender")
     @Mapping(target = "category", source = "product.category")

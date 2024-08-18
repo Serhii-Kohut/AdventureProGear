@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.dto;
 
 import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,9 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDTO {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    Long productId;
+
     @NotBlank(message = "Name is mandatory")
     String productNameUa;
 
