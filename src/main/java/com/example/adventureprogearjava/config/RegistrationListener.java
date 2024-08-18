@@ -37,7 +37,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
         String recipientAddress = userEmailDto.getEmail();
         String subject = environment.getProperty("email.registration.subject", "Registration Confirmation");
-        String confirmationUrl = "https://incredible-creation-production.up.railway.app" + event.getAppUrl() + "/api/public/registration/confirmation?token=" + token;
+        String confirmationUrl = "https://authentic-laughter-production.up.railway.app" + event.getAppUrl() + "/api/public/registration/confirmation?token=" + token;
         String emailBody = environment.getProperty("email.registration.body", "To complete the registration, please follow the link:") + "\r\n" + confirmationUrl;
 
         mailService.sendEmail(recipientAddress, subject, emailBody);
