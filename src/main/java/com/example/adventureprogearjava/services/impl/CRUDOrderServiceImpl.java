@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
 import com.example.adventureprogearjava.dto.OrdersListDTO;
+import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.OrderStatus;
@@ -74,22 +75,6 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
 
         return orderMapper.toDTO(order);
     }
-
-    /*@Override
-    @Transactional
-    public OrderDTO create(OrderDTO orderDTO) {
-        log.info("Creating new order.");
-
-        if (orderDTO == null) {
-            throw new IllegalArgumentException("OrderDTO cannot be null");
-        }
-
-        Order order = orderMapper.toEntity(orderDTO);
-        Order savedOrder = orderRepository.save(order);
-
-        return orderMapper.toDTO(savedOrder);
-    }*/
-
     @Override
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO, User user) {
@@ -139,25 +124,67 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         mailService.sendEmail(user.getEmail(), subject, message.toString());
     }
 
-/*    @Override
     @Transactional
-    public void update(OrderDTO orderDTO, Long id) {
-        log.info("Updating order with id: {}", id);
+    public void updateOrderStatus(UpdateOrderStatusDTO updateOrderStatusDTO) {
+        Order order = orderRepository.findById(updateOrderStatusDTO.getOrderId())
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + updateOrderStatusDTO.getOrderId()));
 
-        Order existingOrder = orderRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Order not found with id: {}", id);
-                    return new ResourceNotFoundException("Order not found with id " + id);
-                });
+        order.setStatus(updateOrderStatusDTO.getStatus());
+        orderRepository.save(order);
 
-        Order orderToUpdate = orderMapper.toEntity(orderDTO);
+        sendUpdateStatusNotification(order);
 
-        orderToUpdate.setId(existingOrder.getId());
+        log.info("Order status updated for order id: {} to status: {}", order.getId(), order.getStatus());
+    }
 
-        orderRepository.save(orderToUpdate);
+    private void sendUpdateStatusNotification(Order order) {
+        String subject = "";
+        StringBuilder message = new StringBuilder();
+        message.append("Шановний(а) ").append(order.getUser().getName()).append(",\n\n");
 
-    }*/
+        switch (order.getStatus()) {
+            case ACCEPTED:
+                subject = "Ваше замовлення прийнято!";
+                message.append("Ваше замовлення №").append(order.getId())
+                        .append(" успішно прийняте і підтверджене. Наразі ми готуємо його до відправлення.\n\n")
+                        .append("Дякуємо, що обрали наш магазин для своїх подорожей та пригод! Ми повідомимо вас, коли ваше замовлення буде відправлене.\n\n");
+                break;
+            case READY_TO_SHIP:
+                subject = "Ваше замовлення готове до відправлення";
+                message.append("Ваше замовлення №").append(order.getId())
+                        .append(" готове до відправлення. Ми дбайливо пакуємо ваші товари і невдовзі передамо їх у службу доставки.\n\n")
+                        .append("Ви отримаєте наступне повідомлення, коли ваше замовлення буде відправлено. Дякуємо, що обрали нас!\n\n");
+                break;
 
+            case SENT:
+                subject = "Ваше замовлення вже у дорозі!";
+                message.append("Раді повідомити, що ваше замовлення №").append(order.getId())
+                        .append(" вже відправлено і прямує до вас!\n Ось номер для відстеження: 1902943.\n\n")
+                        .append("Ви можете відстежувати своє замовлення на сайті служби доставки deliveryexampl.com. Очікуйте отримання вашого замовлення найближчим часом!\n\n");
+                break;
+            case DELIVERED:
+                subject = "Ваше замовлення доставлено";
+                message.append("Ваше замовлення №").append(order.getId())
+                        .append(" успішно доставлено! Сподіваємося, що ви задоволені покупкою.\n\n")
+                        .append("Ми будемо раді почути ваш відгук або побажання щодо товарів і сервісу. Дякуємо, що обрали наш магазин!\n\n");
+                break;
+            case CANCELED:
+                subject = "Ваше замовлення скасовано!";
+                message.append("На жаль, ваше замовлення №").append(order.getId())
+                        .append(" було скасовано. Якщо у вас виникли питання, будь ласка, зв'яжіться з нашою службою підтримки.\n\n");
+                break;
+
+        }
+        message.append("З повагою,\n" +
+                "Команда Adventure Pro Gear");
+        try {
+            mailService.sendEmail(order.getUser().getEmail(), subject, message.toString());
+            log.info("Email sent successfully for order id: {}", order.getId());
+        } catch (Exception e) {
+            log.error("Failed to send email for order id: {}", order.getId(), e);
+        }
+
+    }
     @Override
     @Transactional
     public void updateOrder(OrderDTO orderDTO, Long id, User user) {

@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
+import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.services.impl.CRUDOrderServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -144,6 +146,22 @@ public class OrderController {
                                     required = true
                             ) @PathVariable Long id, @AuthenticationPrincipal User user) {
         orderService.updateOrder(orderDTO, id, user);
+    }
+
+    @PutMapping("/status")
+    @Operation(
+            summary = "Update order status",
+            description = "Update the status of an order",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Order status updated successfully"),
+                    @ApiResponse(responseCode = "404", description = "Order not found")
+            }
+    )
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> updateOrderStatus(@Valid @RequestBody UpdateOrderStatusDTO updateOrderStatusDTO) {
+        orderService.updateOrderStatus(updateOrderStatusDTO);
+        return ResponseEntity.ok("Order status updated.");
     }
 
     @DeleteMapping("/{id}")
