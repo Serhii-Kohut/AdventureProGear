@@ -50,7 +50,11 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
     @Transactional
     public ProductDTO create(ProductDTO productDTO) {
         log.info("Creating new product.");
-        insertProduct(productDTO);
+
+        Long generatedId = insertProduct(productDTO);
+
+        productDTO.setProductId((long) generatedId);
+
         return productDTO;
     }
 
@@ -84,13 +88,15 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
         productRepo.deleteById(id);
     }
 
-    private void insertProduct(ProductDTO productDTO) {
-        productRepo.insertProduct(productDTO.getProductNameEn(),
+    private Long insertProduct(ProductDTO productDTO) {
+        return productRepo.insertProduct(
+                productDTO.getProductNameEn(),
                 productDTO.getProductNameUa(),
                 productDTO.getDescriptionEn(),
                 productDTO.getDescriptionUa(),
                 productDTO.getBasePrice(),
-                productDTO.getCategory().toString(),
-                productDTO.getGender().toString());
+                productDTO.getGender().toString(),
+                productDTO.getCategory().getId());
+
     }
 }
