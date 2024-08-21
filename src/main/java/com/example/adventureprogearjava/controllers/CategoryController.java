@@ -12,6 +12,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -113,7 +117,8 @@ public class CategoryController {
         return categoryService.getAllSubCategories(id);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ApiResponse(
             responseCode = "201",
             description = "Successful operation.",
@@ -128,22 +133,23 @@ public class CategoryController {
             summary = "Creation of new category",
             description = "Creation of new category"
     )
-    public CategoryDTO createCategory(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "Category data, required for creation",
-                    required = true,
-                    content = @Content(schema = @Schema(implementation = CategoryDTO.class))
-            )
-            @Parameter(
-                    description = "ID of the section",
-                    required = true
-            )
-            @PathVariable("id") Long id,
-            @RequestBody CategoryDTO categoryDTO) {
-        return categoryService.createCategoryWithSection(id, categoryDTO);
+    public ResponseEntity<?> createCategory(@RequestBody CategoryDTO categoryDTO) {
+        try {
+            Long sectionId = categoryDTO.getSectionId();
+            if (sectionId == null) {
+                throw new IllegalArgumentException("Section ID is required");
+            }
+            CategoryDTO createdCategory = categoryService.createCategoryWithSection(sectionId, categoryDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Category with name: " + categoryDTO.getCategoryNameEn() + " already exists.");
+        }
     }
 
     @PostMapping("/subcategory/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ApiResponse(
             responseCode = "201",
             description = "Successful operation.",
@@ -174,6 +180,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ApiResponse(
             responseCode = "200",
             description = "Successful operation."
@@ -208,6 +215,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(
             summary = "Deleting category by it's own id",
             description = "Deleting product by it's own id"

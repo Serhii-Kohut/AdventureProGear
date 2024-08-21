@@ -1,7 +1,6 @@
 package com.example.adventureprogearjava.repositories;
 
 import com.example.adventureprogearjava.entity.Category;
-import com.example.adventureprogearjava.entity.OrdersList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,11 +17,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     void insertCategory(@Param("nameEn") String nameEn,
                         @Param("nameUa") String nameUa);
 
-    @Modifying
     @Query(value = "insert into categories (id, category_name_en,category_name_ua, section_id )\n" +
-            "            values (nextval('categories_seq'), :nameEn, :nameUa, :sectionId);",
+            "            values (nextval('categories_seq'), :nameEn, :nameUa, :sectionId)RETURNING id;",
             nativeQuery = true)
-    void insertCategoryWithSection(@Param("nameEn") String nameEn,
+    Long insertCategoryWithSection(@Param("nameEn") String nameEn,
                                    @Param("nameUa") String nameUa,
                                    @Param("sectionId") Long sectionId);
 
@@ -52,4 +50,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> getAllCategoriesBySection(@Param("id") Long id);
 
     Optional<Category> getCategoryByCategoryNameEn(String name);
+
+    Optional<Object> findByCategoryNameUa(String categoryNameUa);
 }
