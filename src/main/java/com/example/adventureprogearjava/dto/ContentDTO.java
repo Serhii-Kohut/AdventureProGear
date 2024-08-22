@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -19,9 +20,12 @@ public class ContentDTO {
         this.productId = productId;
     }
 
-    @NotBlank
-    String source;
     @JsonIgnore
     Long productId;
+    @Schema(description = "Source URL of the content", example = "https://example.com/images/sneakers.png")
+    @NotBlank
+    String source;
+
+    @Schema(description = "Self link", example = "/products/1/contents/1")
     String selfLink;
 }

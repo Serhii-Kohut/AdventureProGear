@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.dto;
 import com.example.adventureprogearjava.entity.Product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,16 +21,28 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductAttributeDTO {
+    @Schema(description = "Product ID", example = "3", accessMode = Schema.AccessMode.WRITE_ONLY)
     @NotNull(message = "Cannot add product attribute for not existent product")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Long productId;
+
+    @Schema(description = "Size of the product", example = "42")
     String size;
+
+    @Schema(description = "Color of the product", example = "Чорний")
     String color;
+
+    @Schema(description = "Additional feature of the product", example = "Водонепроникний")
     String additional;
+
+    @Schema(description = "Price deviation from the base price", example = "0")
     @NotNull
     Long priceDeviation;
+
+    @Schema(description = "Quantity of the product available", example = "20")
     @NotNull
     @Min(0)
     Long quantity;
+
+    @Schema(description = "Self link", example = "/products/1/attributes/1")
     String selfLink;
 }
