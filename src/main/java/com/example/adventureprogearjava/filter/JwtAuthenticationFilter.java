@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         if ((HttpMethod.POST.matches(method) || HttpMethod.PUT.matches(method) || HttpMethod.DELETE.matches(method))
-                && path.startsWith("/api/public/sections")) {
+                && (path.startsWith("/api/public/sections") || path.startsWith("/api/productAttributes"))) {
             return false;
         }
 
