@@ -20,7 +20,8 @@ public class ContentDTO {
         this.productId = productId;
     }
 
-    @JsonIgnore
+    @NotNull
+    @Schema(example = "1" , description = "Unique identifier of the product associated with the content")
     Long productId;
     @Schema(description = "Source URL of the content", example = "https://example.com/images/sneakers.png")
     @NotBlank
