@@ -5,11 +5,13 @@ import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.CategoryMapper;
 import com.example.adventureprogearjava.repositories.CategoryRepository;
+import com.example.adventureprogearjava.repositories.SectionRepository;
 import com.example.adventureprogearjava.services.CategoryService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,8 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CategoryServiceImpl implements CategoryService {
     private final static String api = "https://prime-tax-production.up.railway.app/api/public/categories/";
+
+    SectionRepository sectionRepository;
 
     CategoryRepository categoryRepository;
 
@@ -83,12 +87,26 @@ public class CategoryServiceImpl implements CategoryService {
         return subCategoryList;
     }
 
-    @Override
     @Transactional
     public CategoryDTO createCategoryWithSection(Long sectionId, CategoryDTO categoryDTO) {
         log.info("Creating Category with section");
-        categoryRepository.insertCategoryWithSection(categoryDTO.getCategoryNameEn(),
-                categoryDTO.getCategoryNameUa(), sectionId);
+
+        if (!sectionRepository.existsById(sectionId)) {
+            throw new IllegalArgumentException("Section with ID " + sectionId + " does not exist.");
+        }
+
+        if (categoryRepository.findByCategoryNameUa(categoryDTO.getCategoryNameUa()).isPresent()) {
+            throw new DataIntegrityViolationException("Category with name '" + categoryDTO.getCategoryNameUa() + "' already exists.");
+        }
+
+        Long generatedId = categoryRepository.insertCategoryWithSection(
+                categoryDTO.getCategoryNameEn(),
+                categoryDTO.getCategoryNameUa(),
+                sectionId
+        );
+
+        categoryDTO.setId(generatedId);
+
         return categoryDTO;
     }
 
