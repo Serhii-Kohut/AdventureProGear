@@ -11,17 +11,17 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Modifying
-    @Query(value = "insert into products (id ,product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)\n" +
-            "            values (nextval('product_content_seq'), :nameEn, :nameUa , :descriptionEn, :descriptionUa, :price, CAST(:gender as gender) , CAST(:category as category));",
+
+    @Query(value = "insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category) " +
+            "values (nextval('product_content_seq'), :nameEn, :nameUa, :descriptionEn, :descriptionUa, :price, CAST(:gender as gender), :categoryId)RETURNING id;",
             nativeQuery = true)
-    void insertProduct(@Param("name") String nameEn,
-                       @Param("name") String nameUa,
-                       @Param("description") String descriptionEn,
-                       @Param("description") String descriptionUa,
+    Long insertProduct(@Param("nameEn") String nameEn,
+                       @Param("nameUa") String nameUa,
+                       @Param("descriptionEn") String descriptionEn,
+                       @Param("descriptionUa") String descriptionUa,
                        @Param("price") Long price,
-                       @Param("category") String category,
-                       @Param("gender") String gender);
+                       @Param("gender") String gender,
+                       @Param("categoryId") Long categoryId);
 
     @Modifying
     @Query(value = "UPDATE products set product_name_en = :nameEn," +
