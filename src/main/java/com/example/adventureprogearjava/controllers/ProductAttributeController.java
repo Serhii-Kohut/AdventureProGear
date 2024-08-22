@@ -65,7 +65,7 @@ public class ProductAttributeController {
         return productAttributeCRUDService.getById(id);
     }
 
-    @PostMapping("/attributes")
+    @PostMapping("")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponse(
@@ -92,6 +92,7 @@ public class ProductAttributeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ApiResponse(
             responseCode = "200",
             description = "Successful operation."
@@ -122,6 +123,7 @@ public class ProductAttributeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(
             summary = "Deleting product attributes by it's own id",
             description = "Deleting product attributes by it's own id"

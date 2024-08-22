@@ -26,7 +26,6 @@ public class CategoryDTO {
     @NotBlank
     @Schema(description = "Section ID to which the category belongs", example = "2")
     Long sectionId;
-
     @Schema(description = "List of subcategories", example ="[]")
     List<CategoryDTO> subcategories;
 
