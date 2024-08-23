@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if ((HttpMethod.POST.matches(method) || HttpMethod.PUT.matches(method) || HttpMethod.DELETE.matches(method))
 
-                && (path.startsWith("/api/public/sections")||path.startsWith("/api/productAttributes")|| path.startsWith("/api/public/products")|| path.startsWith("/api/public/categories"))) {
+                && (path.startsWith("/api/public/sections") || path.startsWith("/api/productAttributes") || path.startsWith("/api/public/products") || path.startsWith("/api/public/categories") || path.startsWith("/api/public/productContent"))) {
 
             return false;
         }
