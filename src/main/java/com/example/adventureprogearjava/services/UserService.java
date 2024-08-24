@@ -24,7 +24,7 @@ public interface UserService {
 
     UserResponseDto saveRegisteredUser(UserRequestDto registrationDto);
 
-    void update(UserUpdateDTO userUpdateDTO, Long id);
+    UserDTO update(UserUpdateDTO userUpdateDTO, Long id);
 
     void updateEmail(UserEmailDto userEmailDto, Long id, HttpServletRequest request);
 
