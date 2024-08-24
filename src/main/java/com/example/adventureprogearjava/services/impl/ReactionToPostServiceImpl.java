@@ -114,13 +114,13 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
         );
     }
 
-    private void updateReaction(ReactionToPostDTO reactionToPostDTO) {
+/*    private void updateReaction(ReactionToPostDTO reactionToPostDTO) {
         reactionToPostRepository.updateReaction(
                 reactionToPostDTO.getReactionType().toString(),
                 reactionToPostDTO.getPostId(),
                 reactionToPostDTO.getUserId()
         );
-    }
+    }*/
 
     private boolean isValidReactionType(ReactionType reactionType) {
         return Arrays.asList(ReactionType.values()).contains(reactionType);
