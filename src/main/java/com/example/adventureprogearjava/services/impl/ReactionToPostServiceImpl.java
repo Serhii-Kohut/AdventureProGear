@@ -36,33 +36,36 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
     @Override
     @Transactional
     public ReactionToPostDTO addReaction(Long postId, Long userId, ReactionType reactionType) {
-        Post post = postRepository.findById(postId).orElseThrow(()
-                -> new ResourceNotFoundException("Post not found"));
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new ResourceNotFoundException("Post not found"));
 
-        User user = userRepository.findById(userId).orElseThrow(()
-                -> new ResourceNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("User not found"));
 
         if (!isValidReactionType(reactionType)) {
             throw new InvalidReactionTypeException("Invalid reaction type: " + reactionType);
         }
 
-        Optional<ReactionToPost> optionalExistingReaction = reactionToPostRepository.findByPostAndUser(post, user);
+        ReactionToPost existingReaction = reactionToPostRepository.findByPostAndUser(post, user)
+                .orElse(null);
 
-        ReactionToPostDTO reactionDto = new ReactionToPostDTO();
-        reactionDto.setReactionType(reactionType);
-        reactionDto.setPostId(postId);
-        reactionDto.setUserId(userId);
-
-        if (optionalExistingReaction.isPresent()) {
-            updateReaction(reactionDto);
-            log.info("Updated reaction on post {} for user {} ", postId, userId);
+        if (existingReaction != null) {
+            if (existingReaction.getReactionType().equals(reactionType)) {
+                log.info("Reaction already exists on post {} for user {} with the same type", postId, userId);
+                return new ReactionToPostDTO(reactionType, postId, userId);
+            } else {
+                reactionToPostRepository.delete(existingReaction);
+                insertReaction(new ReactionToPostDTO(reactionType, postId, userId));
+                log.info("Updated reaction on post {} for user {} ", postId, userId);
+            }
         } else {
-            insertReaction(reactionDto);
+            insertReaction(new ReactionToPostDTO(reactionType, postId, userId));
             log.info("Inserted new reaction on post {} for user {} ", postId, userId);
         }
 
-        return reactionDto;
+        return new ReactionToPostDTO(reactionType, postId, userId);
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -111,13 +114,13 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
         );
     }
 
-    private void updateReaction(ReactionToPostDTO reactionToPostDTO) {
+/*    private void updateReaction(ReactionToPostDTO reactionToPostDTO) {
         reactionToPostRepository.updateReaction(
                 reactionToPostDTO.getReactionType().toString(),
                 reactionToPostDTO.getPostId(),
                 reactionToPostDTO.getUserId()
         );
-    }
+    }*/
 
     private boolean isValidReactionType(ReactionType reactionType) {
         return Arrays.asList(ReactionType.values()).contains(reactionType);

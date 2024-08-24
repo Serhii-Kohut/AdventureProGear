@@ -139,8 +139,8 @@ public class UserController {
             description = "Successful operation",
             content = @Content(schema = @Schema(implementation = UserUpdateDTO.class))
     )
-    public void updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal User user) {
-        crudUserService.update(userUpdateDTO, user.getId());
+    public UserDTO updateUser(@Valid @RequestBody UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal User user) {
+        return crudUserService.update(userUpdateDTO, user.getId());
     }
 
     @PutMapping("/me/update-email")

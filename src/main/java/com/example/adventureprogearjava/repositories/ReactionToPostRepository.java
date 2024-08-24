@@ -25,13 +25,13 @@ public interface ReactionToPostRepository extends JpaRepository<ReactionToPost, 
                         @Param("postId") Long postId,
                         @Param("userId") Long userId);
 
-    @Modifying
+/*    @Modifying
     @Transactional
     @Query(value = "UPDATE reactions SET type = CAST(:reactionType AS reaction_type), post_id = :postId, " +
             "user_id = :userId", nativeQuery = true)
     void updateReaction(@Param("reactionType") String reactionType,
                         @Param("postId") Long postId,
-                        @Param("userId") Long userId);
+                        @Param("userId") Long userId);*/
 
 
     Optional<ReactionToPost> findByPostAndUser(Post post, User user);
