@@ -54,8 +54,15 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
         reactionDto.setUserId(userId);
 
         if (optionalExistingReaction.isPresent()) {
-            updateReaction(reactionDto);
-            log.info("Updated reaction on post {} for user {} ", postId, userId);
+            ReactionToPost existingReaction = optionalExistingReaction.get();
+
+            if (existingReaction.getReactionType().equals(reactionType)) {
+                log.info("Reaction already exists on post {} for user {} with the same type", postId, userId);
+                return reactionDto;
+            } else {
+                updateReaction(reactionDto);
+                log.info("Updated reaction on post {} for user {} ", postId, userId);
+            }
         } else {
             insertReaction(reactionDto);
             log.info("Inserted new reaction on post {} for user {} ", postId, userId);
