@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.services.impl;
 import com.example.adventureprogearjava.dto.ContentDTO;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.StorageService;
+import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,43 +29,42 @@ public class StorageServiceImpl implements StorageService {
 
     CRUDService<ContentDTO> crudService;
 
+    @PostConstruct
+    public void init() {
+        try {
+            Files.createDirectories(root);
+        } catch (IOException e) {
+            log.error("Could not initialize storage directory: " + e.getMessage());
+            throw new RuntimeException("Could not initialize storage directory", e);
+        }
+    }
+
     @Override
     public Resource get(String filename) {
         try {
             log.info("Getting file with filename: " + filename);
-            Path file = root.resolve(filename + ".txt");
+            Path file = root.resolve(filename);
             byte[] data = Files.readAllBytes(file);
-            // Return ResponseEntity with image content type
             return new ByteArrayResource(data);
         } catch (IOException e) {
             log.error("Error reading the file: " + e.getMessage());
-            Path file = root.resolve("file.txt");
-            try {
-                byte[] data = Files.readAllBytes(file);
-                return new ByteArrayResource(data);
-            } catch (IOException ex) {
-                log.error("Fatal error. Can't retrieve default file");
-                return null;
-                //TODO Create an empty directory for files if not exist
-                //TODO Create default file if not exist
-            }
+            throw new RuntimeException("File not found: " + filename, e);
         }
     }
 
     @Override
     public void load(MultipartFile file, String source) {
         try {
-            log.info("Loading file with filename: " + file.getName());
-            try (InputStream is = file.getInputStream()) {
+            log.info("Loading file with original filename: " + file.getOriginalFilename());
+            Path destinationFile = root.resolve(source);
+            try (FileOutputStream outputStream = new FileOutputStream(destinationFile.toFile());
+                 InputStream is = file.getInputStream()) {
                 byte[] stream = is.readAllBytes();
-                FileOutputStream outputStream = new FileOutputStream("uploads/" + source + ".txt");
                 outputStream.write(stream);
-                outputStream.close();
-            } catch (IOException e) {
-                log.error("Error reading file: " + e.getMessage());
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (IOException e) {
+            log.error("Error saving file: " + e.getMessage());
+            throw new RuntimeException("Failed to store file: " + source, e);
         }
     }
 }
