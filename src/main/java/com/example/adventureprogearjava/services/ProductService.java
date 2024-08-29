@@ -24,4 +24,5 @@ public interface ProductService {
     List<ProductDTO> getProductsByPriceTo(Long priceTo);
 
     List<ProductDTO> getProductsByPriceFrom(Long priceFrom);
+    List<ProductDTO> getAllProducts(String gender, String category, Long priceFrom, Long priceTo);
 }
