@@ -10,6 +10,7 @@ import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
+import com.example.adventureprogearjava.exceptions.UnauthorizedException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
 import com.example.adventureprogearjava.repositories.ProductRepository;
@@ -201,6 +202,10 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
 
+        if (!order.getUser().equals(user)) {
+            throw new UnauthorizedException("You are not the author and do not have permission to update this order");
+        }
+
         if (orderUpdateDTO.getCity() != null) {
             order.setCity(orderUpdateDTO.getCity());
         }
@@ -220,14 +225,11 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
             order.setStatus(orderUpdateDTO.getStatus());
         }
 
-        if (user != null) {
-            order.setUser(user);
-        }
-
         Order updatedOrder = orderRepository.save(order);
 
         return orderMapper.toDTO(updatedOrder);
     }
+
 
     @Override
     public void deleteOrder(Long id, User user) {
