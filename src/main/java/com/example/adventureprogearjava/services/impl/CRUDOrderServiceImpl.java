@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
+import com.example.adventureprogearjava.dto.OrderUpdateDTO;
 import com.example.adventureprogearjava.dto.OrdersListDTO;
 import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.Order;
@@ -76,6 +77,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
 
         return orderMapper.toDTO(order);
     }
+
     @Override
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO, User user) {
@@ -190,17 +192,41 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         }
 
     }
+
     @Override
     @Transactional
-    public void updateOrder(OrderDTO orderDTO, Long id, User user) {
+    public OrderDTO updateOrder(OrderUpdateDTO orderUpdateDTO, Long id, User user) {
         log.info("Updating order with id: {}", id);
-        if (!orderRepository.existsById(id)) {
-            log.warn("Order not found!");
-            throw new ResourceNotFoundException("Order not found with id " + id);
-        } else {
-            orderRepository.update(id, orderDTO.getCity(), orderDTO.getComment(), orderDTO.getOrderDate(),
-                    orderDTO.getPostAddress(), orderDTO.getPrice(), orderDTO.getStatus().toString(), orderDTO.getUserId());
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
+
+        if (orderUpdateDTO.getCity() != null) {
+            order.setCity(orderUpdateDTO.getCity());
         }
+        if (orderUpdateDTO.getPostAddress() != null) {
+            order.setPostAddress(orderUpdateDTO.getPostAddress());
+        }
+        if (orderUpdateDTO.getPrice() != null) {
+            order.setPrice(orderUpdateDTO.getPrice());
+        }
+        if (orderUpdateDTO.getComment() != null) {
+            order.setComment(orderUpdateDTO.getComment());
+        }
+        if (orderUpdateDTO.getOrderDate() != null) {
+            order.setOrderDate(orderUpdateDTO.getOrderDate());
+        }
+        if (orderUpdateDTO.getStatus() != null) {
+            order.setStatus(orderUpdateDTO.getStatus());
+        }
+
+        if (user != null) {
+            order.setUser(user);
+        }
+
+        Order updatedOrder = orderRepository.save(order);
+
+        return orderMapper.toDTO(updatedOrder);
     }
 
     @Override
