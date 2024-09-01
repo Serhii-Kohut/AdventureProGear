@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +80,10 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO, User user) {
         log.info("Creating new order.");
+
+        if (orderDTO.getOrdersLists() == null) {
+            orderDTO.setOrdersLists(new ArrayList<>());
+        }
 
         Order order = orderMapper.toEntity(orderDTO);
         order.setUser(user);
