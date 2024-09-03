@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
+import com.example.adventureprogearjava.dto.OrderUpdateDTO;
 import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.services.impl.CRUDOrderServiceImpl;
@@ -135,17 +136,17 @@ public class OrderController {
             summary = "Update of the order",
             description = "Update of the order"
     )
-    public void updateOrder(@io.swagger.v3.oas.annotations.parameters.RequestBody(
+    public OrderDTO updateOrder(@io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Order data, required for creation",
             required = true,
             content = @Content(schema = @Schema(implementation = OrderDTO.class))
     )
-                            @Valid @RequestBody OrderDTO orderDTO,
-                            @Parameter(
-                                    description = "ID of the order",
-                                    required = true
-                            ) @PathVariable Long id, @AuthenticationPrincipal User user) {
-        orderService.updateOrder(orderDTO, id, user);
+                                @Valid @RequestBody OrderUpdateDTO orderDTO,
+                                @Parameter(
+                                        description = "ID of the order",
+                                        required = true
+                                ) @PathVariable Long id, @AuthenticationPrincipal User user) {
+        return orderService.updateOrder(orderDTO, id, user);
     }
 
     @PutMapping("/status")

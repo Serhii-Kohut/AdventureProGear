@@ -27,15 +27,18 @@ public class FileController {
                 .body(resource);
     }
 
-    @PostMapping("/{name}")
+    @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String name) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            storageService.load(file, name);
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || originalFilename.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid file name.");
+            }
+            storageService.load(file, originalFilename);
             return ResponseEntity.status(HttpStatus.OK).body("File uploaded successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("File upload failed: " + e.getMessage());
         }
     }
-    //test
 }

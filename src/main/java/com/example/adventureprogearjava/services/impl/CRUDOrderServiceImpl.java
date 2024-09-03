@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.OrderDTO;
+import com.example.adventureprogearjava.dto.OrderUpdateDTO;
 import com.example.adventureprogearjava.dto.OrdersListDTO;
 import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.Order;
@@ -9,6 +10,7 @@ import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
+import com.example.adventureprogearjava.exceptions.UnauthorizedException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
 import com.example.adventureprogearjava.repositories.ProductRepository;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,10 +78,15 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
 
         return orderMapper.toDTO(order);
     }
+
     @Override
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO, User user) {
         log.info("Creating new order.");
+
+        if (orderDTO.getOrdersLists() == null) {
+            orderDTO.setOrdersLists(new ArrayList<>());
+        }
 
         Order order = orderMapper.toEntity(orderDTO);
         order.setUser(user);
@@ -185,18 +193,43 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         }
 
     }
+
     @Override
     @Transactional
-    public void updateOrder(OrderDTO orderDTO, Long id, User user) {
+    public OrderDTO updateOrder(OrderUpdateDTO orderUpdateDTO, Long id, User user) {
         log.info("Updating order with id: {}", id);
-        if (!orderRepository.existsById(id)) {
-            log.warn("Order not found!");
-            throw new ResourceNotFoundException("Order not found with id " + id);
-        } else {
-            orderRepository.update(id, orderDTO.getCity(), orderDTO.getComment(), orderDTO.getOrderDate(),
-                    orderDTO.getPostAddress(), orderDTO.getPrice(), orderDTO.getStatus().toString(), orderDTO.getUserId());
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
+
+        if (!order.getUser().equals(user)) {
+            throw new UnauthorizedException("You are not the author and do not have permission to update this order");
         }
+
+        if (orderUpdateDTO.getCity() != null) {
+            order.setCity(orderUpdateDTO.getCity());
+        }
+        if (orderUpdateDTO.getPostAddress() != null) {
+            order.setPostAddress(orderUpdateDTO.getPostAddress());
+        }
+        if (orderUpdateDTO.getPrice() != null) {
+            order.setPrice(orderUpdateDTO.getPrice());
+        }
+        if (orderUpdateDTO.getComment() != null) {
+            order.setComment(orderUpdateDTO.getComment());
+        }
+        if (orderUpdateDTO.getOrderDate() != null) {
+            order.setOrderDate(orderUpdateDTO.getOrderDate());
+        }
+        if (orderUpdateDTO.getStatus() != null) {
+            order.setStatus(orderUpdateDTO.getStatus());
+        }
+
+        Order updatedOrder = orderRepository.save(order);
+
+        return orderMapper.toDTO(updatedOrder);
     }
+
 
     @Override
     public void deleteOrder(Long id, User user) {

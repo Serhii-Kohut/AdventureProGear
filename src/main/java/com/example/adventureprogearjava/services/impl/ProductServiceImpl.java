@@ -4,11 +4,13 @@ import com.example.adventureprogearjava.dto.ProductDTO;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.mapper.ProductMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;
+import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,9 @@ public class ProductServiceImpl implements ProductService {
     ProductRepository productRepo;
 
     ProductMapper mapper;
+
+    @Autowired
+    CRUDService<ProductDTO> productCRUDService;
 
     @Override
     public List<ProductDTO> getProductsByName(String productName) {
@@ -115,6 +120,34 @@ public class ProductServiceImpl implements ProductService {
                 .map(mapper::toDto)
                 .toList();
     }
+    @Override
+    public List<ProductDTO> getAllProducts(String gender, String category, Long priceFrom, Long priceTo) {
+        log.info("Getting all products with filters");
 
+        if (priceFrom != null && priceTo == null) {
+            return getProductsByPriceFrom(priceFrom);
+        }
 
+        if (priceTo != null && priceFrom == null) {
+            return getProductsByPriceTo(priceTo);
+        }
+
+        if (gender != null && category != null && priceFrom != null && priceTo != null) {
+            return getProductsByPriceAndCategoryAndGender(priceFrom, priceTo, category, gender);
+        } else if (gender != null && category != null) {
+            return getProductsByCategoryAndGender(category, gender);
+        } else if (category != null && priceFrom != null && priceTo != null) {
+            return getProductsByPriceAndCategory(priceFrom, priceTo, category);
+        } else if (gender != null && priceFrom != null && priceTo != null) {
+            return getProductsByPriceAndGender(priceFrom, priceTo, gender);
+        } else if (priceFrom != null && priceTo != null) {
+            return getProductsByPrice(priceFrom, priceTo);
+        } else if (gender != null) {
+            return getProductsByGender(gender);
+        } else if (category != null) {
+            return getProductsByCategory(category);
+        }
+
+        return productCRUDService.getAll();
+    }
 }

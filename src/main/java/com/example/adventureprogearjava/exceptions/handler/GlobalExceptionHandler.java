@@ -9,6 +9,7 @@ import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.PasswordMismatchException;
 import com.example.adventureprogearjava.exceptions.PostNotFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
+import com.example.adventureprogearjava.exceptions.UnauthorizedException;
 import com.example.adventureprogearjava.exceptions.UserAlreadyExistsException;
 import com.example.adventureprogearjava.exceptions.UserIsNotActiveException;
 import org.springframework.http.HttpHeaders;
@@ -134,4 +135,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<String> handleInvalidReactionTypeException(InvalidReactionTypeException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
 }
