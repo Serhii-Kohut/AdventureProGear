@@ -28,63 +28,65 @@ import java.lang.annotation.Target;
 @Operation(
         summary = "Creation of new product",
         description = "Creation of new product",
-        security = @SecurityRequirement(name = "bearerAuth")
-)
-@RequestBody(
-        description = "Product data required for creation",
-        required = true,
-        content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ProductDTO.class),
-                examples = {
-                        @ExampleObject(
-                                name = "Good request",
-                                value = """
-                                        {
-                                          "productNameUa": "Кросівки",
-                                          "productNameEn": "Sneakers",
-                                          "descriptionUa": "Зручні спортивні кросівки",
-                                          "descriptionEn": "Comfortable sports sneakers",
-                                          "basePrice": 2000,
-                                          "gender": "MALE",
-                                          "category": {
-                                            "categoryId": 1,
-                                            "categoryName": "Shoes"
-                                          },
-                                          "attributes": [
-                                            {
-                                              "attributeId": 1,
-                                              "attributeName": "Color",
-                                              "attributeValue": "Red"
-                                            }
-                                          ],
-                                          "contents": [
-                                            {
-                                              "contentId": 1,
-                                              "contentType": "IMAGE",
-                                              "contentUrl": "/images/sneakers.jpg"
-                                            }
-                                          ]
-                                        }
-                                        """
-                        )
-                }
-        )
-)
-@ApiResponse(
-        responseCode = "201",
-        description = "Successful operation.",
-        content = @Content(schema = @Schema(implementation = ProductDTO.class))
-)
-@ApiResponse(
-        responseCode = "403",
-        description = "Access Denied",
-        content = @Content(schema = @Schema(implementation = String.class))
-)
-@ApiResponse(
-        responseCode = "400",
-        description = "Invalid data",
-        content = @Content(schema = @Schema(implementation = String.class))
+        security = @SecurityRequirement(name = "bearerAuth"),
+        requestBody = @RequestBody(
+                description = "Product data required for creation",
+                required = true,
+                content = @Content(
+                        mediaType = "application/json",
+                        schema = @Schema(implementation = ProductDTO.class),
+                        examples = {
+                                @ExampleObject(
+                                        name = "Good request",
+                                        value = """
+                                                {
+                                                  "productNameUa": "Кросівки",
+                                                  "productNameEn": "Sneakers",
+                                                  "descriptionUa": "Зручні спортивні кросівки",
+                                                  "descriptionEn": "Comfortable sports sneakers",
+                                                  "basePrice": 2000,
+                                                  "gender": "MALE",
+                                                  "category": {
+                                                    "categoryId": 1,
+                                                    "categoryName": "Shoes"
+                                                  },
+                                                  "attributes": [
+                                                    {
+                                                      "attributeId": 1,
+                                                      "attributeName": "Color",
+                                                      "attributeValue": "Red"
+                                                    }
+                                                  ],
+                                                  "contents": [
+                                                    {
+                                                      "contentId": 1,
+                                                      "contentType": "IMAGE",
+                                                      "contentUrl": "/images/sneakers.jpg"
+                                                    }
+                                                  ]
+                                                }
+                                                """
+                                )
+                        }
+                )
+        ),
+        responses = {
+                @ApiResponse(
+                        responseCode = "201",
+                        description = "Successful operation.",
+                        content = @Content(schema = @Schema(implementation = ProductDTO.class))
+                ),
+                @ApiResponse(
+                        responseCode = "403",
+                        description = "Access Denied",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                ),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Invalid data",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                )
+        }
 )
 public @interface CreateProduct {
 

@@ -23,26 +23,32 @@ import java.lang.annotation.Target;
         summary = "Get all products by name",
         description = "Retrieves all available products with the provided name. " +
                 "Note: When there are no products with the provided name, the service " +
-                "returns just an empty list instead of a 404 status code."
-)
-@ApiResponse(
-        responseCode = "200",
-        description = "Successful operation.",
-        content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = ProductDTO.class)
-        )
+                "returns just an empty list instead of a 404 status code.",
+        parameters = @Parameter(
+                name = "name",
+                description = "Name of the product to filter by name",
+                required = true,
+                in = ParameterIn.QUERY,
+                schema = @Schema(type = "string")
+        ),
+        responses = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Successful operation.",
+                        content = @Content(
+                                mediaType = "application/json",
+                                schema = @Schema(implementation = ProductDTO.class)
+                        )
+                ),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Invalid request.",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                )
+        }
 )
 public @interface GetProductsByName {
 
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
-
-    @Parameter(
-            description = "Name of the product to filter by name",
-            required = true,
-            in = ParameterIn.PATH,
-            schema = @Schema(type = "string")
-    )
-    String name() default "";
 }
