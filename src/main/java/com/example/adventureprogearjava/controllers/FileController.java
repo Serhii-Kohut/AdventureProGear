@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.services.StorageService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Profile("disabled") // Контроллер заглушен
 @RestController
 @RequestMapping("/files")
 public class FileController {
