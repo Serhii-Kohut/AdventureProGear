@@ -1,13 +1,13 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.annotation.registrationController.ConfirmationUserRegistration;
+import com.example.adventureprogearjava.annotation.registrationController.RegisterUser;
+import com.example.adventureprogearjava.annotation.registrationController.ResendVerificationEmail;
 import com.example.adventureprogearjava.dto.registrationDto.RegistrationDto;
 import com.example.adventureprogearjava.dto.registrationDto.UserEmailDto;
 import com.example.adventureprogearjava.dto.registrationDto.UserResponseDto;
 import com.example.adventureprogearjava.dto.registrationDto.VerificationTokenMessageDto;
 import com.example.adventureprogearjava.services.impl.RegistrationServiceImpl;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -17,8 +17,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,21 +33,7 @@ import org.springframework.web.context.request.WebRequest;
 public class RegistrationController {
     RegistrationServiceImpl registrationService;
 
-    @PostMapping("/register")
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "201",
-            description = "Successful operation.",
-            content = @Content(schema = @Schema(implementation = RegistrationDto.class))
-    )
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid data",
-            content = @Content(schema = @Schema(implementation = String.class))
-    )
-    @Operation(
-            summary = "Registration  of new user",
-            description = "Registration of new user"
-    )
+    @RegisterUser(path = "/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationDto registrationDto,
                                           HttpServletRequest request) {
         try {
@@ -60,21 +44,7 @@ public class RegistrationController {
         }
     }
 
-    @PostMapping("/resend")
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "201",
-            description = "Successful operation.",
-            content = @Content(schema = @Schema(implementation = UserEmailDto.class))
-    )
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid data",
-            content = @Content(schema = @Schema(implementation = String.class))
-    )
-    @Operation(
-            summary = "Resend verification email of new user",
-            description = "Resend verification email of new user"
-    )
+    @ResendVerificationEmail(path = "/resend")
     public ResponseEntity<?> resendVerificationEmail(@Valid @RequestBody UserEmailDto emailDto,
                                                      HttpServletRequest request) {
         try {
@@ -87,28 +57,13 @@ public class RegistrationController {
         }
     }
 
-    @GetMapping("/confirmation")
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Successful operation.",
-            content = @Content(schema = @Schema(implementation = ApiResponse.class))
-    )
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid data",
-            content = @Content(schema = @Schema(implementation = String.class))
-    )
-    @Operation(
-            summary = "Confirmation of user registration",
-            description = "Confirmation of user registration"
-    )
+    @ConfirmationUserRegistration(path = "/confirmation")
     public ResponseEntity<?> confirmation(@RequestParam("token") String token, WebRequest request) {
         VerificationTokenMessageDto result = registrationService.confirmUserRegistration(token, request.getLocale());
 
         return ResponseEntity.status(result.getStatus())
                 .body(new ApiResponse(result.isSuccess(), result.getMessage()));
     }
-
     public record ApiResponse(boolean success, String message) {
     }
 
