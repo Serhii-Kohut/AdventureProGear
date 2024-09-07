@@ -1,5 +1,7 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.annotation.authenticationController.LoginUser;
+import com.example.adventureprogearjava.annotation.authenticationController.RefreshToken;
 import com.example.adventureprogearjava.dto.authToken.AuthenticationRequestDto;
 import com.example.adventureprogearjava.dto.authToken.AuthenticationResponseDto;
 import com.example.adventureprogearjava.dto.authToken.RefreshTokenRequestDto;
@@ -27,21 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     AuthenticationService authenticationService;
 
-    @PostMapping("/login")
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Successful operation.",
-            content = @Content(schema = @Schema(implementation = AuthenticationResponseDto.class))
-    )
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid data",
-            content = @Content(schema = @Schema(implementation = String.class))
-    )
-    @Operation(
-            summary = "Login of a user",
-            description = "Login of a user"
-    )
+    @LoginUser(path = "/login")
     public ResponseEntity<AuthenticationResponseDto> login(@RequestBody
                                                            AuthenticationRequestDto authenticationRequestDto) {
         AuthenticationResponseDto authenticationResponseDto = authenticationService.login(authenticationRequestDto);
@@ -50,21 +38,7 @@ public class AuthenticationController {
                 .body(authenticationResponseDto);
     }
 
-    @PostMapping("/refresh-token")
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "200",
-            description = "Successful operation.",
-            content = @Content(schema = @Schema(implementation = RefreshTokenResponseDto.class))
-    )
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(
-            responseCode = "400",
-            description = "Invalid data",
-            content = @Content(schema = @Schema(implementation = String.class))
-    )
-    @Operation(
-            summary = "Refresh token of a user",
-            description = "Refresh token of a user"
-    )
+    @RefreshToken(path = "/refresh_token")
     public ResponseEntity<RefreshTokenResponseDto> refreshToken(@RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {
         RefreshTokenResponseDto refreshTokenResponseDto = authenticationService.refreshToken(refreshTokenRequestDto);
         return ResponseEntity.ok().body(refreshTokenResponseDto);

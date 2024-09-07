@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.annotation.sectionsController.*;
 import com.example.adventureprogearjava.dto.SectionDTO;
 import com.example.adventureprogearjava.services.CRUDService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -22,18 +25,17 @@ import java.util.List;
 public class SectionsController {
     CRUDService<SectionDTO> crudService;
 
-    @GetMapping("")
-    public List<SectionDTO> getAllSections(){
+    @GetAllSections(path = "")
+    public List<SectionDTO> getAllSections() {
         return crudService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public SectionDTO getSectionById(@PathVariable("id") Long id){
+    @GetSectionsById(path = "/{id}")
+    public SectionDTO getSectionById(@PathVariable("id") Long id) {
         return crudService.getById(id);
     }
 
-    @PostMapping("")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @CreateSections(path = "")
     public ResponseEntity<String> createSection(@RequestBody SectionDTO sectionDTO) {
         try {
             crudService.create(sectionDTO);
@@ -43,16 +45,14 @@ public class SectionsController {
         }
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @UpdateSections(path = "/{id}")
     public void updateSection(@PathVariable("id") Long id,
-                              @RequestBody SectionDTO sectionDTO){
+                              @RequestBody SectionDTO sectionDTO) {
         crudService.update(sectionDTO, id);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void deleteSection(@PathVariable("id") Long id){
+    @DeleteSections(path = "/{id}")
+    public void deleteSection(@PathVariable("id") Long id) {
         crudService.delete(id);
     }
 
