@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.annotation.orderController;
 import com.example.adventureprogearjava.dto.OrderDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,7 +27,28 @@ import java.lang.annotation.Target;
         requestBody = @RequestBody(
                 description = "Order data, required for creation",
                 required = true,
-                content = @Content(schema = @Schema(implementation = OrderDTO.class))
+                content = @Content(
+                        schema = @Schema(implementation = OrderDTO.class),
+                        examples = @ExampleObject(name = "Order Example",
+                                value = "{\n" +
+                                        "  \"city\": \"New York\",\n" +
+                                        "  \"postAddress\": \"123 Elm Street\",\n" +
+                                        "  \"comment\": \"Please deliver between 9 AM and 5 PM.\",\n" +
+                                        "  \"price\": 1200,\n" +
+                                        "  \"ordersLists\": [\n" +
+                                        "    {\n" +
+                                        "      \"productId\": 2,\n" +
+                                        "      \"quantity\": 2,\n" +
+                                        "      \"price\": 600\n" +
+                                        "    },\n" +
+                                        "    {\n" +
+                                        "      \"productId\": 3,\n" +
+                                        "      \"quantity\": 1,\n" +
+                                        "      \"price\": 600\n" +
+                                        "    }\n" +
+                                        "  ]\n" +
+                                        "}")
+                )
         ),
         responses = {
                 @ApiResponse(
