@@ -28,7 +28,6 @@ import java.lang.annotation.Target;
                 name = "name",
                 description = "Name of the product to filter by name",
                 required = true,
-                in = ParameterIn.QUERY,
                 schema = @Schema(type = "string")
         ),
         responses = {

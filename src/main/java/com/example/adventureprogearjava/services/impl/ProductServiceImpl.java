@@ -39,7 +39,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> getProductsByGender(String gender) {
         log.info("Getting products by gender");
-        return productRepo.findByGender(gender)
+        String upperGender = gender.toUpperCase();
+        return productRepo.findByGender(upperGender)
                 .stream()
                 .map(mapper::toDto)
                 .toList();

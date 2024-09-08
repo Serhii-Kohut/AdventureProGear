@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import java.lang.annotation.Target;
 @Operation(
         summary = "Delete order list by its ID",
         description = "Deletes an order list by the specified ID.",
+        security = @SecurityRequirement(name = "bearerAuth"),
         parameters = {
                 @Parameter(
                         name = "id",
