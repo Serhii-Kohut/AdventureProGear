@@ -97,11 +97,19 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         if (orderDTO.getStatus() == null) {
             order.setStatus(OrderStatus.NEW);
         }
+        double totalPrice = 0;
+        for (OrdersListDTO item : orderDTO.getOrdersLists()) {
+            double productPrice = productRepository.findProductPriceById(item.getProductId());
+            totalPrice += productPrice * item.getQuantity();
+        }
+        order.setPrice((long) totalPrice);
 
         Order savedOrder = orderRepository.save(order);
         orderDTO.setId(savedOrder.getId());
         orderDTO.setUserId(user.getId());
-
+        orderDTO.setPrice(savedOrder.getPrice());
+        orderDTO.setStatus(savedOrder.getStatus());
+        orderDTO.setOrderDate(savedOrder.getOrderDate());
         sendOrderConfirmation(orderDTO, user.getId());
         return orderDTO;
     }
@@ -110,25 +118,44 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + userId));
 
-
         Order savedOrder = orderRepository.findById(savedOrderDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + savedOrderDTO.getId()));
 
-
         String subject = "Дякуємо за ваше замовлення!";
         StringBuilder message = new StringBuilder();
+
         message.append("Шановний(а) ").append(user.getName()).append(",\n\n")
                 .append("Дякуємо за ваше замовлення №").append(savedOrder.getId())
-                .append(" у нашому інтернет-магазині Adventure Pro Gear. Ваше замовлення отримано і буде оброблене найближчим часом.\n\n")
-                .append("Ми зв'яжемося з вами, як тільки воно буде підтверджено. Ви можете слідкувати за статусом вашого замовлення у своєму особистому кабінеті на нашому сайті.\n\n")
-                .append("З найкращими побажаннями,\n")
-                .append("Команда Adventure Pro Gear\n\n");
+                .append(" у нашому інтернет-магазині Adventure Pro Gear. Ми успішно отримали ваше замовлення, і воно буде оброблене найближчим часом.\n\n")
+                .append("Перелік товарів у замовленні:\n\n");
+
+        double totalPrice = 0;
+        int itemNumber = 1;
+
         for (OrdersListDTO item : savedOrderDTO.getOrdersLists()) {
             String productName = productRepository.getProductNameById(item.getProductId());
-            message.append("- Product: ").append(productName)
-                    .append(", Quantity: ").append(item.getQuantity()).append("\n");
-        }
+            Long productPrice = productRepository.findProductPriceById(item.getProductId());
+            if (productPrice == null) {
+                throw new ResourceNotFoundException("Product price not found for product id " + item.getProductId());
+            }
+            double itemTotalPrice = productPrice * item.getQuantity();
+            message.append(itemNumber).append(". ")
+                    .append(productName).append(" — ")
+                    .append(item.getQuantity()).append(" шт. прайс: ")
+                    .append(productPrice).append(" грн/одиниця\n");
 
+            totalPrice += itemTotalPrice;
+            itemNumber++;
+        }
+        message.append("\nЗагальна сума замовлення: ").append(totalPrice).append(" грн.\n\n")
+                .append("Адреса доставки:\n")
+                .append("Ім'я: ").append(user.getName()).append(" ").append(user.getSurname()).append("\n")
+                .append("Місто: ").append(savedOrderDTO.getCity()).append("\n")
+                .append("Адреса: ").append(savedOrderDTO.getPostAddress()).append("\n\n")
+                .append("Ви можете слідкувати за статусом свого замовлення у своєму особистому кабінеті на нашому сайті.\n\n")
+                .append("Якщо у вас є будь-які питання, будь ласка, зв'яжіться з нашою службою підтримки.\n\n")
+                .append("З найкращими побажаннями,\n")
+                .append("Команда Adventure Pro Gear\n");
         mailService.sendEmail(user.getEmail(), subject, message.toString());
     }
 
