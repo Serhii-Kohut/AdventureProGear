@@ -1,9 +1,8 @@
-package com.example.adventureprogearjava.annotation.productController;
+package com.example.adventureprogearjava.annotation.postController;
 
-import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.dto.PostDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,34 +19,33 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.GET)
 @Operation(
-        summary = "Get all products by name",
-        description = "Retrieves all available products with the provided name. " +
-                "Note: When there are no products with the provided name, the service " +
-                "returns just an empty list instead of a 404 status code.",
+        summary = "Get post by ID",
+        description = "Retrieves an available post with the specified ID.",
         parameters = @Parameter(
-                name = "name",
-                description = "Name of the product to filter by name",
+                name = "postId",
+                description = "The ID of the post to retrieve.",
                 required = true,
-                schema = @Schema(type = "string")
+                example = "1"
         ),
         responses = {
                 @ApiResponse(
                         responseCode = "200",
                         description = "Successful operation.",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = ProductDTO.class)
-                        )
+                        content = @Content(schema = @Schema(implementation = PostDTO.class))
                 ),
                 @ApiResponse(
-                        responseCode = "400",
-                        description = "Invalid request.",
+                        responseCode = "404",
+                        description = "Post not found.",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                ),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "Internal Server Error.",
                         content = @Content(schema = @Schema(implementation = String.class))
                 )
         }
 )
-public @interface GetProductsByName {
-
+public @interface GetPostById {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }

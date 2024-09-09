@@ -1,9 +1,8 @@
-package com.example.adventureprogearjava.annotation.productController;
+package com.example.adventureprogearjava.annotation.categoryController;
 
-import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.dto.CategoryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,34 +19,38 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.GET)
 @Operation(
-        summary = "Get all products by name",
-        description = "Retrieves all available products with the provided name. " +
-                "Note: When there are no products with the provided name, the service " +
-                "returns just an empty list instead of a 404 status code.",
+        summary = "Get category by its own ID",
+        description = "Retrieves a category by its ID.",
         parameters = @Parameter(
-                name = "name",
-                description = "Name of the product to filter by name",
+                name = "CategoryId",
+                description = "The ID of the Category.",
                 required = true,
-                schema = @Schema(type = "string")
+                example = "1"
         ),
         responses = {
                 @ApiResponse(
                         responseCode = "200",
-                        description = "Successful operation.",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(implementation = ProductDTO.class)
-                        )
+                        description = "Successful operation",
+                        content = @Content(schema = @Schema(implementation = CategoryDTO.class))
                 ),
                 @ApiResponse(
                         responseCode = "400",
-                        description = "Invalid request.",
+                        description = "Bad Request - Invalid ID supplied",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                ),
+                @ApiResponse(
+                        responseCode = "404",
+                        description = "Category Not Found",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                ),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "Internal Server Error",
                         content = @Content(schema = @Schema(implementation = String.class))
                 )
         }
 )
-public @interface GetProductsByName {
-
+public @interface GetCategoryById {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }
