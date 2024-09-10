@@ -37,8 +37,7 @@ public class OrderDTO {
 
     String comment;
 
-    @NotNull
-    @Min(0)
+
     Long price;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

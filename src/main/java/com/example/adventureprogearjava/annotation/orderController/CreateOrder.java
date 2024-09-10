@@ -34,17 +34,14 @@ import java.lang.annotation.Target;
                                         "  \"city\": \"New York\",\n" +
                                         "  \"postAddress\": \"123 Elm Street\",\n" +
                                         "  \"comment\": \"Please deliver between 9 AM and 5 PM.\",\n" +
-                                        "  \"price\": 1200,\n" +
                                         "  \"ordersLists\": [\n" +
                                         "    {\n" +
-                                        "      \"productId\": 2,\n" +
-                                        "      \"quantity\": 2,\n" +
-                                        "      \"price\": 600\n" +
+                                        "      \"productId\": 3,\n" +
+                                        "      \"quantity\": 1\n" +
                                         "    },\n" +
                                         "    {\n" +
-                                        "      \"productId\": 3,\n" +
-                                        "      \"quantity\": 1,\n" +
-                                        "      \"price\": 600\n" +
+                                        "      \"productId\": 1,\n" +
+                                        "      \"quantity\": 1\n" +
                                         "    }\n" +
                                         "  ]\n" +
                                         "}")
