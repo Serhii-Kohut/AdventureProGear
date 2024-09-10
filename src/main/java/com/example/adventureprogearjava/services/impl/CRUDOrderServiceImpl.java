@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class CRUDOrderServiceImpl implements CRUDOrderService {
     OrderRepository orderRepository;
     UserRepository userRepository;
-    OrderMapper orderMapper = OrderMapper.MAPPER;
+    OrderMapper orderMapper;
     private final MailService mailService;
     private final ProductRepository productRepository;
 
