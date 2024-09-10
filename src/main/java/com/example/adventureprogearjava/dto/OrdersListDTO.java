@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -15,6 +16,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrdersListDTO {
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    Long id;
+
     @NotNull
     Long orderId;
 
