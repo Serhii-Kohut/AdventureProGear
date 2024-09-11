@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.exceptions.handler;
 
+import com.example.adventureprogearjava.exceptions.AccessToOrderDeniedException;
 import com.example.adventureprogearjava.exceptions.InvalidReactionTypeException;
 import com.example.adventureprogearjava.exceptions.InvalidTokenException;
 import com.example.adventureprogearjava.exceptions.NoContentException;
@@ -16,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -138,6 +138,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(AccessToOrderDeniedException.class)
+    public ResponseEntity<String> handleAccessToOrderDeniedException(AccessToOrderDeniedException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 

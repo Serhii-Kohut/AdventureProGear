@@ -4,14 +4,13 @@ import com.example.adventureprogearjava.dto.OrdersListDTO;
 import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.OrdersList;
 import com.example.adventureprogearjava.entity.User;
-import com.example.adventureprogearjava.exceptions.NoContentException;
+import com.example.adventureprogearjava.exceptions.AccessToOrderDeniedException;
 import com.example.adventureprogearjava.exceptions.NoOrdersListFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.OrdersListMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
 import com.example.adventureprogearjava.repositories.OrdersListRepository;
 import com.example.adventureprogearjava.services.CRUDOrderListService;
-import com.example.adventureprogearjava.services.CRUDService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -83,7 +82,7 @@ public class CRUDOrdersListServiceImpl implements CRUDOrderListService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID " + ordersListDTO.getOrderId()));
 
         if (!order.getUser().getId().equals(user.getId())) {
-            throw new AccessDeniedException("You do not have permission to create order lists for this order.");
+            throw new AccessToOrderDeniedException("You do not have permission to create order lists for this order.");
         }
 
         insertOrdersList(ordersListDTO);
@@ -103,7 +102,7 @@ public class CRUDOrdersListServiceImpl implements CRUDOrderListService {
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID " + ordersListDTO.getOrderId()));
 
         if (!order.getUser().getId().equals(user.getId())) {
-            throw new AccessDeniedException("You do not have permission to create order lists for this order.");
+            throw new AccessToOrderDeniedException("You do not have permission to create order lists for this order.");
         }
 
         OrdersList existingOrdersList = ordersListRepository.findById(id)
@@ -123,7 +122,7 @@ public class CRUDOrdersListServiceImpl implements CRUDOrderListService {
     public void delete(Long id, User user) {
         log.info("Deleting orders list with id: {}", id);
 
-        OrdersList ordersList = ordersListRepository.findByIdAndUser(id, user)
+        OrdersList ordersList = ordersListRepository.findByIdAndOrderUser(id, user)
                 .orElseThrow(() -> {
                     log.warn("OrderList not found with id: {}", id);
                     return new ResourceNotFoundException("OrderList not found with id " + id);

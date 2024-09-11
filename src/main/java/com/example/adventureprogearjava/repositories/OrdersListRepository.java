@@ -32,6 +32,6 @@ public interface OrdersListRepository extends JpaRepository<OrdersList, Long> {
                 @Param("productAttributeId") Long productAttributeId,
                 @Param("quantity") Long quantity);
 
-    Optional<OrdersList> findByIdAndUser(Long id, User user);
+    Optional<OrdersList> findByIdAndOrderUser(Long id, User user);
 
 }
