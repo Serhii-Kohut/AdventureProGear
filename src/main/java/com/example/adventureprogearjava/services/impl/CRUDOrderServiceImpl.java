@@ -270,4 +270,11 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
 
         orderRepository.delete(order);
     }
+
+
+    public boolean isUserOwnerOfOrder(Long orderId, User user) {
+        return orderRepository.findById(orderId)
+                .map(order -> order.getUser().getId().equals(user.getId()))
+                .orElse(false);
+    }
 }
