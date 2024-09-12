@@ -21,8 +21,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.PUT)
 @Operation(
-        summary = "Update of the order",
-        description = "Update of the order",
+        summary = "Update of the order. Access for ME and ADMIN.",
+        description = "Update of the order. Access for ME and ADMIN.",
         security = @SecurityRequirement(name = "bearerAuth"),
         requestBody = @RequestBody(
                 description = "Order data, required for creation",
@@ -45,6 +45,10 @@ import java.lang.annotation.Target;
                 @ApiResponse(
                         responseCode = "404",
                         description = "Not Found",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                ), @ApiResponse(
+                        responseCode = "403",
+                        description = "You do not have permission to ACCESS for this order.",
                         content = @Content(schema = @Schema(implementation = String.class))
                 ),
                 @ApiResponse(

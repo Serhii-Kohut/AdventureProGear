@@ -12,7 +12,6 @@ import com.example.adventureprogearjava.exceptions.AccessToOrderDeniedException;
 import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
-import com.example.adventureprogearjava.exceptions.UnauthorizedException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
 import com.example.adventureprogearjava.repositories.ProductRepository;
@@ -237,9 +236,13 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
 
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
-
+/*
         if (!order.getUser().equals(user)) {
             throw new UnauthorizedException("You are not the author and do not have permission to update this order");
+        }
+*/
+        if (!order.getUser().getId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new AccessToOrderDeniedException("You do not have permission to UPDATE order. You are not owner OR Admin.");
         }
 
         if (orderUpdateDTO.getCity() != null) {
@@ -271,11 +274,15 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
     public void deleteOrder(Long id, User user) {
         log.info("Deleting order with id: {}", id);
 
-        Order order = orderRepository.findByIdAndUser(id, user)
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Order not found with id: {}", id);
                     return new ResourceNotFoundException("Order not found with id " + id);
                 });
+
+        if (!order.getUser().getId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new AccessToOrderDeniedException("You do not have permission to DELETE this order. You are not owner OR Admin.");
+        }
 
         orderRepository.delete(order);
     }

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.core.annotation.AliasFor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,10 +18,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.DELETE)
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Operation(
-        summary = "Deleting orders by its own id",
-        description = "Deletes an order by its ID",
+        summary = "Deleting orders by its own id. Access for ME and ADMIN.",
+        description = "Deletes an order by its ID. Access for ME and ADMIN.",
         security = @SecurityRequirement(name = "bearerAuth"),
         parameters = {
                 @Parameter(
@@ -42,7 +41,7 @@ import java.lang.annotation.Target;
                         responseCode = "404", description = "Order not found", content = @Content(schema = @Schema(implementation = String.class))
                 ),
                 @ApiResponse(
-                        responseCode = "403", description = "Forbidden: Insufficient permissions", content = @Content(schema = @Schema(implementation = String.class))
+                        responseCode = "403", description = "You do not have permission to DELETE this order. You are not owner OR Admin.", content = @Content(schema = @Schema(implementation = String.class))
                 ),
                 @ApiResponse(
                         responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = String.class))
