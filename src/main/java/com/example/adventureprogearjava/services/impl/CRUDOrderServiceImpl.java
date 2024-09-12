@@ -7,6 +7,8 @@ import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.OrderStatus;
+import com.example.adventureprogearjava.entity.enums.Role;
+import com.example.adventureprogearjava.exceptions.AccessToOrderDeniedException;
 import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
 import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
@@ -70,11 +72,18 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoUsersFoundException("User not found with id " + userId));
 
-        Order order = orderRepository.findByIdAndUser(id, user)
+      /*  Order order = orderRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> {
                     log.warn("Order not found with id: {}", id);
                     return new ResourceNotFoundException("Order not found with id " + id);
-                });
+                });*/
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with ID " + id));
+
+        if (!order.getUser().getId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
+            throw new AccessToOrderDeniedException("You do not have permission to ACCESS for this order.");
+        }
 
         return orderMapper.toDTO(order);
     }
