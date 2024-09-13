@@ -12,12 +12,17 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface OrdersListMapper {
-    String api = "https://prime-tax-production.up.railway.app/api/order-lists/";
+    String api = "https://authentic-laughter-production.up.railway.app/api/order-lists/";
 
     OrdersListMapper MAPPER = Mappers.getMapper(OrdersListMapper.class);
 
     @Mapping(target = "selfLink", source = "ordersList.id", qualifiedByName = "idToLink")
+    @Mapping(target = "id", source = "ordersList.id")
+    @Mapping(target = "orderId", source = "ordersList.order.id")
+    @Mapping(target = "productId", source = "ordersList.product.id")
+    @Mapping(target = "productAttributeId", source = "ordersList.productAttribute.id")
     OrdersListDTO toDTO(OrdersList ordersList);
+
     @Mapping(source = "orderId", target = "order", qualifiedByName = "orderIdToOrder")
     @Mapping(source = "productId", target = "product", qualifiedByName = "productIdToProduct")
     @Mapping(source = "productAttributeId", target = "productAttribute", qualifiedByName = "productAttributeIdToProductAttribute")

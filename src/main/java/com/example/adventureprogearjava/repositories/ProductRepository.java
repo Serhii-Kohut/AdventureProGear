@@ -67,6 +67,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND p.gender = CAST(:gender as gender)",
             nativeQuery = true)
     List<Product> findByCategoryAndGender(@Param("category") String category, @Param("gender") String gender);
+    @Query("SELECT p.basePrice FROM Product p WHERE p.id = :productId")
+    Long findProductPriceById(@Param("productId") Long productId);
     List<Product> findByBasePriceBetween(Long from, Long to);
 
     List<Product> findByBasePriceLessThanEqual(Long priceTo);

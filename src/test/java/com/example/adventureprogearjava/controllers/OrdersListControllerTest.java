@@ -121,7 +121,7 @@ public class OrdersListControllerTest {
     public void createValidOrdersListTest() throws Exception {
         String jwt = createMockJWT("ADMIN");
 
-        when(ordersListService.create(any(OrdersListDTO.class))).thenReturn(validOrderListDTO);
+     //   when(ordersListService.create(any(OrdersListDTO.class))).thenReturn(validOrderListDTO);
 
         mockMvc.perform(post("/api/order-lists")
                         .header("Authorization", "Bearer " + jwt)
@@ -148,7 +148,7 @@ public class OrdersListControllerTest {
 
         String jwt = createMockJWT("ADMIN");
 
-        doNothing().when(ordersListService).update(any(OrdersListDTO.class), eq(orderListId));
+     //   doNothing().when(ordersListService).update(any(OrdersListDTO.class), eq(orderListId));
 
         mockMvc.perform(put("/api/order-lists/" + orderListId)
                         .header("Authorization", "Bearer " + jwt)
@@ -163,7 +163,7 @@ public class OrdersListControllerTest {
 
         String jwt = createMockJWT("ADMIN");
 
-        doNothing().when(ordersListService).delete(orderListId);
+      //  doNothing().when(ordersListService).delete(orderListId);
 
         mockMvc.perform(delete("/api/order-lists/" + orderListId)
                         .header("Authorization", "Bearer " + jwt)
@@ -177,8 +177,8 @@ public class OrdersListControllerTest {
 
         String jwt = createMockJWT("ADMIN");
 
-        doThrow(new ResourceNotFoundException("Order List not found with id " + nonExistentOrdersListId))
-                .when(ordersListService).delete(nonExistentOrdersListId);
+      //  doThrow(new ResourceNotFoundException("Order List not found with id " + nonExistentOrdersListId))
+        //        .when(ordersListService).delete(nonExistentOrdersListId);
 
         mockMvc.perform(delete("/api/order-lists/" + nonExistentOrdersListId)
                         .header("Authorization", "Bearer " + jwt)

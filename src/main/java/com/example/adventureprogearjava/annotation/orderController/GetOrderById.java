@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.core.annotation.AliasFor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,10 +19,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.GET)
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Operation(
-        summary = "Get order by its own ID",
-        description = "Retrieves order by ID",
+        summary = "Get order by its own ID. Access for ME and ADMIN.",
+        description = "Retrieves order by ID. Access for ME and ADMIN.",
         security = @SecurityRequirement(name = "bearerAuth"),
         parameters = {
                 @Parameter(
@@ -41,6 +40,10 @@ import java.lang.annotation.Target;
                 @ApiResponse(
                         responseCode = "404",
                         description = "Not Found",
+                        content = @Content(schema = @Schema(implementation = String.class))
+                ),@ApiResponse(
+                        responseCode = "403",
+                        description = "You do not have permission to ACCESS for this order.",
                         content = @Content(schema = @Schema(implementation = String.class))
                 ),
                 @ApiResponse(

@@ -1,11 +1,15 @@
 package com.example.adventureprogearjava.repositories;
 
+import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.OrdersList;
+import com.example.adventureprogearjava.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface OrdersListRepository extends JpaRepository<OrdersList, Long> {
@@ -27,5 +31,7 @@ public interface OrdersListRepository extends JpaRepository<OrdersList, Long> {
                 @Param("productId") Long productId,
                 @Param("productAttributeId") Long productAttributeId,
                 @Param("quantity") Long quantity);
+
+    Optional<OrdersList> findByIdAndOrderUser(Long id, User user);
 
 }
