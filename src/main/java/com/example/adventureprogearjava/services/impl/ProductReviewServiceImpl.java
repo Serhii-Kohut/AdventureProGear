@@ -21,7 +21,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     private final ProductReviewMapper productReviewMapper;
 
     @Override
-    public List<ProductReviewDTO> getAll(Long productId, Integer ratingFrom, Integer ratingTo) {
+    public List<ProductReviewDTO> getAll(Long productId, Double ratingFrom, Double ratingTo) {
         List<ProductReview> reviews;
 
         if (productId != null) {

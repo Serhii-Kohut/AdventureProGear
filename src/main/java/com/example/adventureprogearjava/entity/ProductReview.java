@@ -22,7 +22,7 @@ public class ProductReview extends BaseEntity {
     String username;
 
     @Column
-    double rating;
+    double rating = 0.0;
 
     @Column(name = "comment")
     String comment;

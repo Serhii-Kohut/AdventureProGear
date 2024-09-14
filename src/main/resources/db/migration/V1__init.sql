@@ -50,17 +50,17 @@ CREATE TABLE IF NOT EXISTS public.products
     description_en  text,
     description_ua  text,
     base_price      integer not null,
-    average_rating  integer default 0,
-    gender gender,
+    average_rating DOUBLE precision default 0.0,
+    gender          gender,
     category        integer
         constraint category_fk
-        references public.categories
+            references public.categories
 );
 CREATE TABLE IF NOT EXISTS public.products_review
 (
     id          BIGINT PRIMARY KEY,
     user_name   VARCHAR,
-    rating      DOUBLE PRECISION ,
+    rating      double precision ,
     comment     TEXT,
     review_date DATE,
     product_id  BIGINT NOT NULL

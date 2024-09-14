@@ -28,8 +28,8 @@ public class ProductReviewController {
     @GetMapping("")
     public List<ProductReviewDTO> getAllReviews(
             @RequestParam(required = false) Long productId,
-            @RequestParam(required = false) Integer ratingFrom,
-            @RequestParam(required = false) Integer ratingTo) {
+            @RequestParam(required = false) Double ratingFrom,
+            @RequestParam(required = false) Double ratingTo) {
         return productReviewService.getAll(productId, ratingFrom, ratingTo);
     }
 
@@ -54,7 +54,7 @@ public class ProductReviewController {
     }
 
     @GetMapping("/average-rating")
-    public int getAverageRating(@RequestParam Long productId) {
-        return (int) productReviewServiceImpl.calculateAverageRating(productId);
+    public double getAverageRating(@RequestParam Long productId) {
+        return (Double) productReviewServiceImpl.calculateAverageRating(productId);
     }
 }
