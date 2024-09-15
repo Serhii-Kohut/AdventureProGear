@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.controllers;
 
+import com.example.adventureprogearjava.annotation.productReview.*;
 import com.example.adventureprogearjava.dto.ProductReviewDTO;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.ProductReviewService;
@@ -26,7 +27,7 @@ public class ProductReviewController {
     CRUDProductReviewServiceImpl productReviewServiceImpl;
     ProductReviewService productReviewService;
 
-    @GetMapping("")
+    @com.example.adventureprogearjava.annotation.productReviewController.GetAllReviews(path = "")
     public List<ProductReviewDTO> getAllReviews(
             @RequestParam(required = false) Long productId,
             @RequestParam(required = false) Double ratingFrom,
@@ -34,49 +35,50 @@ public class ProductReviewController {
         return productReviewService.getAll(productId, ratingFrom, ratingTo);
     }
 
-    @GetMapping("/{id}")
+    @GetReviewById(path = "/{id}")
     public ProductReviewDTO getReviewById(@PathVariable Long id) {
         return productReviewCRUDService.getById(id);
     }
 
-    @PostMapping("")
+    @CreateReview(path = "")
     public ProductReviewDTO createReview(@Valid @RequestBody ProductReviewDTO productReviewDTO) {
         return productReviewCRUDService.create(productReviewDTO);
     }
 
-    @PutMapping("/{id}")
+    @UpdateReview(path = "/{id}")
     public void updateReview(@PathVariable Long id, @Valid @RequestBody ProductReviewDTO productReviewDTO) {
         productReviewCRUDService.update(productReviewDTO, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteReview(path = "/{id}")
     public void deleteReview(@PathVariable Long id) {
         productReviewCRUDService.delete(id);
     }
 
-    @GetMapping("/average-rating")
+    @GetAverageRating(path = "/average-rating")
     public double getAverageRating(@RequestParam Long productId) {
         return (Double) productReviewServiceImpl.calculateAverageRating(productId);
     }
-    @PostMapping("/{id}/like")
+
+    @LikeReview(path = "/{id}/like")
     public ResponseEntity<String> likeReview(@PathVariable Long id) {
         String result = productReviewService.incrementLikes(id);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{id}/dislike")
+    @DislikeReview(path = "/{id}/dislike")
     public ResponseEntity<String> dislikeReview(@PathVariable Long id) {
         String result = productReviewService.incrementDislikes(id);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{id}/unlike")
+    @UnlikeReview(path = "/{id}/unlike")
     public ResponseEntity<String> unlikeReview(@PathVariable Long id) {
         String result = productReviewService.decrementLikes(id);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/{id}/undislike")
+    @UnDislikeReview(path = "/{id}/undislike")
     public ResponseEntity<String> undislikeReview(@PathVariable Long id) {
         String result = productReviewService.decrementDislikes(id);
         return ResponseEntity.ok(result);
