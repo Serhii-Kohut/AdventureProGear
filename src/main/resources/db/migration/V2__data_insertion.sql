@@ -23,6 +23,12 @@ INCREMENT 1;
 
 
 CREATE
+SEQUENCE product_review_reaction_seq
+START
+1
+INCREMENT 1;
+
+CREATE
 SEQUENCE product_attr_seq
     start
 1

@@ -72,7 +72,15 @@ CREATE TABLE IF NOT EXISTS public.products_review
     likes       BIGINT DEFAULT 0,
     dislikes    BIGINT DEFAULT 0
 );
-
+CREATE TABLE IF NOT EXISTS public.review_reactions (
+                                                       id BIGINT PRIMARY KEY,
+                                                       user_id BIGINT NOT NULL,
+                                                       review_id BIGINT NOT NULL,
+                                                       reaction_type VARCHAR NOT NULL CHECK (reaction_type IN ('LIKE', 'DISLIKE')),
+                                                       CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(id),
+                                                       CONSTRAINT fk_review FOREIGN KEY (review_id) REFERENCES public.products_review(id),
+                                                       CONSTRAINT unique_user_review UNIQUE (user_id, review_id)
+);
 
 CREATE TABLE IF NOT EXISTS public.product_attributes
 (

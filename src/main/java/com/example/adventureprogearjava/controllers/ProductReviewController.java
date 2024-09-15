@@ -59,25 +59,26 @@ public class ProductReviewController {
         return (Double) productReviewServiceImpl.calculateAverageRating(productId);
     }
     @PostMapping("/{id}/like")
-    public ResponseEntity<?> likeReview(@PathVariable Long id) {
-        productReviewService.incrementLikes(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> likeReview(@PathVariable Long id) {
+        String result = productReviewService.incrementLikes(id);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{id}/dislike")
-    public ResponseEntity<?> dislikeReview(@PathVariable Long id) {
-        productReviewService.incrementDislikes(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> dislikeReview(@PathVariable Long id) {
+        String result = productReviewService.incrementDislikes(id);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{id}/unlike")
-    public ResponseEntity<?> unlikeReview(@PathVariable Long id) {
-        productReviewService.decrementLikes(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> unlikeReview(@PathVariable Long id) {
+        String result = productReviewService.decrementLikes(id);
+        return ResponseEntity.ok(result);
     }
+
     @PostMapping("/{id}/undislike")
-    public ResponseEntity<?> undislikeReview(@PathVariable Long id) {
-        productReviewService.decrementDislikes(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> undislikeReview(@PathVariable Long id) {
+        String result = productReviewService.decrementDislikes(id);
+        return ResponseEntity.ok(result);
     }
 }

@@ -2,15 +2,21 @@ package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductReviewDTO;
 import com.example.adventureprogearjava.entity.ProductReview;
+import com.example.adventureprogearjava.entity.ProductReviewReaction;
+import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.mapper.ProductReviewMapper;
+import com.example.adventureprogearjava.repositories.ProductReviewReactionRepository;
 import com.example.adventureprogearjava.repositories.ProductReviewRepository;
+import com.example.adventureprogearjava.repositories.UserRepository;
 import com.example.adventureprogearjava.services.ProductReviewService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +26,8 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
     private final ProductReviewRepository productReviewRepository;
     private final ProductReviewMapper productReviewMapper;
+    private final ProductReviewReactionRepository productReviewReactionRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<ProductReviewDTO> getAll(Long productId, Double ratingFrom, Double ratingTo) {
@@ -50,40 +58,131 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .collect(Collectors.toList());
     }
 
-    public void incrementLikes(Long reviewId) {
-        ProductReview review = getReviewByIdOrThrow(reviewId);
+    public String incrementLikes(Long reviewId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
+        if (reviewOpt.isEmpty()) {
+            return "Review not found";
+        }
+
+        boolean hasReacted = productReviewReactionRepository.existsByUserIdAndReviewId(user.getId(), reviewId);
+        if (hasReacted) {
+            return "User has already reacted to this review";
+        }
+
+        ProductReview review = reviewOpt.get();
         review.setLikes(review.getLikes() + 1);
         productReviewRepository.save(review);
+
+        ProductReviewReaction reaction = new ProductReviewReaction();
+        reaction.setUserId(user.getId());
+        reaction.setReviewId(reviewId);
+        reaction.setReactionType("LIKE");
+        productReviewReactionRepository.save(reaction);
+
+        return "Like added successfully.";
     }
 
-    public void incrementDislikes(Long reviewId) {
-        ProductReview review = getReviewByIdOrThrow(reviewId);
+
+    public String incrementDislikes(Long reviewId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
+        if (reviewOpt.isEmpty()) {
+            return "Review not found";
+        }
+
+        boolean hasReacted = productReviewReactionRepository.existsByUserIdAndReviewId(user.getId(), reviewId);
+        if (hasReacted) {
+            return "User has already reacted to this review";
+        }
+
+        ProductReview review = reviewOpt.get();
         review.setDislikes(review.getDislikes() + 1);
         productReviewRepository.save(review);
+
+        ProductReviewReaction reaction = new ProductReviewReaction();
+        reaction.setUserId(user.getId());
+        reaction.setReviewId(reviewId);
+        reaction.setReactionType("DISLIKE");
+        productReviewReactionRepository.save(reaction);
+
+        return "Dislike added successfully.";
     }
 
-    public void decrementLikes(Long reviewId) {
-        ProductReview review = getReviewByIdOrThrow(reviewId);
-        if (review.getLikes() > 0) {
-            review.setLikes(review.getLikes() - 1);
-            productReviewRepository.save(review);
+
+    public String decrementLikes(Long reviewId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
+        if (reviewOpt.isEmpty()) {
+            return "Review not found";
+        }
+
+        Optional<Object> reactionOpt = productReviewReactionRepository.findByUserIdAndReviewId(user.getId(), reviewId);
+        if (reactionOpt.isEmpty()) {
+            return "Reaction not found";
+        }
+
+        ProductReviewReaction reaction = (ProductReviewReaction) reactionOpt.get();
+        if (reaction.getReactionType().equals("LIKE")) {
+            ProductReview review = reviewOpt.get();
+            if (review.getLikes() > 0) {
+                review.setLikes(review.getLikes() - 1);
+                productReviewRepository.save(review);
+            } else {
+                return "No likes to remove";
+            }
+
+            productReviewReactionRepository.delete(reaction);
+            return "Like removed successfully.";
         } else {
-            throw new IllegalStateException("No likes to remove");
+            return "User has not liked this review";
         }
     }
 
-    public void decrementDislikes(Long reviewId) {
-        ProductReview review = getReviewByIdOrThrow(reviewId);
-        if (review.getDislikes() > 0) {
-            review.setDislikes(review.getDislikes() - 1);
-            productReviewRepository.save(review);
+
+    public String decrementDislikes(Long reviewId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
+        if (reviewOpt.isEmpty()) {
+            return "Review not found";
+        }
+
+        Optional<Object> reactionOpt = productReviewReactionRepository.findByUserIdAndReviewId(user.getId(), reviewId);
+        if (reactionOpt.isEmpty()) {
+            return "Reaction not found";
+        }
+
+        ProductReviewReaction reaction = (ProductReviewReaction) reactionOpt.get();
+        if (reaction.getReactionType().equals("DISLIKE")) {
+            ProductReview review = reviewOpt.get();
+            if (review.getDislikes() > 0) {
+                review.setDislikes(review.getDislikes() - 1);
+                productReviewRepository.save(review);
+            } else {
+                return "No dislikes to remove";
+            }
+
+            productReviewReactionRepository.delete(reaction);
+            return "Dislike removed successfully.";
         } else {
-            throw new IllegalStateException("No dislikes to remove");
+            return "User has not disliked this review";
         }
     }
 
-    private ProductReview getReviewByIdOrThrow(Long reviewId) {
-        return productReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new EntityNotFoundException("Review not found with id: " + reviewId));
-    }
 }

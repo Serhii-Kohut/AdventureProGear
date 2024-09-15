@@ -7,11 +7,11 @@ import java.util.List;
 public interface ProductReviewService {
     List<ProductReviewDTO> getAll(Long productId, Double ratingFrom, Double ratingTo);
 
-    void incrementLikes(Long id);
+    String incrementLikes(Long id);
 
-    void incrementDislikes(Long id);
+    String incrementDislikes(Long id);
 
-    void decrementLikes(Long id);
+    String decrementLikes(Long id);
 
-    void decrementDislikes(Long id);
+    String decrementDislikes(Long id);
 }
