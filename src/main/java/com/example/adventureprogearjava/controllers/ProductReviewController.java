@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,5 +57,27 @@ public class ProductReviewController {
     @GetMapping("/average-rating")
     public double getAverageRating(@RequestParam Long productId) {
         return (Double) productReviewServiceImpl.calculateAverageRating(productId);
+    }
+    @PostMapping("/{id}/like")
+    public ResponseEntity<?> likeReview(@PathVariable Long id) {
+        productReviewService.incrementLikes(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/dislike")
+    public ResponseEntity<?> dislikeReview(@PathVariable Long id) {
+        productReviewService.incrementDislikes(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/unlike")
+    public ResponseEntity<?> unlikeReview(@PathVariable Long id) {
+        productReviewService.decrementLikes(id);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/{id}/undislike")
+    public ResponseEntity<?> undislikeReview(@PathVariable Long id) {
+        productReviewService.decrementDislikes(id);
+        return ResponseEntity.ok().build();
     }
 }

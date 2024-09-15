@@ -1,8 +1,11 @@
-CREATE TYPE gender AS ENUM ('MALE','FEMALE');
+CREATE
+TYPE gender AS ENUM ('MALE','FEMALE');
 
-CREATE TYPE status AS ENUM ('NEW', 'PAID','DELIVERED','CANCELED');
+CREATE
+TYPE status AS ENUM ('NEW', 'PAID','DELIVERED','CANCELED');
 
-CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
+CREATE
+TYPE user_role AS ENUM ('USER', 'ADMIN');
 --
 -- CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
 create table if not exists sections
@@ -50,22 +53,24 @@ CREATE TABLE IF NOT EXISTS public.products
     description_en  text,
     description_ua  text,
     base_price      integer not null,
-    average_rating DOUBLE precision default 0.0,
-    gender          gender,
+    average_rating  DOUBLE precision default 0.0,
+    gender gender,
     category        integer
         constraint category_fk
-            references public.categories
+        references public.categories
 );
 CREATE TABLE IF NOT EXISTS public.products_review
 (
     id          BIGINT PRIMARY KEY,
     user_name   VARCHAR,
-    rating      double precision ,
+    rating      double precision,
     comment     TEXT,
     review_date DATE,
     product_id  BIGINT NOT NULL
         CONSTRAINT fk_product
-        REFERENCES public.products(id)
+        REFERENCES public.products(id),
+    likes       BIGINT DEFAULT 0,
+    dislikes    BIGINT DEFAULT 0
 );
 
 

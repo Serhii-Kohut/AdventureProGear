@@ -5,6 +5,7 @@ import com.example.adventureprogearjava.entity.ProductReview;
 import com.example.adventureprogearjava.mapper.ProductReviewMapper;
 import com.example.adventureprogearjava.repositories.ProductReviewRepository;
 import com.example.adventureprogearjava.services.ProductReviewService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,42 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         return reviews.stream()
                 .map(productReviewMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public void incrementLikes(Long reviewId) {
+        ProductReview review = getReviewByIdOrThrow(reviewId);
+        review.setLikes(review.getLikes() + 1);
+        productReviewRepository.save(review);
+    }
+
+    public void incrementDislikes(Long reviewId) {
+        ProductReview review = getReviewByIdOrThrow(reviewId);
+        review.setDislikes(review.getDislikes() + 1);
+        productReviewRepository.save(review);
+    }
+
+    public void decrementLikes(Long reviewId) {
+        ProductReview review = getReviewByIdOrThrow(reviewId);
+        if (review.getLikes() > 0) {
+            review.setLikes(review.getLikes() - 1);
+            productReviewRepository.save(review);
+        } else {
+            throw new IllegalStateException("No likes to remove");
+        }
+    }
+
+    public void decrementDislikes(Long reviewId) {
+        ProductReview review = getReviewByIdOrThrow(reviewId);
+        if (review.getDislikes() > 0) {
+            review.setDislikes(review.getDislikes() - 1);
+            productReviewRepository.save(review);
+        } else {
+            throw new IllegalStateException("No dislikes to remove");
+        }
+    }
+
+    private ProductReview getReviewByIdOrThrow(Long reviewId) {
+        return productReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new EntityNotFoundException("Review not found with id: " + reviewId));
     }
 }

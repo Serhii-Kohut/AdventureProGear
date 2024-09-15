@@ -30,6 +30,13 @@ public class ProductReview extends BaseEntity {
     @Column(name = "review_date")
     LocalDate date;
 
+    @Column(name = "likes")
+    int likes;
+
+    @Column(name = "dislikes")
+    int dislikes;
+
+
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

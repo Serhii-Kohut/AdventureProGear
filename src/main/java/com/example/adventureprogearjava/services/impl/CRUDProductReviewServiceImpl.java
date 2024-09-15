@@ -61,6 +61,12 @@ public class CRUDProductReviewServiceImpl implements CRUDService<ProductReviewDT
         ProductReview productReview = productReviewMapper.toEntity(productReviewDTO);
         productReview.setDate(LocalDate.now());
         productReview.setUsername(username);
+        if (productReview.getLikes() == 0 && productReviewDTO.getLikes() != 0) {
+            productReview.setLikes(productReviewDTO.getLikes());
+        }
+        if (productReview.getDislikes() == 0 && productReviewDTO.getDislikes() != 0) {
+            productReview.setDislikes(productReviewDTO.getDislikes());
+        }
         ProductReview savedReview = productReviewRepository.save(productReview);
 
         double averageRating = calculateAverageRating(productReviewDTO.getProductId());
