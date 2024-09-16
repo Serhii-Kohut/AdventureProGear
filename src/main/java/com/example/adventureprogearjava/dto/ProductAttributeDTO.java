@@ -38,6 +38,8 @@ public class ProductAttributeDTO {
     @NotNull
     Long quantity;
 
+    String label;
+
     @Schema(description = "Self link", example = "/products/1/attributes/1")
     String selfLink;
 }

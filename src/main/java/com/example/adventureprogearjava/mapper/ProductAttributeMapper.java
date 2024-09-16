@@ -10,7 +10,7 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface ProductAttributeMapper {
-    String api = "https://prime-tax-production.up.railway.app/api/v1/productAttributes/";
+    String api = "https://authentic-laughter-production.up.railway.app/api/v1/productAttributes/";
 
     @Mapping(target = "selfLink", source = "productAttribute.id", qualifiedByName = "idToLink")
     ProductAttributeDTO toDto(ProductAttribute productAttribute);

@@ -8,7 +8,7 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    String api = "https://prime-tax-production.up.railway.app/api/public/products/";
+    String api = "https://authentic-laughter-production.up.railway.app/api/public/products/";
 
     @Mapping(target = "productId", source = "product.id")
     @Mapping(target = "basePrice", source = "product.basePrice")

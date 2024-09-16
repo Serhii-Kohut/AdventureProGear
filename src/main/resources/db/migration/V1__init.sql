@@ -160,4 +160,6 @@ CREATE TABLE IF NOT EXISTS public.reactions
         FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
 
+ALTER TABLE product_attributes
+    ADD COLUMN label VARCHAR(255);
 
