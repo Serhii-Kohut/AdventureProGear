@@ -36,6 +36,9 @@ public class Product extends BaseEntity {
     @Column(name = "base_price", nullable = false)
     Long basePrice;
 
+    @Column(name = "average_rating")
+    private Double averageRating = 0.0;
+
     @Enumerated(EnumType.STRING)
     Gender gender;
 
