@@ -43,6 +43,9 @@ public class ProductAttribute extends BaseEntity {
     @Column(name = "quantity", nullable = false)
     Long quantity;
 
+    @Column(name = "label")
+    String label;
+
     @OneToMany(mappedBy = "productAttribute")
     List<OrdersList> ordersLists;
 

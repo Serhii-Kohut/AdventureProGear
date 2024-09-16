@@ -1,15 +1,18 @@
-CREATE TYPE gender AS ENUM ('MALE','FEMALE');
+CREATE
+TYPE gender AS ENUM ('MALE','FEMALE');
 
-CREATE TYPE status AS ENUM ('NEW', 'PAID','DELIVERED','CANCELED');
+CREATE
+TYPE status AS ENUM ('NEW', 'PAID','DELIVERED','CANCELED');
 
-CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
+CREATE
+TYPE user_role AS ENUM ('USER', 'ADMIN');
 --
 -- CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
 create table if not exists sections
 (
     id                bigint  not null
         constraint sections_pkey
-            primary key,
+        primary key,
     sectioncaption_en varchar not null,
     sectioncaption_ua varchar not null,
     sectionicon       varchar
@@ -25,10 +28,10 @@ CREATE TABLE IF NOT EXISTS public.categories
     category_name_en varchar not null unique,
     category_id      integer
         constraint subcategory_fk
-            references public.categories,
+        references public.categories,
     section_id       integer
         constraint section_fk
-            references public.sections
+        references public.sections
 );
 
 CREATE TABLE IF NOT EXISTS public.users
@@ -50,10 +53,33 @@ CREATE TABLE IF NOT EXISTS public.products
     description_en  text,
     description_ua  text,
     base_price      integer not null,
-    gender          gender,
+    average_rating  DOUBLE precision default 0.0,
+    gender gender,
     category        integer
         constraint category_fk
-            references public.categories
+        references public.categories
+);
+CREATE TABLE IF NOT EXISTS public.products_review
+(
+    id          BIGINT PRIMARY KEY,
+    user_name   VARCHAR,
+    rating      double precision,
+    comment     TEXT,
+    review_date DATE,
+    product_id  BIGINT NOT NULL
+        CONSTRAINT fk_product
+        REFERENCES public.products(id),
+    likes       BIGINT DEFAULT 0,
+    dislikes    BIGINT DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS public.review_reactions (
+                                                       id BIGINT PRIMARY KEY,
+                                                       user_id BIGINT NOT NULL,
+                                                       review_id BIGINT NOT NULL,
+                                                       reaction_type VARCHAR NOT NULL CHECK (reaction_type IN ('LIKE', 'DISLIKE')),
+                                                       CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(id),
+                                                       CONSTRAINT fk_review FOREIGN KEY (review_id) REFERENCES public.products_review(id),
+                                                       CONSTRAINT unique_user_review UNIQUE (user_id, review_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.product_attributes
@@ -65,7 +91,7 @@ CREATE TABLE IF NOT EXISTS public.product_attributes
     price_deviation integer not null,
     product_id      integer not null
         constraint prodatr_prod_fk
-            references public.products,
+        references public.products,
     quantity        integer not null
 );
 
@@ -74,7 +100,7 @@ CREATE TABLE IF NOT EXISTS public.product_content
     id         bigint primary key,
     product_id integer not null
         constraint prodcont_prod_fk
-            references public.products,
+        references public.products,
     source     varchar not null
 );
 
@@ -83,13 +109,13 @@ CREATE TABLE IF NOT EXISTS public.orders
     id           bigint primary key,
     user_id      integer not null
         constraint order_user_fk
-            references public.users,
+        references public.users,
     order_date   date,
     city         varchar not null,
     post_address varchar not null,
     comment      text,
     price        int,
-    status       varchar  not null
+    status       varchar not null
 );
 
 CREATE TABLE IF NOT EXISTS public.orders_list
@@ -97,13 +123,13 @@ CREATE TABLE IF NOT EXISTS public.orders_list
     id                   bigint primary key,
     order_id             integer not null
         constraint orderls_order_fk
-            references public.orders,
+        references public.orders,
     product_id           integer not null
         constraint orderls_prod_fk
-            references public.products,
+        references public.products,
     product_attribute_id integer
         constraint orderls_prodatr_fk
-            references public.product_attributes,
+        references public.product_attributes,
     quantity             integer not null
 );
 
@@ -133,31 +159,36 @@ ALTER TABLE users
 
 CREATE TABLE IF NOT EXISTS public.post
 (
-    id         bigint primary key,
-    user_id    bigint not null,
-    title      varchar,
-    content    text,
-    image      varchar,
+    id      bigint primary key,
+    user_id bigint not null,
+    title   varchar,
+    content text,
+    image   varchar,
     CONSTRAINT fk_user
-        FOREIGN KEY (user_id) REFERENCES public.users(id)
+        FOREIGN KEY (user_id) REFERENCES public.users (id)
 );
 
-CREATE TYPE reaction_type AS ENUM ('LIKE', 'DISLIKE', 'LAUGH', 'SAD', 'ANGRY');
+CREATE
+TYPE reaction_type AS ENUM ('LIKE', 'DISLIKE', 'LAUGH', 'SAD', 'ANGRY');
 
-CREATE SEQUENCE reaction_seq
-    START 1
+CREATE
+SEQUENCE reaction_seq
+    START
+1
     INCREMENT 1;
 
 CREATE TABLE IF NOT EXISTS public.reactions
 (
-    id          bigint primary key DEFAULT nextval('reaction_seq'),
-    type        reaction_type not null,
-    post_id     bigint not null,
-    user_id     bigint not null,
+    id      bigint primary key DEFAULT nextval('reaction_seq'),
+    type reaction_type not null,
+    post_id bigint not null,
+    user_id bigint not null,
     CONSTRAINT fk_post
-        FOREIGN KEY (post_id) REFERENCES public.post(id),
+        FOREIGN KEY (post_id) REFERENCES public.post (id),
     CONSTRAINT fk_user
-        FOREIGN KEY (user_id) REFERENCES public.users(id)
+        FOREIGN KEY (user_id) REFERENCES public.users (id)
 );
 
+ALTER TABLE product_attributes
+    ADD COLUMN label VARCHAR(255);
 

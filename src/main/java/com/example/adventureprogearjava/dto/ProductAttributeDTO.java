@@ -1,19 +1,13 @@
 package com.example.adventureprogearjava.dto;
 
-import com.example.adventureprogearjava.entity.Product;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -37,6 +31,8 @@ public class ProductAttributeDTO {
 
     @NotNull
     Long quantity;
+
+    String label;
 
     @Schema(description = "Self link", example = "/products/1/attributes/1")
     String selfLink;

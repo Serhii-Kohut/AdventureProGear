@@ -1,45 +1,79 @@
-CREATE SEQUENCE user_seq
-    start 1
+CREATE
+SEQUENCE user_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE user_role_seq
-    start 1
+CREATE
+SEQUENCE user_role_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE product_seq
-    start 1
+CREATE
+SEQUENCE product_seq
+    start
+1
+    increment 1;
+CREATE
+SEQUENCE product_review_seq
+START
+1
+INCREMENT 1;
+
+
+CREATE
+SEQUENCE product_review_reaction_seq
+START
+1
+INCREMENT 1;
+
+CREATE
+SEQUENCE product_attr_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE product_attr_seq
-    start 1
+CREATE
+SEQUENCE product_content_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE product_content_seq
-    start 1
+CREATE
+SEQUENCE product_categories_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE product_categories_seq
-    start 1
+CREATE
+SEQUENCE order_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE order_seq
-    start 1
+CREATE
+SEQUENCE order_list_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE order_list_seq
-    start 1
+CREATE
+SEQUENCE categories_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE categories_seq
-    start 1
+CREATE
+SEQUENCE sections_seq
+    start
+1
     increment 1;
 
-CREATE SEQUENCE sections_seq
-    start 1
-    increment 1;
-
-CREATE SEQUENCE post_seq
-    START 1
+CREATE
+SEQUENCE post_seq
+    START
+1
     INCREMENT 1;
 
 
@@ -98,33 +132,47 @@ values (nextval('categories_seq'), 'Sleeping bags', 'Спальні мішки',
 
 
 
-
-
-insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
+insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender,
+                      category)
 values (nextval('product_seq'), 'T-Shirt', 'Футболка', 'Common shirt', 'Звичайна футболка', 200, 'MALE', 4);
 
-insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
-values (nextval('product_seq'), 'T-Shirt', 'Футболка','Common shirt', 'Звичайна футболка', 175, 'FEMALE', 4);
+insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender,
+                      category)
+values (nextval('product_seq'), 'T-Shirt', 'Футболка', 'Common shirt', 'Звичайна футболка', 175, 'FEMALE', 4);
 
-insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Кросівки для походів', 'Best choice for your feet', 'Найкращий вибір для вашої стопи', 350, 'FEMALE', 1);
+insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender,
+                      category)
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Кросівки для походів', 'Best choice for your feet',
+        'Найкращий вибір для вашої стопи', 350, 'FEMALE', 1);
 
-insert into products (id,  product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category)
-values (nextval('product_seq'), 'Sneakers Hike Model', 'Кросівки для походів', 'Best choice for your feet', 'Найкращий вибір для вашої стопи', 350, 'MALE', 1);
+insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender,
+                      category)
+values (nextval('product_seq'), 'Sneakers Hike Model', 'Кросівки для походів', 'Best choice for your feet',
+        'Найкращий вибір для вашої стопи', 350, 'MALE', 1);
 
-insert into products (id,  product_name_en, product_name_ua, description_en, description_ua , base_price, category)
+insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, category)
 values (nextval('product_seq'), 'Butcher knife', 'Ніж', 'Common knife', 'Звичайний ніж', 120, 5);
 
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_1');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 1, 'img1_2');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 2, 'img2_1');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 2, 'img2_2');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 3, 'img3');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 4, 'img4');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 5, 'img5_1');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 5, 'img5_2');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 5, 'img5_3');
-insert into product_content (id, product_id, source) values (nextval('product_content_seq'), 5, 'img5_4');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 1, 'img1_1');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 1, 'img1_2');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 2, 'img2_1');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 2, 'img2_2');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 3, 'img3');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 4, 'img4');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 5, 'img5_1');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 5, 'img5_2');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 5, 'img5_3');
+insert into product_content (id, product_id, source)
+values (nextval('product_content_seq'), 5, 'img5_4');
 
 insert into product_attributes (id, size, price_deviation, product_id, quantity)
 values (nextval('product_attr_seq'), 'S', 0, 1, 10);
@@ -196,13 +244,13 @@ values (nextval('order_list_seq'), 1, 5, 1);
 
 
 INSERT INTO public.post (id, user_id, title, content, image)
-VALUES
-    (nextval('post_seq'), 1, 'First Post', 'This is the content of the first post.', 'https://example.com/image1.jpg'),
-    (nextval('post_seq'), 2, 'Second Post', 'This is the content of the second post.', 'https://example.com/image2.jpg');
+VALUES (nextval('post_seq'), 1, 'First Post', 'This is the content of the first post.',
+        'https://example.com/image1.jpg'),
+       (nextval('post_seq'), 2, 'Second Post', 'This is the content of the second post.',
+        'https://example.com/image2.jpg');
 
 INSERT INTO public.reactions (id, type, post_id, user_id)
-VALUES
-    (nextval('reaction_seq'), 'LIKE', 1, 1),
-    (nextval('reaction_seq'), 'DISLIKE', 1, 2),
-    (nextval('reaction_seq'), 'LAUGH', 2, 1),
-    (nextval('reaction_seq'), 'SAD', 2, 2);
+VALUES (nextval('reaction_seq'), 'LIKE', 1, 1),
+       (nextval('reaction_seq'), 'DISLIKE', 1, 2),
+       (nextval('reaction_seq'), 'LAUGH', 2, 1),
+       (nextval('reaction_seq'), 'SAD', 2, 2);
