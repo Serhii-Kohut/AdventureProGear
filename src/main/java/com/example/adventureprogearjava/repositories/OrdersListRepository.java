@@ -1,6 +1,5 @@
 package com.example.adventureprogearjava.repositories;
 
-import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.OrdersList;
 import com.example.adventureprogearjava.entity.User;
 import jakarta.transaction.Transactional;
