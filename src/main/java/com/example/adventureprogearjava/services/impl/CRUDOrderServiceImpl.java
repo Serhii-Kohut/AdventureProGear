@@ -14,6 +14,7 @@ import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
+import com.example.adventureprogearjava.repositories.OrdersListRepository;
 import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.repositories.UserRepository;
 import com.example.adventureprogearjava.services.CRUDOrderService;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CRUDOrderServiceImpl implements CRUDOrderService {
     OrderRepository orderRepository;
+    OrdersListRepository ordersListRepository;
     UserRepository userRepository;
     OrderMapper orderMapper;
     private final MailService mailService;
@@ -269,7 +271,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         return orderMapper.toDTO(updatedOrder);
     }
 
-
+    @Transactional
     @Override
     public void deleteOrder(Long id, User user) {
         log.info("Deleting order with id: {}", id);
@@ -283,6 +285,8 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         if (!order.getUser().getId().equals(user.getId()) && user.getRole() != Role.ADMIN) {
             throw new AccessToOrderDeniedException("You do not have permission to DELETE this order. You are not owner OR Admin.");
         }
+
+        ordersListRepository.deleteByOrderId(id);
 
         orderRepository.delete(order);
     }
