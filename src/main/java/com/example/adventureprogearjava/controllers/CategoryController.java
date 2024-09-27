@@ -11,10 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,7 +23,6 @@ import java.util.List;
         description = "API operations for the category catalog")
 public class CategoryController {
     CRUDService<CategoryDTO> categoryCRUDService;
-
     CategoryService categoryService;
 
     @GetAllCategory(path = "")
@@ -44,9 +40,14 @@ public class CategoryController {
         return categoryService.getCategoryByName(name);
     }
 
-    @GetSubcategoryById(path = "subcategory/{id}")
+    @GetSubcategoryById(path = "/subcategory/{id}")
     public List<CategoryDTO> getAllSubCategories(@PathVariable("id") Long id) {
         return categoryService.getAllSubCategories(id);
+    }
+
+    @GetSubcategoryById(path = "/subcategory/subsubcategory/{id}")
+    public List<CategoryDTO> getAllSubSubCategories(@PathVariable("id") Long id) {
+        return categoryService.getAllSubSubCategories(id);
     }
 
     @CreateCategory(path = "")
@@ -68,6 +69,16 @@ public class CategoryController {
     @CreateSubcategory(path = "/subcategory/{id}")
     public CategoryDTO createSubCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable("id") Long id) {
         return categoryService.createSubcategory(id, categoryDTO);
+    }
+
+    @PostMapping("/subcategories/subsubcategories/{id}")
+    public ResponseEntity<?> createSubSubCategory(@PathVariable("id") Long subcategoryId, @RequestBody CategoryDTO subSubCategoryDTO) {
+        try {
+            CategoryDTO createdSubSubCategory = categoryService.createSubSubCategory(subcategoryId, subSubCategoryDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdSubSubCategory);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @UpdateCategory(path = "/{id}")

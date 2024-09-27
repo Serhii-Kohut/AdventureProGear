@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS public.categories
     category_name_en varchar not null unique,
     category_id      integer
         constraint subcategory_fk
-        references public.categories,
-    section_id       integer
+        references public.categories(id) ON DELETE SET NULL,
+    section_id       bigint
         constraint section_fk
         references public.sections
 );

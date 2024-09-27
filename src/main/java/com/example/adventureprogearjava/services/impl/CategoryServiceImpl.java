@@ -87,6 +87,24 @@ public class CategoryServiceImpl implements CategoryService {
         return subCategoryList;
     }
 
+    @Override
+    public List<CategoryDTO> getAllSubSubCategories(Long id) {
+        log.info("Getting all sub-subcategories");
+        List<CategoryDTO> subSubCategoryList = categoryRepository
+                .getAllSubCategories(id)
+                .stream()
+                .flatMap(subCategory -> categoryRepository
+                        .getAllSubCategories(subCategory.getId())
+                        .stream()
+                        .map(mapper::toDTO))
+                .toList();
+
+        subSubCategoryList.forEach(subSubCategory -> {
+            subSubCategory.setSelfLink(api + subSubCategory.getId());
+        });
+        return subSubCategoryList;
+    }
+
     @Transactional
     public CategoryDTO createCategoryWithSection(Long sectionId, CategoryDTO categoryDTO) {
         log.info("Creating Category with section");
@@ -121,7 +139,24 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return categoryDTO;
     }
+    @Transactional
+    @Override
+    public CategoryDTO createSubSubCategory(Long subcategoryId, CategoryDTO subSubCategoryDTO) {
+        log.info("Creating sub-subcategory for subcategory with ID: {}", subcategoryId);
 
+        Optional<Category> subcategory = categoryRepository.findById(subcategoryId);
+        if (subcategory.isEmpty()) {
+            throw new ResourceNotFoundException("Subcategory not found with ID: " + subcategoryId);
+        }
+
+        categoryRepository.insertSubSubCategory(
+                subSubCategoryDTO.getCategoryNameEn(),
+                subSubCategoryDTO.getCategoryNameUa(),
+                subcategoryId
+        );
+
+        return subSubCategoryDTO;
+    }
     private CategoryDTO addLinkForSubcategory(CategoryDTO categoryDTO) {
         categoryDTO.setSelfLink(api + categoryDTO.getId());
         return categoryDTO;

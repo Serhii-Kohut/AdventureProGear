@@ -29,6 +29,9 @@ public class CategoryDTO {
     @Schema(description = "List of subcategories", example ="[]")
     List<CategoryDTO> subcategories;
 
+    @Schema(description = "List of sub-subcategories", example = "[]")
+    List<CategoryDTO> subSubcategories;
+
     @Schema(description = "Self link", example = "/categories/sneakers")
     String selfLink;
 }
