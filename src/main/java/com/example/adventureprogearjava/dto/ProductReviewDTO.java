@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -17,6 +18,9 @@ public class ProductReviewDTO {
 
     @NotNull(message = "Product ID is required")
     Long productId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    String username;
 
     @Min(value = 1, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating must be at most 5")
