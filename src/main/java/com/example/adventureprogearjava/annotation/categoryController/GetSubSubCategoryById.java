@@ -19,8 +19,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.GET)
 @Operation(
-        summary = "Get category by its own ID",
-        description = "Retrieves a category by its ID.",
+        summary = "Get sub-subcategories by category ID",
+        description = "Retrieves all sub-subcategories by category ID",
+        parameters = {
+                @Parameter(
+                        name = "id",
+                        description = "ID of the category",
+                        required = true
+                )
+        },
         responses = {
                 @ApiResponse(
                         responseCode = "200",
@@ -44,7 +51,7 @@ import java.lang.annotation.Target;
                 )
         }
 )
-public @interface GetCategoryById {
+public @interface GetSubSubCategoryById {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }

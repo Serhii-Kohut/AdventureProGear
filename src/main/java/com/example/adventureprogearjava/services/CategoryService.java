@@ -1,7 +1,8 @@
 package com.example.adventureprogearjava.services;
 
 import com.example.adventureprogearjava.dto.CategoryDTO;
-import org.springframework.transaction.annotation.Transactional;
+import com.example.adventureprogearjava.dto.SubSubCategoryDTO;
+import com.example.adventureprogearjava.dto.SubcategoryDTO;
 
 import java.util.List;
 
@@ -14,10 +15,19 @@ public interface CategoryService {
 
     CategoryDTO createCategoryWithSection(Long sectionId, CategoryDTO categoryDTO);
 
-    CategoryDTO createSubcategory(Long id, CategoryDTO categoryDTO);
+    void createSubcategory(Long id, SubcategoryDTO categoryDTO);
 
     List<CategoryDTO> getAllSubSubCategories(Long id);
 
-    CategoryDTO createSubSubCategory(Long subcategoryId, CategoryDTO subSubCategoryDTO);
+    void createSubSubCategory(Long subcategoryId, SubSubCategoryDTO subSubCategoryDTO);
 
+    void updateSubcategory(Long id, CategoryDTO categoryDTO);
+
+    void updateSubSubcategory(Long id, SubSubCategoryDTO categoryDTO);
+
+    void deleteSubcategory(Long id);
+
+    void deleteSubSubcategory(Long id);
+
+    SubSubCategoryDTO getSubSubCategoryById(Long id);
 }
