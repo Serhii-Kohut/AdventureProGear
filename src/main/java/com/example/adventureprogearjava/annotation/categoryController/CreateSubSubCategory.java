@@ -1,6 +1,6 @@
 package com.example.adventureprogearjava.annotation.categoryController;
 
-import com.example.adventureprogearjava.dto.SubSubCategoryDTO; // Импортируйте SubSubCategoryDTO
+import com.example.adventureprogearjava.dto.SubSubCategoryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

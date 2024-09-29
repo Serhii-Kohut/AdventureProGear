@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         List<CategoryDTO> categoryDTOS = categoryRepository.getAllCategoriesBySection(id)
                 .stream()
-                .filter(category -> category.getParentCategory() == null) // Категории высшего уровня
+                .filter(category -> category.getParentCategory() == null)
                 .map(mapper::toDTO)
                 .toList();
 
