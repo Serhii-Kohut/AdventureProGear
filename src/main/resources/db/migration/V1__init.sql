@@ -193,3 +193,6 @@ CREATE TABLE IF NOT EXISTS public.reactions
 ALTER TABLE product_attributes
     ADD COLUMN label VARCHAR(255);
 
+ALTER TABLE product_attributes
+    ADD COLUMN picture_url VARCHAR(255);
+
