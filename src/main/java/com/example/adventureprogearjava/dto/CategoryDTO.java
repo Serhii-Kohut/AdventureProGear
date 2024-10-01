@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -13,21 +14,27 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryDTO {
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
-    @Schema(description = "Category name_Uа", example = "Толстовка")
+    @Schema(description = "Category name in Ukrainian", example = "Толстовка")
     @NotBlank
     String categoryNameUa;
 
-    @Schema(description = "Category_En", example = "Jumper")
+    @Schema(description = "Category name in English", example = "Jumper")
     @NotBlank
     String categoryNameEn;
 
-    @NotBlank
-    @Schema(description = "Section ID to which the category belongs", example = "2")
+    @Schema(description = "Section ID to which the category belongs, null if this is a subcategory", example = "2")
     Long sectionId;
-    @Schema(description = "List of subcategories", example ="[]")
-    List<CategoryDTO> subcategories;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    Long parentCategoryId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "List of subcategories", example = "[]")
+    List<SubcategoryDTO> subcategories;
 
     @Schema(description = "Self link", example = "/categories/sneakers")
     String selfLink;

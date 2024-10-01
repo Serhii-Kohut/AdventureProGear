@@ -23,15 +23,15 @@ alter table sections
 
 CREATE TABLE IF NOT EXISTS public.categories
 (
-    id               bigint primary key,
-    category_name_ua varchar not null unique,
-    category_name_en varchar not null unique,
-    category_id      integer
-        constraint subcategory_fk
-        references public.categories,
-    section_id       integer
-        constraint section_fk
-        references public.sections
+    id BIGSERIAL PRIMARY KEY,
+    category_name_ua   VARCHAR NOT NULL UNIQUE,
+    category_name_en   VARCHAR NOT NULL UNIQUE,
+    parent_category_id BIGINT
+        CONSTRAINT subcategory_fk
+        REFERENCES public.categories(id) ON DELETE SET NULL,
+    section_id         BIGINT
+        CONSTRAINT section_fk
+        REFERENCES public.sections(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS public.users
@@ -72,14 +72,15 @@ CREATE TABLE IF NOT EXISTS public.products_review
     likes       BIGINT DEFAULT 0,
     dislikes    BIGINT DEFAULT 0
 );
-CREATE TABLE IF NOT EXISTS public.review_reactions (
-                                                       id BIGINT PRIMARY KEY,
-                                                       user_id BIGINT NOT NULL,
-                                                       review_id BIGINT NOT NULL,
-                                                       reaction_type VARCHAR NOT NULL CHECK (reaction_type IN ('LIKE', 'DISLIKE')),
-                                                       CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(id),
-                                                       CONSTRAINT fk_review FOREIGN KEY (review_id) REFERENCES public.products_review(id),
-                                                       CONSTRAINT unique_user_review UNIQUE (user_id, review_id)
+CREATE TABLE IF NOT EXISTS public.review_reactions
+(
+    id            BIGINT PRIMARY KEY,
+    user_id       BIGINT  NOT NULL,
+    review_id     BIGINT  NOT NULL,
+    reaction_type VARCHAR NOT NULL CHECK (reaction_type IN ('LIKE', 'DISLIKE')),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users (id),
+    CONSTRAINT fk_review FOREIGN KEY (review_id) REFERENCES public.products_review (id),
+    CONSTRAINT unique_user_review UNIQUE (user_id, review_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.product_attributes
@@ -191,4 +192,7 @@ CREATE TABLE IF NOT EXISTS public.reactions
 
 ALTER TABLE product_attributes
     ADD COLUMN label VARCHAR(255);
+
+ALTER TABLE product_attributes
+    ADD COLUMN picture_url VARCHAR(255);
 

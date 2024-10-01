@@ -127,8 +127,6 @@ values (nextval('categories_seq'), 'Caps', 'Шапки', 3);
 insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Tents', 'Палатки', 4);
 
-insert into categories(id, category_name_en, category_name_ua, category_id)
-values (nextval('categories_seq'), 'Sleeping bags', 'Спальні мішки', 9);
 
 
 

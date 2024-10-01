@@ -1,20 +1,7 @@
 package com.example.adventureprogearjava.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
@@ -27,19 +14,27 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Category extends BaseEntity {
 
-    @Transient
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categories_seq")
     @SequenceGenerator(name = "categories_seq", sequenceName = "categories_seq", allocationSize = 1)
-    Long sequenceId;
+    Long id;
 
-    @Column(name = "category_name_en")
+    @Column(name = "category_name_en", nullable = false)
     String categoryNameEn;
-    @Column(name = "category_name_ua")
+
+    @Column(name = "category_name_ua", nullable = false)
     String categoryNameUa;
+
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    Category category;
+    @JoinColumn(name = "parent_category_id")
+    Category parentCategory;
+
     @ManyToOne
     @JoinColumn(name = "section_id")
     Section section;
+
+    @Transient
+    public boolean isSubCategory() {
+        return this.parentCategory != null;
+    }
 }

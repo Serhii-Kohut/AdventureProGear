@@ -1,6 +1,6 @@
 package com.example.adventureprogearjava.annotation.categoryController;
 
-import com.example.adventureprogearjava.dto.SubcategoryDTO;
+import com.example.adventureprogearjava.dto.SubSubCategoryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -23,21 +23,21 @@ import java.lang.annotation.Target;
 @RequestMapping(method = RequestMethod.POST)
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Operation(
-        summary = "Creation of new subcategory",
-        description = "Creation of new subcategory",
+        summary = "Creation of new sub-subcategory",
+        description = "Creation of new sub-subcategory",
         security = @SecurityRequirement(name = "bearerAuth"),
         requestBody = @RequestBody(
-                description = "Subcategory data, required for creation",
+                description = "Sub-subcategory data, required for creation",
                 required = true,
                 content = @Content(
-                        schema = @Schema(implementation = SubcategoryDTO.class),
+                        schema = @Schema(implementation = SubSubCategoryDTO.class),
                         examples = {
                                 @ExampleObject(
-                                        name = "Subcategory Example",
-                                        description = "Example of a subcategory creation request",
-                                        value = "{\"subcategoryNameUa\": \"Рюкзаки\"," +
-                                                " \"subcategoryNameEn\": \"Backpacks\"," +
-                                                " \"subsectionId\": 2}"
+                                        name = "Sub-Subcategory Example",
+                                        description = "Example of a sub-subcategory creation request",
+                                        value = "{\"subSubCategoryNameUa\": \"Супер Толстовка\"," +
+                                                " \"subSubCategoryNameEn\": \"Super Jumper\"," +
+                                                " \"subCategoryId\": 3}"
                                 )
                         }
                 )
@@ -46,7 +46,7 @@ import java.lang.annotation.Target;
                 @ApiResponse(
                         responseCode = "201",
                         description = "Successful operation.",
-                        content = @Content(schema = @Schema(implementation = SubcategoryDTO.class))
+                        content = @Content(schema = @Schema(implementation = SubSubCategoryDTO.class))
                 ),
                 @ApiResponse(
                         responseCode = "400",
@@ -60,7 +60,7 @@ import java.lang.annotation.Target;
                 )
         }
 )
-public @interface CreateSubcategory {
+public @interface CreateSubSubCategory {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }

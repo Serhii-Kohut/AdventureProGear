@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductAttributeRepository extends JpaRepository<ProductAttribute, Long> {
     @Modifying
-    @Query(value = "insert into product_attributes (id, size, color, additional, price_deviation, product_id, quantity, label)" +
-            "            values (nextval('product_attr_seq'),:size,:color,:additional, :price_deviation, :product_id, :quantity, :label);",
+    @Query(value = "insert into product_attributes (id, size, color, additional, price_deviation, product_id, quantity, label, picture_url)" +
+            "            values (nextval('product_attr_seq'),:size,:color,:additional, :price_deviation, :product_id, :quantity, :label, :picture_url);",
             nativeQuery = true)
     void insertProductAttr(@Param("size") String size,
                            @Param("additional") String additional,
@@ -19,12 +19,13 @@ public interface ProductAttributeRepository extends JpaRepository<ProductAttribu
                            @Param("price_deviation") Long priceDeviation,
                            @Param("product_id") Long productId,
                            @Param("quantity") Long quantity,
-                           @Param("label") String label);
+                           @Param("label") String label,
+                           @Param("picture_url") String pictureUrl);
 
     @Modifying
     @Query(value = "UPDATE product_attributes set size = :size, " +
             "color=:color, additional = :additional," +
-            "price_deviation = :price_deviation, quantity = :quantity, label = :label where id=:id",
+            "price_deviation = :price_deviation, quantity = :quantity, label = :label, picture_url = :picture_url where id=:id",
             nativeQuery = true)
     void update(@Param("id") Long id,
                 @Param("size") String size,
@@ -32,7 +33,8 @@ public interface ProductAttributeRepository extends JpaRepository<ProductAttribu
                 @Param("color") String color,
                 @Param("price_deviation") Long priceDeviation,
                 @Param("quantity") Long quantity,
-                @Param("label") String label);
+                @Param("label") String label,
+                @Param("picture_url") String pictureUrl);
 
     @Modifying
     @Query(value = "DELETE FROM product_attributes WHERE id =:id",

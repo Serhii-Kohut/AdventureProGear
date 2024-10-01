@@ -34,6 +34,8 @@ public class ProductAttributeDTO {
 
     String label;
 
+    String pictureUrl;
+
     @Schema(description = "Self link", example = "/products/1/attributes/1")
     String selfLink;
 }

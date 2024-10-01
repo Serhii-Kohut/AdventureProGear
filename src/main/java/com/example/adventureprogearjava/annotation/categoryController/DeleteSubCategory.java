@@ -1,11 +1,9 @@
 package com.example.adventureprogearjava.annotation.categoryController;
 
-import com.example.adventureprogearjava.dto.SubcategoryDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.core.annotation.AliasFor;
@@ -20,37 +18,27 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@RequestMapping(method = RequestMethod.POST)
+@RequestMapping(method = RequestMethod.DELETE)
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Operation(
-        summary = "Creation of new subcategory",
-        description = "Creation of new subcategory",
+        summary = "Delete subcategory",
+        description = "Delete a subcategory by its ID",
         security = @SecurityRequirement(name = "bearerAuth"),
-        requestBody = @RequestBody(
-                description = "Subcategory data, required for creation",
-                required = true,
-                content = @Content(
-                        schema = @Schema(implementation = SubcategoryDTO.class),
-                        examples = {
-                                @ExampleObject(
-                                        name = "Subcategory Example",
-                                        description = "Example of a subcategory creation request",
-                                        value = "{\"subcategoryNameUa\": \"Рюкзаки\"," +
-                                                " \"subcategoryNameEn\": \"Backpacks\"," +
-                                                " \"subsectionId\": 2}"
-                                )
-                        }
+        parameters = {
+                @Parameter(
+                        name = "id",
+                        description = "ID of the subcategory to delete",
+                        required = true
                 )
-        ),
+        },
         responses = {
                 @ApiResponse(
-                        responseCode = "201",
-                        description = "Successful operation.",
-                        content = @Content(schema = @Schema(implementation = SubcategoryDTO.class))
+                        responseCode = "204",
+                        description = "Successful deletion"
                 ),
                 @ApiResponse(
-                        responseCode = "400",
-                        description = "Invalid data",
+                        responseCode = "404",
+                        description = "Subcategory Not Found",
                         content = @Content(schema = @Schema(implementation = String.class))
                 ),
                 @ApiResponse(
@@ -60,7 +48,7 @@ import java.lang.annotation.Target;
                 )
         }
 )
-public @interface CreateSubcategory {
+public @interface DeleteSubCategory {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }

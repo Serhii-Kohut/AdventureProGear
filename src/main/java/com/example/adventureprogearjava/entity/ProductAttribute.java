@@ -46,6 +46,9 @@ public class ProductAttribute extends BaseEntity {
     @Column(name = "label")
     String label;
 
+    @Column(name = "picture_url")
+    String pictureUrl;
+
     @OneToMany(mappedBy = "productAttribute")
     List<OrdersList> ordersLists;
 
