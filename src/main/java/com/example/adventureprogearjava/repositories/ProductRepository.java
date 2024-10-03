@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.repositories;
 
 import com.example.adventureprogearjava.entity.Product;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,12 +9,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "insert into products (id, product_name_en, product_name_ua, description_en, description_ua, base_price, gender, category) " +
-            "values (nextval('product_content_seq'), :nameEn, :nameUa, :descriptionEn, :descriptionUa, :price, CAST(:gender as gender), :categoryId)RETURNING id;",
+            "values (nextval('product_content_seq'), :nameEn, :nameUa, :descriptionEn, :descriptionUa, :price, CAST(:gender as gender), :categoryId) RETURNING id;",
             nativeQuery = true)
     Long insertProduct(@Param("nameEn") String nameEn,
                        @Param("nameUa") String nameUa,

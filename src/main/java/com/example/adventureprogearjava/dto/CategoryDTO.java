@@ -15,7 +15,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryDTO {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
     @Schema(description = "Category name in Ukrainian", example = "Толстовка")

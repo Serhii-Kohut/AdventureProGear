@@ -7,12 +7,13 @@ import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.Section;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
+    @Mapping(target = "sectionId", source = "section.id")
+    @Mapping(target = "selfLink", expression = "java(createSelfLink(category))")
     CategoryDTO toDTO(Category category);
 
     @Mapping(target = "section", source = "sectionId")
@@ -20,7 +21,8 @@ public interface CategoryMapper {
 
     @Mapping(target = "subcategoryNameUa", source = "category.categoryNameUa")
     @Mapping(target = "subcategoryNameEn", source = "category.categoryNameEn")
-    @Mapping(target = "subsectionId", source = "category.id")
+    @Mapping(target = "parentCategoryId", source = "category.parentCategory.id")
+    @Mapping(target = "id", source = "category.id")
     SubcategoryDTO toDTOFromCategory(Category category);
 
     @Mapping(target = "subSubCategoryNameUa", source = "category.categoryNameUa")
@@ -40,4 +42,8 @@ public interface CategoryMapper {
         return section;
     }
 
+    default String createSelfLink(Category category) {
+        return category != null ? "/categories/" + category.getId() : null;
+
+    }
 }

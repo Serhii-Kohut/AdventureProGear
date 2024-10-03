@@ -4,6 +4,7 @@ import com.example.adventureprogearjava.dto.ProductReviewDTO;
 import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.ProductReview;
 import com.example.adventureprogearjava.entity.User;
+import com.example.adventureprogearjava.exceptions.ReviewNotFoundException;
 import com.example.adventureprogearjava.mapper.ProductReviewMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.repositories.ProductReviewRepository;
@@ -45,7 +46,7 @@ public class CRUDProductReviewServiceImpl implements CRUDService<ProductReviewDT
     @Override
     public ProductReviewDTO getById(Long id) {
         ProductReview review = productReviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found"));
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID:"));
         return productReviewMapper.toDTO(review);
     }
 

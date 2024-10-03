@@ -2,6 +2,7 @@ package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.annotation.productReview.*;
 import com.example.adventureprogearjava.dto.ProductReviewDTO;
+import com.example.adventureprogearjava.exceptions.ReviewNotFoundException;
 import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.ProductReviewService;
 import com.example.adventureprogearjava.services.impl.CRUDProductReviewServiceImpl;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +38,15 @@ public class ProductReviewController {
     }
 
     @GetReviewById(path = "/{id}")
-    public ProductReviewDTO getReviewById(@PathVariable Long id) {
-        return productReviewCRUDService.getById(id);
+    public ResponseEntity<ProductReviewDTO> getReviewById(@PathVariable Long id) {
+        try {
+            ProductReviewDTO reviewDTO = productReviewCRUDService.getById(id);
+            return ResponseEntity.ok(reviewDTO);
+        } catch (ReviewNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @CreateReview(path = "")

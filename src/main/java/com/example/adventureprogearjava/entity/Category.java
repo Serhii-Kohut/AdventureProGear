@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @Getter
@@ -25,11 +27,14 @@ public class Category extends BaseEntity {
     @Column(name = "category_name_ua", nullable = false)
     String categoryNameUa;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_id")
     Category parentCategory;
 
-    @ManyToOne
+    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
+    private List<Category> subcategories;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id")
     Section section;
 

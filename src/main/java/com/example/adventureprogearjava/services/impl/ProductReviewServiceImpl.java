@@ -4,6 +4,7 @@ import com.example.adventureprogearjava.dto.ProductReviewDTO;
 import com.example.adventureprogearjava.entity.ProductReview;
 import com.example.adventureprogearjava.entity.ProductReviewReaction;
 import com.example.adventureprogearjava.entity.User;
+import com.example.adventureprogearjava.exceptions.ReviewNotFoundException;
 import com.example.adventureprogearjava.mapper.ProductReviewMapper;
 import com.example.adventureprogearjava.repositories.ProductReviewReactionRepository;
 import com.example.adventureprogearjava.repositories.ProductReviewRepository;
@@ -64,17 +65,14 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
-        if (reviewOpt.isEmpty()) {
-            return "Review not found";
-        }
+        ProductReview review = productReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
         boolean hasReacted = productReviewReactionRepository.existsByUserIdAndReviewId(user.getId(), reviewId);
         if (hasReacted) {
             return "User has already reacted to this review";
         }
 
-        ProductReview review = reviewOpt.get();
         review.setLikes(review.getLikes() + 1);
         productReviewRepository.save(review);
 
@@ -87,24 +85,20 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         return "Like added successfully.";
     }
 
-
     public String incrementDislikes(Long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
-        if (reviewOpt.isEmpty()) {
-            return "Review not found";
-        }
+        ProductReview review = productReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
         boolean hasReacted = productReviewReactionRepository.existsByUserIdAndReviewId(user.getId(), reviewId);
         if (hasReacted) {
             return "User has already reacted to this review";
         }
 
-        ProductReview review = reviewOpt.get();
         review.setDislikes(review.getDislikes() + 1);
         productReviewRepository.save(review);
 
@@ -117,17 +111,14 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         return "Dislike added successfully.";
     }
 
-
     public String decrementLikes(Long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
-        if (reviewOpt.isEmpty()) {
-            return "Review not found";
-        }
+        ProductReview review = productReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
         Optional<Object> reactionOpt = productReviewReactionRepository.findByUserIdAndReviewId(user.getId(), reviewId);
         if (reactionOpt.isEmpty()) {
@@ -136,7 +127,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
         ProductReviewReaction reaction = (ProductReviewReaction) reactionOpt.get();
         if (reaction.getReactionType().equals("LIKE")) {
-            ProductReview review = reviewOpt.get();
             if (review.getLikes() > 0) {
                 review.setLikes(review.getLikes() - 1);
                 productReviewRepository.save(review);
@@ -151,17 +141,14 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         }
     }
 
-
     public String decrementDislikes(Long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Optional<ProductReview> reviewOpt = productReviewRepository.findById(reviewId);
-        if (reviewOpt.isEmpty()) {
-            return "Review not found";
-        }
+        ProductReview review = productReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
         Optional<Object> reactionOpt = productReviewReactionRepository.findByUserIdAndReviewId(user.getId(), reviewId);
         if (reactionOpt.isEmpty()) {
@@ -170,7 +157,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
         ProductReviewReaction reaction = (ProductReviewReaction) reactionOpt.get();
         if (reaction.getReactionType().equals("DISLIKE")) {
-            ProductReview review = reviewOpt.get();
             if (review.getDislikes() > 0) {
                 review.setDislikes(review.getDislikes() - 1);
                 productReviewRepository.save(review);
@@ -184,5 +170,4 @@ public class ProductReviewServiceImpl implements ProductReviewService {
             return "User has not disliked this review";
         }
     }
-
 }

@@ -1,18 +1,6 @@
 package com.example.adventureprogearjava.exceptions.handler;
 
-import com.example.adventureprogearjava.exceptions.AccessToOrderDeniedException;
-import com.example.adventureprogearjava.exceptions.InvalidReactionTypeException;
-import com.example.adventureprogearjava.exceptions.InvalidTokenException;
-import com.example.adventureprogearjava.exceptions.NoContentException;
-import com.example.adventureprogearjava.exceptions.NoOrdersFoundException;
-import com.example.adventureprogearjava.exceptions.NoOrdersListFoundException;
-import com.example.adventureprogearjava.exceptions.NoUsersFoundException;
-import com.example.adventureprogearjava.exceptions.PasswordMismatchException;
-import com.example.adventureprogearjava.exceptions.PostNotFoundException;
-import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
-import com.example.adventureprogearjava.exceptions.UnauthorizedException;
-import com.example.adventureprogearjava.exceptions.UserAlreadyExistsException;
-import com.example.adventureprogearjava.exceptions.UserIsNotActiveException;
+import com.example.adventureprogearjava.exceptions.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -146,4 +134,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<String> handleReviewNotFoundException(ReviewNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }

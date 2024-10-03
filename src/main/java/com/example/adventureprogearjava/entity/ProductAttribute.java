@@ -24,7 +24,7 @@ public class ProductAttribute extends BaseEntity {
     @SequenceGenerator(name = "product_attr_seq", sequenceName = "product_attr_seq", allocationSize = 1)
     Long sequenceId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
 
