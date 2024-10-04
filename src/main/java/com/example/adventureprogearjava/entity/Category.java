@@ -38,8 +38,7 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "section_id")
     Section section;
 
-    @Transient
-    public boolean isSubCategory() {
-        return this.parentCategory != null;
-    }
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products;
+
 }

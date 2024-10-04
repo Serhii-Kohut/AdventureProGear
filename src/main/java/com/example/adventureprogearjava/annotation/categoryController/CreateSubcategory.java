@@ -36,8 +36,7 @@ import java.lang.annotation.Target;
                                         name = "Subcategory Example",
                                         description = "Example of a subcategory creation request",
                                         value = "{\"subcategoryNameUa\": \"Рюкзаки\"," +
-                                                " \"subcategoryNameEn\": \"Backpacks\"," +
-                                                " \"subsectionId\": 2}"
+                                                " \"subcategoryNameEn\": \"Backpacks\"}"
                                 )
                         }
                 )

@@ -28,7 +28,6 @@ public interface CategoryMapper {
     @Mapping(target = "subSubCategoryNameUa", source = "category.categoryNameUa")
     @Mapping(target = "subSubCategoryNameEn", source = "category.categoryNameEn")
     @Mapping(target = "subCategoryId", source = "category.parentCategory.id")
-    @Mapping(target = "selfLink", expression = "java(\"/subsubcategories/\" + category.getId())")
     SubSubCategoryDTO toSubSubCategoryDTO(Category category);
 
     List<SubcategoryDTO> toSubcategoryDTOs(List<Category> subCategories);

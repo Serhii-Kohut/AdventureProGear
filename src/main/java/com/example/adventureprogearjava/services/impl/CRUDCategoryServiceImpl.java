@@ -129,9 +129,4 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
         }
         categoryRepository.deleteById(id);
     }
-
-    private CategoryDTO addLinkForSubcategory(CategoryDTO categoryDTO) {
-        categoryDTO.setSelfLink(api + categoryDTO.getId());
-        return categoryDTO;
-    }
 }

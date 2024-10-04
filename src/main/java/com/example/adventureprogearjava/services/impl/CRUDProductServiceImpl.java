@@ -57,7 +57,11 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
         }
         Long generatedId = insertProduct(productDTO);
         productDTO.setProductId(generatedId);
-        return productDTO;
+        Product savedProduct = productRepo.findById(generatedId).orElseThrow(() ->
+                new ResourceNotFoundException("Resource is not available!")
+        );
+
+        return productMapper.toDto(savedProduct);
     }
 
     @Override

@@ -26,6 +26,4 @@ public class SubSubCategoryDTO {
     @Schema(description = "ID of the parent subcategory", example = "3")
     Long subCategoryId;
 
-    @Schema(description = "Self link", example = "/subSubcategories/super-jumper")
-    String selfLink;
 }

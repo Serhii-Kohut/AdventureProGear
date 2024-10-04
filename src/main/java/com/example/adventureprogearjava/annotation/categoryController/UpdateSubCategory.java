@@ -1,6 +1,6 @@
 package com.example.adventureprogearjava.annotation.categoryController;
 
-import com.example.adventureprogearjava.dto.CategoryDTO;
+import com.example.adventureprogearjava.dto.SubcategoryDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
         requestBody = @RequestBody(
                 description = "Subcategory data, required for update",
                 required = true,
-                content = @Content(schema = @Schema(implementation = CategoryDTO.class))
+                content = @Content(schema = @Schema(implementation = SubcategoryDTO.class))
         ),
         parameters = {
                 @Parameter(

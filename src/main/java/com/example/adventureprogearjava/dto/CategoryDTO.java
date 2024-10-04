@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryDTO {
-
+    @Schema(hidden = true)
     Long id;
 
     @Schema(description = "Category name in Ukrainian", example = "Толстовка")
@@ -35,6 +35,7 @@ public class CategoryDTO {
     @Schema(description = "List of subcategories", example = "[]")
     List<SubcategoryDTO> subcategories;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(description = "Self link", example = "/categories/sneakers")
     String selfLink;
 }

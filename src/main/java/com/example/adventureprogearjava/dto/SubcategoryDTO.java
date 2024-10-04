@@ -21,7 +21,7 @@ public class SubcategoryDTO {
 
     @NotBlank
     String subcategoryNameEn;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     Long parentCategoryId;
 
     List<SubSubCategoryDTO> subSubCategories;
