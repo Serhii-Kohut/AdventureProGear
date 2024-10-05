@@ -40,31 +40,16 @@ import java.lang.annotation.Target;
                                         name = "Good request",
                                         value = """
                                                 {
-                                                  "productNameUa": "Кросівки",
-                                                  "productNameEn": "Sneakers",
-                                                  "descriptionUa": "Зручні спортивні кросівки",
-                                                  "descriptionEn": "Comfortable sports sneakers",
-                                                  "basePrice": 2000,
-                                                  "gender": "MALE",
-                                                  "category": {
-                                                    "categoryId": 1,
-                                                    "categoryName": "Shoes"
-                                                  },
-                                                  "attributes": [
-                                                    {
-                                                      "attributeId": 1,
-                                                      "attributeName": "Color",
-                                                      "attributeValue": "Red"
-                                                    }
-                                                  ],
-                                                  "contents": [
-                                                    {
-                                                      "contentId": 1,
-                                                      "contentType": "IMAGE",
-                                                      "contentUrl": "/images/sneakers.jpg"
-                                                    }
-                                                  ]
-                                                }
+                                                   "productNameUa": "Рюкзак туристичний",
+                                                   "productNameEn": "Backpack tourist",
+                                                   "descriptionUa": "Рюкзак для прогулянок горами",
+                                                   "descriptionEn": "Backpack for walks in the mountains",
+                                                   "basePrice": 640,
+                                                   "gender": "MALE",
+                                                   "category": {
+                                                     "id": 11
+                                                   }
+                                                 }
                                                 """
                                 )
                         }

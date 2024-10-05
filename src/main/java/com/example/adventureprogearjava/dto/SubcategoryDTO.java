@@ -15,14 +15,14 @@ import java.util.List;
 public class SubcategoryDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
+
     @NotBlank
     String subcategoryNameUa;
 
     @NotBlank
     String subcategoryNameEn;
 
-    @NotBlank
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    Long subsectionId;
+    Long parentCategoryId;
+
     List<SubSubCategoryDTO> subSubCategories;
 }

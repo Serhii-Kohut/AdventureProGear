@@ -15,15 +15,15 @@ public interface CategoryService {
 
     CategoryDTO createCategoryWithSection(Long sectionId, CategoryDTO categoryDTO);
 
-    void createSubcategory(Long id, SubcategoryDTO categoryDTO);
+    SubcategoryDTO createSubcategory(Long id, SubcategoryDTO categoryDTO);
 
     List<CategoryDTO> getAllSubSubCategories(Long id);
 
-    void createSubSubCategory(Long subcategoryId, SubSubCategoryDTO subSubCategoryDTO);
+    SubSubCategoryDTO createSubSubCategory(Long subcategoryId, SubSubCategoryDTO subSubCategoryDTO);
 
-    void updateSubcategory(Long id, CategoryDTO categoryDTO);
+    SubcategoryDTO updateSubcategory(Long id, SubcategoryDTO categoryDTO);
 
-    void updateSubSubcategory(Long id, SubSubCategoryDTO categoryDTO);
+    SubSubCategoryDTO updateSubSubcategory(Long id, SubSubCategoryDTO categoryDTO);
 
     void deleteSubcategory(Long id);
 

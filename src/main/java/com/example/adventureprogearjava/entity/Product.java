@@ -42,7 +42,7 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     Gender gender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "category", nullable = false)
     Category category;
 

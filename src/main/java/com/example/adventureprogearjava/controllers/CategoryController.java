@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/public/categories")
 @RequiredArgsConstructor
@@ -57,18 +58,15 @@ public class CategoryController {
     }
 
     @CreateCategory(path = "")
-    public ResponseEntity<?> createCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<Object> createCategory(@RequestBody CategoryDTO categoryDTO) {
         try {
             Long sectionId = categoryDTO.getSectionId();
-            if (sectionId == null) {
-                throw new IllegalArgumentException("Section ID is required");
-            }
             CategoryDTO createdCategory = categoryService.createCategoryWithSection(sectionId, categoryDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Section ID is required");
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Category with name: " + categoryDTO.getCategoryNameEn() + " already exists.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Category with this name already exists.");
         }
     }
 
@@ -77,13 +75,12 @@ public class CategoryController {
             @PathVariable("parentCategoryId") Long parentCategoryId,
             @RequestBody SubcategoryDTO subCategoryDTO) {
         try {
-            if (subCategoryDTO.getSubcategoryNameEn() == null || subCategoryDTO.getSubcategoryNameUa() == null) {
-                throw new IllegalArgumentException("Both category names (English and Ukrainian) are required.");
-            }
-            categoryService.createSubcategory(parentCategoryId, subCategoryDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            SubcategoryDTO createdSubcategory = categoryService.createSubcategory(parentCategoryId, subCategoryDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdSubcategory);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Both category names (English and Ukrainian) are required.");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Subcategory with this name already exists.");
         }
     }
 
@@ -92,73 +89,53 @@ public class CategoryController {
             @PathVariable("parentSubCategoryId") Long parentSubCategoryId,
             @RequestBody SubSubCategoryDTO subSubCategoryDTO) {
         try {
-            if (subSubCategoryDTO.getSubSubCategoryNameEn() == null || subSubCategoryDTO.getSubSubCategoryNameUa() == null) {
-                throw new IllegalArgumentException("Both subsubcategory names (English and Ukrainian) are required.");
-            }
-            categoryService.createSubSubCategory(parentSubCategoryId, subSubCategoryDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            SubSubCategoryDTO createdSubSubCategory = categoryService.createSubSubCategory(parentSubCategoryId, subSubCategoryDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdSubSubCategory);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Both subSubcategory names (English and Ukrainian) are required.");
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("SubSubcategory with this name already exists.");
         }
     }
 
     @UpdateCategory(path = "/{id}")
     public ResponseEntity<Object> updateCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable("id") Long id) {
-        try {
-            categoryCRUDService.update(categoryDTO, id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        categoryCRUDService.update(categoryDTO, id);
+        return ResponseEntity.ok(categoryDTO);
     }
 
     @UpdateSubCategory(path = "/subcategory/{id}")
-    public ResponseEntity<Object> updateSubCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable("id") Long id) {
-        try {
-            categoryService.updateSubcategory(id, categoryDTO);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<SubcategoryDTO> updateSubCategory(
+            @PathVariable("id") Long id,
+            @RequestBody SubcategoryDTO subcategoryDTO) {
+        SubcategoryDTO updatedSubcategory = categoryService.updateSubcategory(id, subcategoryDTO);
+        return ResponseEntity.ok(updatedSubcategory);
     }
 
-    @UpdateSubSubCategory(path = "/subcategory/subsubcategory/{id}")
-    public ResponseEntity<Object> updateSubSubCategory(@RequestBody SubSubCategoryDTO subSubCategoryDTO, @PathVariable("id") Long id) {
-        try {
-            categoryService.updateSubSubcategory(id, subSubCategoryDTO);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    @UpdateSubSubCategory(path = "/subcategory/subSubcategory/{id}")
+    public ResponseEntity<SubSubCategoryDTO> updateSubSubCategory(
+            @PathVariable("id") Long id,
+            @RequestBody SubSubCategoryDTO subSubCategoryDTO) {
+        SubSubCategoryDTO updatedSubSubCategory = categoryService.updateSubSubcategory(id, subSubCategoryDTO);
+        return ResponseEntity.ok(updatedSubSubCategory);
     }
+
 
     @DeleteCategory(path = "/{id}")
-    public ResponseEntity<Object> deleteCategory(@PathVariable("id") Long id) {
-        try {
-            categoryCRUDService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<Void> deleteCategory(@PathVariable("id") Long id) {
+        categoryCRUDService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteSubCategory(path = "/subcategory/{id}")
-    public ResponseEntity<Object> deleteSubCategory(@PathVariable("id") Long id) {
-        try {
-            categoryService.deleteSubcategory(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<Void> deleteSubCategory(@PathVariable("id") Long id) {
+        categoryService.deleteSubcategory(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteSubSubCategory(path = "/subcategory/subsubcategory/{id}")
-    public ResponseEntity<Object> deleteSubSubCategory(@PathVariable("id") Long id) {
-        try {
-            categoryService.deleteSubSubcategory(id);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    @DeleteSubSubCategory(path = "/subcategory/subSubcategory/{id}")
+    public ResponseEntity<Void> deleteSubSubCategory(@PathVariable("id") Long id) {
+        categoryService.deleteSubSubcategory(id);
+        return ResponseEntity.noContent().build();
     }
 }

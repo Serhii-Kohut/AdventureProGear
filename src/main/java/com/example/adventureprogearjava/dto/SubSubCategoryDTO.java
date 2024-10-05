@@ -15,17 +15,15 @@ public class SubSubCategoryDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
-    @Schema(description = "Subsubcategory name in Ukrainian", example = "Супер Толстовка")
+    @Schema(description = "SubSubcategory name in Ukrainian", example = "Супер Толстовка")
     @NotBlank
     String subSubCategoryNameUa;
 
-    @Schema(description = "Subsubcategory name in English", example = "Super Jumper")
+    @Schema(description = "SubSubcategory name in English", example = "Super Jumper")
     @NotBlank
     String subSubCategoryNameEn;
 
     @Schema(description = "ID of the parent subcategory", example = "3")
     Long subCategoryId;
 
-    @Schema(description = "Self link", example = "/subsubcategories/super-jumper")
-    String selfLink;
 }

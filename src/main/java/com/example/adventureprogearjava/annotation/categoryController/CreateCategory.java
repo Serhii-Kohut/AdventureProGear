@@ -29,6 +29,7 @@ import java.lang.annotation.Target;
                 description = "Category data, required for creation",
                 required = true,
                 content = @Content(schema = @Schema(implementation = CategoryDTO.class))
+
         ),
         responses = {
                 @ApiResponse(
@@ -57,3 +58,4 @@ public @interface CreateCategory {
     @AliasFor(annotation = RequestMapping.class, attribute = "path")
     String[] path() default {};
 }
+

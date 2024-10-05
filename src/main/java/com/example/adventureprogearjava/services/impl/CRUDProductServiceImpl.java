@@ -5,6 +5,7 @@ import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.ProductMapper;
+import com.example.adventureprogearjava.repositories.CategoryRepository;
 import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.services.CRUDService;
 import lombok.AccessLevel;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
     ProductRepository productRepo;
-
+    CategoryRepository categoryRepository;
     ProductMapper productMapper;
 
     @Override
@@ -50,12 +51,17 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
     @Transactional
     public ProductDTO create(ProductDTO productDTO) {
         log.info("Creating new product.");
-
+        if (!categoryExists(productDTO.getCategory().getId())) {
+            log.error("Category with ID {} does not exist!", productDTO.getCategory().getId());
+            throw new ResourceNotFoundException("Category with ID " + productDTO.getCategory().getId() + " does not exist");
+        }
         Long generatedId = insertProduct(productDTO);
+        productDTO.setProductId(generatedId);
+        Product savedProduct = productRepo.findById(generatedId).orElseThrow(() ->
+                new ResourceNotFoundException("Resource is not available!")
+        );
 
-        productDTO.setProductId((long) generatedId);
-
-        return productDTO;
+        return productMapper.toDto(savedProduct);
     }
 
     @Override
@@ -65,17 +71,21 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
         if (!productRepo.existsById(id)) {
             log.warn("Product not found!");
             throw new ResourceNotFoundException("Resource is not available!");
-        } else {
-            if (productDTO.getGender() != null) {
-                productRepo.updateGender(id, productDTO.getGender().toString());
-            }
-            productRepo.update(id, productDTO.getProductNameEn(),
-                    productDTO.getProductNameUa(),
-                    productDTO.getDescriptionEn(),
-                    productDTO.getDescriptionUa(),
-                    productDTO.getBasePrice(),
-                    productDTO.getCategory().getId());
         }
+        if (!categoryExists(productDTO.getCategory().getId())) {
+            log.error("Category with ID {} does not exist!", productDTO.getCategory().getId());
+            throw new ResourceNotFoundException("Category with ID " + productDTO.getCategory().getId() + " does not exist");
+        }
+        if (productDTO.getGender() != null) {
+            productRepo.updateGender(id, productDTO.getGender().toString());
+        }
+        productRepo.update(id,
+                productDTO.getProductNameEn(),
+                productDTO.getProductNameUa(),
+                productDTO.getDescriptionEn(),
+                productDTO.getDescriptionUa(),
+                productDTO.getBasePrice(),
+                productDTO.getCategory().getId());
     }
 
     @Override
@@ -97,6 +107,9 @@ public class CRUDProductServiceImpl implements CRUDService<ProductDTO> {
                 productDTO.getBasePrice(),
                 productDTO.getGender().toString(),
                 productDTO.getCategory().getId());
+    }
 
+    private boolean categoryExists(Long categoryId) {
+        return categoryRepository.existsById(categoryId);
     }
 }

@@ -33,7 +33,7 @@ public class ProductDTO {
 
     Gender gender;
 
-    @NotNull(message = "Category is required")
+    @NotNull(message = "Category ID is required")
     CategoryDTO category;
 
     List<ProductAttributeDTO> attributes;
