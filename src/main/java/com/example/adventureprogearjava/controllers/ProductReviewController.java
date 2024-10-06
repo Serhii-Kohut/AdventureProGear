@@ -2,8 +2,9 @@ package com.example.adventureprogearjava.controllers;
 
 import com.example.adventureprogearjava.annotation.productReview.*;
 import com.example.adventureprogearjava.dto.ProductReviewDTO;
+import com.example.adventureprogearjava.exceptions.ReviewAccessDeniedException;
 import com.example.adventureprogearjava.exceptions.ReviewNotFoundException;
-import com.example.adventureprogearjava.services.CRUDService;
+import com.example.adventureprogearjava.services.ProductReviewCRUDService;
 import com.example.adventureprogearjava.services.ProductReviewService;
 import com.example.adventureprogearjava.services.impl.CRUDProductReviewServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +26,7 @@ import java.util.List;
         description = "API operations for managing product reviews")
 public class ProductReviewController {
 
-    CRUDService<ProductReviewDTO> productReviewCRUDService;
+    ProductReviewCRUDService productReviewCRUDService;
     CRUDProductReviewServiceImpl productReviewServiceImpl;
     ProductReviewService productReviewService;
 
@@ -55,13 +56,27 @@ public class ProductReviewController {
     }
 
     @UpdateReview(path = "/{id}")
-    public void updateReview(@PathVariable Long id, @Valid @RequestBody ProductReviewDTO productReviewDTO) {
-        productReviewCRUDService.update(productReviewDTO, id);
+    public ResponseEntity<String> updateReview(@PathVariable Long id, @Valid @RequestBody ProductReviewDTO productReviewDTO) {
+        try {
+            ProductReviewDTO updatedReview = productReviewCRUDService.update(productReviewDTO, id);
+            return ResponseEntity.ok("Review updated successfully: " + updatedReview);
+        } catch (ReviewNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (ReviewAccessDeniedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        }
     }
 
     @DeleteReview(path = "/{id}")
-    public void deleteReview(@PathVariable Long id) {
-        productReviewCRUDService.delete(id);
+    public ResponseEntity<String> deleteReview(@PathVariable Long id) {
+        try {
+            productReviewCRUDService.delete(id);
+            return ResponseEntity.ok("Review deleted successfully.");
+        } catch (ReviewNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (ReviewAccessDeniedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        }
     }
 
     @GetAverageRating(path = "/average-rating")

@@ -22,10 +22,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.PUT)
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Operation(
         summary = "Update product review",
-        description = "Updates an existing product review identified by its ID.By user with the role 'ADMIN'",
+        description = "Updates an existing product review identified by its ID. User can update their own review, or an admin can update any review.",
         security = @SecurityRequirement(name = "bearerAuth"),
         parameters = @Parameter(
                 name = "id",

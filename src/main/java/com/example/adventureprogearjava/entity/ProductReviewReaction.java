@@ -20,9 +20,10 @@ public class ProductReviewReaction extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "review_id")
-    private Long reviewId;
-
     @Column(name = "reaction_type")
     private String reactionType;
+
+    @ManyToOne
+    @JoinColumn(name = "review_id", nullable = false)
+    private ProductReview productReview;
 }

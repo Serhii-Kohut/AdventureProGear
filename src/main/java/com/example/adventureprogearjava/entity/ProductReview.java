@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "products_review")
@@ -40,5 +41,11 @@ public class ProductReview extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @OneToMany(mappedBy = "productReview", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductReviewReaction> reactions;
 
 }

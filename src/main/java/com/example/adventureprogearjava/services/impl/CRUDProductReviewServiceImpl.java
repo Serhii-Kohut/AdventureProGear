@@ -5,11 +5,12 @@ import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.ProductReview;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.exceptions.ReviewNotFoundException;
+import com.example.adventureprogearjava.exceptions.ReviewAccessDeniedException;
 import com.example.adventureprogearjava.mapper.ProductReviewMapper;
 import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.repositories.ProductReviewRepository;
 import com.example.adventureprogearjava.repositories.UserRepository;
-import com.example.adventureprogearjava.services.CRUDService;
+import com.example.adventureprogearjava.services.ProductReviewCRUDService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 @Transactional
 @Service
-public class CRUDProductReviewServiceImpl implements CRUDService<ProductReviewDTO> {
+public class CRUDProductReviewServiceImpl implements ProductReviewCRUDService {
 
     @Autowired
     private ProductReviewRepository productReviewRepository;
@@ -58,16 +59,18 @@ public class CRUDProductReviewServiceImpl implements CRUDService<ProductReviewDT
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String username = user.getName();
         ProductReview productReview = productReviewMapper.toEntity(productReviewDTO);
         productReview.setDate(LocalDate.now());
-        productReview.setUsername(username);
+        productReview.setUser(user);
+        productReview.setUsername(user.getName());
+
         if (productReview.getLikes() == 0 && productReviewDTO.getLikes() != 0) {
             productReview.setLikes(productReviewDTO.getLikes());
         }
         if (productReview.getDislikes() == 0 && productReviewDTO.getDislikes() != 0) {
             productReview.setDislikes(productReviewDTO.getDislikes());
         }
+
         ProductReview savedReview = productReviewRepository.save(productReview);
 
         double averageRating = calculateAverageRating(productReviewDTO.getProductId());
@@ -79,21 +82,43 @@ public class CRUDProductReviewServiceImpl implements CRUDService<ProductReviewDT
     }
 
     @Override
-    public void update(ProductReviewDTO productReviewDTO, Long id) {
-        ProductReview review = productReviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found"));
-        productReviewMapper.updateEntity(productReviewDTO, review);
-        productReviewRepository.save(review);
+    public ProductReviewDTO update(ProductReviewDTO productReviewDTO, Long reviewId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
-        double averageRating = calculateAverageRating(review.getProduct().getId());
-        Product product = productRepository.findById(review.getProduct().getId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setAverageRating(averageRating);
-        productRepository.save(product);
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        ProductReview review = productReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
+
+        if (!review.getUser().getEmail().equals(email) && !currentUser.getRole().equals("ROLE_ADMIN")) {
+            throw new ReviewAccessDeniedException("You do not have permission to update this review.");
+        }
+
+        productReviewMapper.updateEntity(productReviewDTO, review);
+        review.setUsername(currentUser.getName());
+        ProductReview updatedReview = productReviewRepository.save(review);
+
+        return productReviewMapper.toDTO(updatedReview);
     }
 
     @Override
     public void delete(Long id) {
+        ProductReview review = productReviewRepository.findById(id)
+                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + id));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!review.getUser().getId().equals(currentUser.getId()) &&
+                !currentUser.getRole().equals("ROLE_ADMIN")) {
+            throw new ReviewAccessDeniedException("You do not have permission to delete this review.");
+        }
+
         productReviewRepository.deleteById(id);
     }
 
