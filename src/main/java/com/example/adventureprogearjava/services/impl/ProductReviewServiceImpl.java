@@ -68,7 +68,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         ProductReview review = productReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
-        boolean hasReacted = productReviewReactionRepository.existsByUserIdAndReviewId(user.getId(), reviewId);
+        boolean hasReacted = productReviewReactionRepository.existsByUserIdAndProductReview(user.getId(), review);
         if (hasReacted) {
             return "User has already reacted to this review";
         }
@@ -78,7 +78,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
         ProductReviewReaction reaction = new ProductReviewReaction();
         reaction.setUserId(user.getId());
-        reaction.setReviewId(reviewId);
+        reaction.setProductReview(review);
         reaction.setReactionType("LIKE");
         productReviewReactionRepository.save(reaction);
 
@@ -94,7 +94,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         ProductReview review = productReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
-        boolean hasReacted = productReviewReactionRepository.existsByUserIdAndReviewId(user.getId(), reviewId);
+        boolean hasReacted = productReviewReactionRepository.existsByUserIdAndProductReview(user.getId(), review);
         if (hasReacted) {
             return "User has already reacted to this review";
         }
@@ -104,7 +104,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
         ProductReviewReaction reaction = new ProductReviewReaction();
         reaction.setUserId(user.getId());
-        reaction.setReviewId(reviewId);
+        reaction.setProductReview(review);
         reaction.setReactionType("DISLIKE");
         productReviewReactionRepository.save(reaction);
 
@@ -120,12 +120,12 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         ProductReview review = productReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
-        Optional<Object> reactionOpt = productReviewReactionRepository.findByUserIdAndReviewId(user.getId(), reviewId);
+        Optional<ProductReviewReaction> reactionOpt = productReviewReactionRepository.findByUserIdAndProductReview(user.getId(), review);
         if (reactionOpt.isEmpty()) {
             return "Reaction not found";
         }
 
-        ProductReviewReaction reaction = (ProductReviewReaction) reactionOpt.get();
+        ProductReviewReaction reaction = reactionOpt.get();
         if (reaction.getReactionType().equals("LIKE")) {
             if (review.getLikes() > 0) {
                 review.setLikes(review.getLikes() - 1);
@@ -150,12 +150,12 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         ProductReview review = productReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
-        Optional<Object> reactionOpt = productReviewReactionRepository.findByUserIdAndReviewId(user.getId(), reviewId);
+        Optional<ProductReviewReaction> reactionOpt = productReviewReactionRepository.findByUserIdAndProductReview(user.getId(), review);
         if (reactionOpt.isEmpty()) {
             return "Reaction not found";
         }
 
-        ProductReviewReaction reaction = (ProductReviewReaction) reactionOpt.get();
+        ProductReviewReaction reaction = reactionOpt.get();
         if (reaction.getReactionType().equals("DISLIKE")) {
             if (review.getDislikes() > 0) {
                 review.setDislikes(review.getDislikes() - 1);

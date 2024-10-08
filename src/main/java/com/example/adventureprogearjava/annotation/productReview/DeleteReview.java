@@ -20,10 +20,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.DELETE)
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Operation(
         summary = "Delete product review by ID",
-        description = "Deletes a product review identified by its ID. By user with the role 'ADMIN'.",
+        description = "Deletes a product review identified by its ID. A user can delete their own review or an admin can delete any review.",
         security = @SecurityRequirement(name = "bearerAuth"),
         parameters = @Parameter(
                 name = "id",
