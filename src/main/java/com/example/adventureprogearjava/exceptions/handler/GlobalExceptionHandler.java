@@ -143,4 +143,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<String> handleReviewAccessDeniedException(ReviewAccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ReviewCommentAccessDeniedException.class)
+    public ResponseEntity<String> handleReviewCommentAccessDeniedException(ReviewCommentAccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+    @ExceptionHandler(ReviewCommentNotFoundException.class)
+    public ResponseEntity<String> handleReviewCommentNotFoundException(ReviewCommentAccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
 }
