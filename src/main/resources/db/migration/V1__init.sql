@@ -72,6 +72,17 @@ CREATE TABLE IF NOT EXISTS public.products_review
     likes       BIGINT DEFAULT 0,
     dislikes    BIGINT DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS public.review_comments
+(
+    id BIGSERIAL PRIMARY KEY,
+    review_id    BIGINT NOT NULL,
+    user_id      BIGINT NOT NULL,
+    comment_text     TEXT   NOT NULL,
+    comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_review FOREIGN KEY (review_id) REFERENCES public.products_review (id) ON DELETE CASCADE,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users (id) ON DELETE CASCADE
+);
 CREATE TABLE IF NOT EXISTS public.review_reactions
 (
     id            BIGINT PRIMARY KEY,
