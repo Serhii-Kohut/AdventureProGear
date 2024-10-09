@@ -21,6 +21,12 @@ START
 1
 INCREMENT 1;
 
+CREATE
+SEQUENCE review_comment_seq
+START
+1
+INCREMENT 1;
+
 
 CREATE
 SEQUENCE product_review_reaction_seq
@@ -126,7 +132,6 @@ values (nextval('categories_seq'), 'Caps', 'Шапки', 3);
 
 insert into categories(id, category_name_en, category_name_ua, section_id)
 values (nextval('categories_seq'), 'Tents', 'Палатки', 4);
-
 
 
 

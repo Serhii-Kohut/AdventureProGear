@@ -48,4 +48,7 @@ public class ProductReview extends BaseEntity {
     @OneToMany(mappedBy = "productReview", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductReviewReaction> reactions;
 
+    @OneToMany(mappedBy = "productReview", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReviewComment> comments;
+
 }
