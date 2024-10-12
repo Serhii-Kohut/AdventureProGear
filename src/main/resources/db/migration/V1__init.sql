@@ -69,6 +69,9 @@ CREATE TABLE IF NOT EXISTS public.products_review
     product_id  BIGINT NOT NULL
         CONSTRAINT fk_product
         REFERENCES public.products(id),
+    user_id     BIGINT NOT NULL
+        CONSTRAINT fk_user
+        REFERENCES public.users(id),
     likes       BIGINT DEFAULT 0,
     dislikes    BIGINT DEFAULT 0
 );
