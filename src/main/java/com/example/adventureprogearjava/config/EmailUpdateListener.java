@@ -38,7 +38,7 @@ public class EmailUpdateListener implements ApplicationListener<OnEmailUpdateEve
 
         String recipientAddress = userEmailDto.getEmail();
         String subject = environment.getProperty("email.update.subject", "Email Update Confirmation");
-        String confirmationUrl = "https://authentic-laughter-production.up.railway.app" + event.getAppUrl() + "/api/public/email/update/confirmation?token=" + token;
+        String confirmationUrl = "https://empowering-happiness-production.up.railway.app" + event.getAppUrl() + "/api/public/email/update/confirmation?token=" + token;
         String emailBody = environment.getProperty("email.update.body", "To confirm the email update, please follow the link:") + "\r\n" + confirmationUrl;
 
         mailService.sendEmail(recipientAddress, subject, emailBody);

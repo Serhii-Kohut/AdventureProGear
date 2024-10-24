@@ -8,7 +8,7 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface SectionMapper {
-    String api = "https://prime-tax-production.up.railway.app/api/public/sections";
+    String api = "https://empowering-happiness-production.up.railway.app/api/public/sections";
 
     String categoriesApi = "https://prime-tax-production.up.railway.app/api/public/categories/";
 

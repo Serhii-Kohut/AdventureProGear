@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ProductReviewMapper {
-    String api = "https://prime-tax-production.up.railway.app/api/public/products_review";
+    String api = "https://empowering-happiness-production.up.railway.app/api/public/products_review";
 
     @Mapping(target = "productId", source = "product.id")
     ProductReviewDTO toDTO(ProductReview productReview);
