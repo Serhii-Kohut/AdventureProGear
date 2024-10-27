@@ -21,7 +21,9 @@ alter table sections
 
 CREATE TABLE IF NOT EXISTS public.categories
 (
+
     id                 BIGINT PRIMARY KEY,
+
     category_name_ua   VARCHAR NOT NULL UNIQUE,
     category_name_en   VARCHAR NOT NULL UNIQUE,
     parent_category_id BIGINT
@@ -66,7 +68,9 @@ CREATE TABLE IF NOT EXISTS public.products_review
     review_date DATE,
     product_id  BIGINT NOT NULL
         CONSTRAINT fk_product
+
         REFERENCES public.products(id) ON DELETE CASCADE,
+
 
     user_id     BIGINT NOT NULL
         CONSTRAINT fk_user
