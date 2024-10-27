@@ -1,7 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
+import com.example.adventureprogearjava.dto.CategoryDTO;
 import com.example.adventureprogearjava.dto.SectionDTO;
-import com.example.adventureprogearjava.entity.ProductContent;
 import com.example.adventureprogearjava.entity.Section;
 import com.example.adventureprogearjava.exceptions.NoContentException;
 import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,9 +56,38 @@ public class CRUDSectionServiceImpl implements CRUDService<SectionDTO> {
     @Override
     @Transactional
     public SectionDTO create(SectionDTO sectionDTO) {
-        log.info("Creating new section.");
-        sectionRepository.save(sectionMapper.toEntity(sectionDTO));
+        log.info("Creating new section with DTO: {}", sectionDTO);
+
+        if (sectionRepository.findBySectionCaptionUa(sectionDTO.getSectionCaptionUa()).isPresent()) {
+            throw new DataIntegrityViolationException("Section with name '" + sectionDTO.getSectionCaptionUa() + "' already exists.");
+        }
+
+        if (sectionRepository.findBySectionCaptionEn(sectionDTO.getSectionCaptionEn()).isPresent()) {
+            throw new DataIntegrityViolationException("Section with name '" + sectionDTO.getSectionCaptionEn() + "' already exists.");
+        }
+
+        sectionRepository.insertSection(
+                sectionDTO.getSectionCaptionEn(),
+                sectionDTO.getSectionCaptionUa(),
+                sectionDTO.getSectionIcon()
+        );
+
+        Long generatedId = sectionRepository.getLastInsertedId();
+        if (generatedId == null) {
+            log.error("Failed to generate ID for section");
+            throw new RuntimeException("Failed to generate ID for section");
+        }
+
+        sectionDTO.setId(generatedId);
+        setSelfLink(sectionDTO);
+
+        log.info("Section created successfully with ID: {}", generatedId);
         return sectionDTO;
+    }
+
+
+    private void setSelfLink(SectionDTO sectionDTO) {
+        sectionDTO.setSelfLink("/sections/" + sectionDTO.getId());
     }
 
     @Override
@@ -84,7 +114,10 @@ public class CRUDSectionServiceImpl implements CRUDService<SectionDTO> {
     }
 
     private SectionDTO joinAllCategories(SectionDTO sectionDTO) {
-        sectionDTO.setCategories(categoryService.getAllCategoriesBySection(sectionDTO.getId()));
+        log.info("Joining categories for section with id: {}", sectionDTO.getId());
+        List<CategoryDTO> categories = categoryService.getAllCategoriesBySection(sectionDTO.getId());
+        sectionDTO.setCategories(categories);
         return sectionDTO;
     }
+
 }

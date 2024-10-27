@@ -8,14 +8,12 @@ CREATE
 TYPE user_role AS ENUM ('USER', 'ADMIN');
 --
 -- CREATE TYPE category AS ENUM ('T_SHIRTS','PANTS', 'LINEN', 'HEADWEARS', 'HIKING_EQUIPMENT', 'BAGS', 'SHOES' );
-create table if not exists sections
+CREATE TABLE IF NOT EXISTS sections
 (
-    id                bigint  not null
-        constraint sections_pkey
-        primary key,
-    sectioncaption_en varchar not null,
-    sectioncaption_ua varchar not null,
-    sectionicon       varchar
+    id                BIGINT PRIMARY KEY ,
+    sectioncaption_en VARCHAR NOT NULL,
+    sectioncaption_ua VARCHAR NOT NULL,
+    sectionicon       VARCHAR
 );
 
 alter table sections
@@ -23,7 +21,7 @@ alter table sections
 
 CREATE TABLE IF NOT EXISTS public.categories
 (
-    id BIGINT PRIMARY KEY,
+    id                 BIGINT PRIMARY KEY,
     category_name_ua   VARCHAR NOT NULL UNIQUE,
     category_name_en   VARCHAR NOT NULL UNIQUE,
     parent_category_id BIGINT
@@ -68,7 +66,7 @@ CREATE TABLE IF NOT EXISTS public.products_review
     review_date DATE,
     product_id  BIGINT NOT NULL
         CONSTRAINT fk_product
-        REFERENCES public.products(id)ON DELETE CASCADE,
+        REFERENCES public.products(id) ON DELETE CASCADE,
 
     user_id     BIGINT NOT NULL
         CONSTRAINT fk_user
@@ -82,7 +80,7 @@ CREATE TABLE IF NOT EXISTS public.review_comments
     id BIGSERIAL PRIMARY KEY,
     review_id    BIGINT NOT NULL,
     user_id      BIGINT NOT NULL,
-    comment_text     TEXT   NOT NULL,
+    comment_text TEXT   NOT NULL,
     comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_review FOREIGN KEY (review_id) REFERENCES public.products_review (id) ON DELETE CASCADE,
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users (id) ON DELETE CASCADE

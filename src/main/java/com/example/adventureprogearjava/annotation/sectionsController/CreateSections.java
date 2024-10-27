@@ -1,8 +1,10 @@
 package com.example.adventureprogearjava.annotation.sectionsController;
 
+import com.example.adventureprogearjava.dto.CategoryDTO;
 import com.example.adventureprogearjava.dto.SectionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,57 +33,37 @@ import java.lang.annotation.Target;
                 content = @Content(
                         mediaType = "application/json",
                         schema = @Schema(
-                                implementation = SectionDTO.class,
-                                example = """
-                                        {
-                                            "sectionCaptionEn": "Clothing",
-                                            "sectionCaptionUa": "Одяг",
-                                            "sectionIcon": "icon7",
-                                            "categories": [
+                                implementation = SectionDTO.class),
+
+                        examples = {
+                                @ExampleObject(
+                                        name = "Good request",
+                                        value = """
                                                 {
-                                                    "categoryNameUa": "Футболки",
-                                                    "categoryNameEn": "T-shirts",
-                                                    "subcategories": [
-                                                        {
-                                                            "categoryNameUa": "Subcategory UA",
-                                                            "categoryNameEn": "Subcategory EN",
-                                                            "selfLink": "subcategorySelfLink"
-                                                        }
-                                                    ],
-                                                    "selfLink": "categorySelfLink"
+                                                    "sectionCaptionEn": "Yoga & Meditation",
+                                                    "sectionCaptionUa": "Йога та медитація",
+                                                    "sectionIcon": "yoga_icon"
                                                 }
-                                            ],
-                                            "selfLink": "exampleSelfLink",
-                                            "categoryCreationLink": "exampleCreationLink"
-                                        }
-                                        """
-                        )
+                                                """
+                                )
+                        }
                 )
         ),
         responses = {
                 @ApiResponse(
                         responseCode = "200",
                         description = "Section created successfully.",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(type = "string")
-                        )
+                        content = @Content(schema = @Schema(implementation = SectionDTO.class))
                 ),
                 @ApiResponse(
                         responseCode = "400",
                         description = "Invalid data provided.",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(type = "string")
-                        )
+                        content = @Content(schema = @Schema(implementation = String.class))
                 ),
                 @ApiResponse(
                         responseCode = "500",
                         description = "Server error occurred.",
-                        content = @Content(
-                                mediaType = "application/json",
-                                schema = @Schema(type = "string")
-                        )
+                        content = @Content(schema = @Schema(implementation = String.class))
                 )
         }
 )

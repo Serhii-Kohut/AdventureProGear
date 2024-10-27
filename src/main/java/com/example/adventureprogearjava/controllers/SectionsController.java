@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,14 +37,17 @@ public class SectionsController {
     }
 
     @CreateSections(path = "")
-    public ResponseEntity<String> createSection(@RequestBody SectionDTO sectionDTO) {
+    public ResponseEntity<Object> createSection(@RequestBody SectionDTO sectionDTO) {
         try {
-            crudService.create(sectionDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("Section created successfully");
+            SectionDTO createdSection = crudService.create(sectionDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdSection);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Section with the same name already exists.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An unexpected error occurred.");
         }
     }
+
 
     @UpdateSections(path = "/{id}")
     public void updateSection(@PathVariable("id") Long id,
