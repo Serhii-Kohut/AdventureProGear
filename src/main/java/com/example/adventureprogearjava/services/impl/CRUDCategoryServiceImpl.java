@@ -124,6 +124,8 @@ public class CRUDCategoryServiceImpl implements CRUDService<CategoryDTO> {
         }
 
         categoryRepository.save(category);
+        categoryDTO.setId(id);
+        categoryDTO.setSelfLink(api + id);
     }
 
     @Override

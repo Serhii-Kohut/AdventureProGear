@@ -21,7 +21,7 @@ public interface CategoryMapper {
 
     @Mapping(target = "subcategoryNameUa", source = "category.categoryNameUa")
     @Mapping(target = "subcategoryNameEn", source = "category.categoryNameEn")
-    @Mapping(target = "parentCategoryId", source = "category.parentCategory.id")
+    @Mapping(target = "parentCategoryId", expression = "java(category.getParentCategory() != null ? category.getParentCategory().getId() : null)")
     @Mapping(target = "id", source = "category.id")
     SubcategoryDTO toDTOFromCategory(Category category);
 
@@ -43,6 +43,5 @@ public interface CategoryMapper {
 
     default String createSelfLink(Category category) {
         return category != null ? "/categories/" + category.getId() : null;
-
     }
 }

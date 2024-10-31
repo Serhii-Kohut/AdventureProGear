@@ -19,12 +19,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.GET)
 @Operation(
-        summary = "Get sub-subcategories by category ID",
+        summary = "Get sub-subcategories by Subcategory ID",
         description = "Retrieves all sub-subcategories by category ID",
         parameters = {
                 @Parameter(
-                        name = "id",
-                        description = "ID of the category",
+                        name = "subcategoryId",
+                        description = "ID of the Subcategory",
                         required = true
                 )
         },

@@ -29,5 +29,8 @@ public interface CategoryService {
 
     void deleteSubSubcategory(Long id);
 
-    SubSubCategoryDTO getSubSubCategoryById(Long id);
+    List<SubcategoryDTO> getSubcategoriesByCategoryId(Long categoryId);
+
+    List<SubSubCategoryDTO> getSubSubcategoriesBySubcategoryId(Long subcategoryId);
+
 }

@@ -44,7 +44,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                            @Param("parentCategoryId") Long parentCategoryId,
                            @Param("sectionId") Long sectionId);
 
-
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO categories (id, category_name_en, category_name_ua, parent_category_id, section_id) " +
@@ -54,18 +53,16 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                               @Param("subCategoryId") Long subCategoryId,
                               @Param("sectionId") Long sectionId);
 
-    @Query(value = "SELECT id, category_name_en, category_name_ua, parent_category_id, section_id FROM categories WHERE parent_category_id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM categories WHERE parent_category_id = :id", nativeQuery = true)
     List<Category> getAllSubCategories(@Param("id") Long id);
+
     @Query(value = "SELECT * FROM categories WHERE parent_category_id = :parentId", nativeQuery = true)
     List<Category> getAllSubSubCategories(@Param("parentId") Long parentId);
-
-
-
 
     @Query(value = "SELECT * FROM categories WHERE section_id = :id", nativeQuery = true)
     List<Category> getAllCategoriesBySection(@Param("id") Long id);
 
-    Optional<Category> getCategoryByCategoryNameEn(String name);
+    Optional<Category> getCategoryByCategoryNameEnOrCategoryNameUa(String categoryNameEn, String categoryNameUa);
 
     Optional<Category> findByCategoryNameUa(String categoryNameUa);
 }

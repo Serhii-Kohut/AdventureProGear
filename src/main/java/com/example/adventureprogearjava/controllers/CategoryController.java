@@ -52,10 +52,10 @@ public class CategoryController {
         return ResponseEntity.ok(subcategories);
     }
 
-    @GetSubSubCategoryById(path = "/subsubcategory/{id}")
-    public ResponseEntity<SubSubCategoryDTO> getSubSubCategoryById(@PathVariable Long id) {
-        SubSubCategoryDTO subSubCategory = categoryService.getSubSubCategoryById(id);
-        return ResponseEntity.ok(subSubCategory);
+    @GetSubSubCategoryById(path = "/subsubcategory/{subcategoryId}")
+    public ResponseEntity<List<SubSubCategoryDTO>> getSubSubCategoriesBySubcategoryId(@PathVariable Long subcategoryId) {
+        List<SubSubCategoryDTO> subSubCategories = categoryService.getSubSubcategoriesBySubcategoryId(subcategoryId);
+        return ResponseEntity.ok(subSubCategories);
     }
 
     @CreateCategory(path = "")

@@ -25,4 +25,7 @@ public class SubcategoryDTO {
     Long parentCategoryId;
 
     List<SubSubCategoryDTO> subSubCategories;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    String selfLink;
 }

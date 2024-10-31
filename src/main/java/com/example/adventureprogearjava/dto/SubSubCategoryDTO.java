@@ -26,4 +26,9 @@ public class SubSubCategoryDTO {
     @Schema(description = "ID of the parent subcategory", example = "3")
     Long subCategoryId;
 
+    Long parentCategoryId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    String selfLink;
+
 }
