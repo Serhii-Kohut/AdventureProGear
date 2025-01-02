@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,4 +32,7 @@ public class ProductReviewDTO {
 
     @NotBlank(message = "Comment is required")
     String comment;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDate date;
 }

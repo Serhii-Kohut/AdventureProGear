@@ -11,9 +11,11 @@ public interface ProductReviewMapper {
     String api = "https://adventure-production-f65e.up.railway.app/api/public/products_review";
 
     @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "date", source = "date")
     ProductReviewDTO toDTO(ProductReview productReview);
 
     @Mapping(target = "product.id", source = "productId")
+    @Mapping(target = "date", source = "date")
     ProductReview toEntity(ProductReviewDTO productReviewDTO);
 
     @Mapping(target = "id", ignore = true)
