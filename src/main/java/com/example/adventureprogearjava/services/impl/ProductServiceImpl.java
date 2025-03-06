@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.services.impl;
 
 import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.entity.Category;
 import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import com.example.adventureprogearjava.mapper.ProductMapper;
@@ -145,17 +146,55 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDTO> getProductsByAdvancedFilters(Long categoryId, Long subcategoryId, Long priceFrom, Long priceTo, String gender, int page, int size) {
+    public Page<ProductDTO> getProductsByAdvancedFilters(
+            Long categoryId,
+            Long subcategoryId,
+            Long priceFrom,
+            Long priceTo,
+            String gender,
+            String categoryName,
+            int page,
+            int size) {
+
         log.info("🔍 [START] Отримання продуктів з фільтрами + пагінацією");
 
         validateFilters(categoryId, subcategoryId, priceFrom, priceTo, gender);
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Product> productPage = productRepository.findByAdvancedFilters(categoryId, subcategoryId, priceFrom, priceTo, gender, pageable);
+        if (subcategoryId != null) {
+            Category subcategory = categoryRepository.findById(subcategoryId).orElse(null);
+            if (subcategory != null && subcategory.getParentCategory() != null) {
+                categoryId = subcategory.getParentCategory().getId();
+            }
+        }
+
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId).orElse(null);
+            if (category != null) {
+                categoryName = category.getCategoryNameEn();
+            } else {
+                return Page.empty();
+            }
+        }
+
+        Page<Product> productPage;
+        if (subcategoryId != null) {
+            productPage = productRepository.findByCategoryName(categoryName, pageable);
+        } else {
+            productPage = productRepository.findByAdvancedFilters(
+                    categoryId,
+                    subcategoryId,
+                    priceFrom,
+                    priceTo,
+                    gender,
+                    categoryName,
+                    pageable
+            );
+        }
+
         return productPage.map(productMapper::toDto);
     }
-
 
     private void validateFilters(Long categoryId, Long subcategoryId, Long priceFrom, Long priceTo, String gender) {
         List<Long> numericParams = Arrays.asList(categoryId, subcategoryId, priceFrom, priceTo);

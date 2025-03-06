@@ -71,11 +71,12 @@ public class ProductController {
             @RequestParam(required = false) Long priceFrom,
             @RequestParam(required = false) Long priceTo,
             @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String categoryName,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         return productService.getProductsByAdvancedFilters(categoryId, subcategoryId,
-                priceFrom, priceTo, gender, page, size);
+                priceFrom, priceTo, gender, categoryName, page, size);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.example.adventureprogearjava.repositories;
 
 import com.example.adventureprogearjava.entity.Product;
-import com.example.adventureprogearjava.entity.enums.Gender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -111,16 +110,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable);
 
     @Query("SELECT DISTINCT p FROM Product p " +
-            "JOIN FETCH p.category c " +
-            "LEFT JOIN FETCH p.attributes " +
-            "LEFT JOIN FETCH p.contents " +
-            "LEFT JOIN FETCH p.productCharacteristics " +
-            "LEFT JOIN FETCH c.parentCategory " +
-            "LEFT JOIN FETCH c.section " +
-            "LEFT JOIN FETCH c.characteristics " +
-            "WHERE (:categoryId IS NULL OR c.id = :categoryId OR c.parentCategory.id = :categoryId " +
-            "OR EXISTS (SELECT sc FROM Category sc WHERE sc.id = c.parentCategory.id AND sc.parentCategory.id = :categoryId)) " +
-            "AND (:subcategoryId IS NULL OR c.id = :subcategoryId) " +
+            "JOIN p.category c " +
+            "LEFT JOIN c.parentCategory pc " +
+            "WHERE (:categoryId IS NULL OR c.id = :categoryId) " +
+            "AND (:subcategoryId IS NULL OR c.id = :subcategoryId OR pc.id = :subcategoryId) " +
+            "AND (:categoryName IS NULL OR c.categoryNameEn = :categoryName) " +
             "AND (:priceFrom IS NULL OR p.basePrice >= :priceFrom) " +
             "AND (:priceTo IS NULL OR p.basePrice <= :priceTo) " +
             "AND (:gender IS NULL OR p.gender = :gender)")
@@ -130,7 +124,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("priceFrom") Long priceFrom,
             @Param("priceTo") Long priceTo,
             @Param("gender") String gender,
+            @Param("categoryName") String categoryName,
             Pageable pageable);
+
+
+    @Query("SELECT p FROM Product p WHERE p.category.categoryNameEn = :categoryName")
+    Page<Product> findByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
 
 
     @Query(value = "SELECT * FROM products WHERE " +
@@ -141,6 +140,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("UPDATE Product p SET p.reviewCount = :reviewCount WHERE p.id = :productId")
     void updateReviewCount(@Param("productId") Long productId, @Param("reviewCount") int reviewCount);
-
 
 }

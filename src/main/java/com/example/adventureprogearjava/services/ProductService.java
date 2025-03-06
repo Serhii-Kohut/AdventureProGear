@@ -28,5 +28,5 @@ public interface ProductService {
 
     Page<ProductDTO> getAllProducts(String gender, String category, Long priceFrom, Long priceTo, int page, int size);
 
-    Page<ProductDTO> getProductsByAdvancedFilters(Long categoryId, Long subcategoryId, Long priceFrom, Long priceTo, String gender, int page, int size);
+    Page<ProductDTO> getProductsByAdvancedFilters(Long categoryId, Long subcategoryId, Long priceFrom, Long priceTo, String gender, String categoryName, int page, int size);
 }
