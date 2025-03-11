@@ -14,23 +14,33 @@ import java.time.LocalDateTime;
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Modifying
     @Transactional
-    @Query(value = "insert into post (id, user_id, title, content, image) " +
-            "values (nextval('post_seq'), :user_id, :postTitle, :content, :imageUrl)",
+    @Query(value = "insert into post (id, user_id, title_en, title_ua, content_en, content_ua, image, created_at) " +
+            "values (nextval('post_seq'), :user_id, :titleEn, :titleUa, :contentEn, :contentUa, :imageUrl, now())",
             nativeQuery = true)
     void insertPost(@Param("user_id") Long user_id,
-                    @Param("postTitle") String postTitle,
-                    @Param("content") String content,
+                    @Param("titleEn") String titleEn,
+                    @Param("titleUa") String titleUa,
+                    @Param("contentEn") String contentEn,
+                    @Param("contentUa") String contentUa,
                     @Param("imageUrl") String imageUrl);
 
     @Modifying
-    @Query(value = "UPDATE post SET user_id = :user_id, title = :postTitle, content = :content, " +
-            "image = :imageUrl " +
+    @Transactional
+    @Query(value = "UPDATE post SET " +
+            "user_id = COALESCE(:user_id, user_id), " +
+            "title_en = COALESCE(:titleEn, title_en), " +
+            "title_ua = COALESCE(:titleUa, title_ua), " +
+            "content_en = COALESCE(:contentEn, content_en), " +
+            "content_ua = COALESCE(:contentUa, content_ua), " +
+            "image = COALESCE(:imageUrl, image) " +
             "WHERE id = :id",
             nativeQuery = true)
     void update(@Param("id") Long id,
                 @Param("user_id") Long user_id,
-                @Param("postTitle") String postTitle,
-                @Param("content") String content,
+                @Param("titleEn") String titleEn,
+                @Param("titleUa") String titleUa,
+                @Param("contentEn") String contentEn,
+                @Param("contentUa") String contentUa,
                 @Param("imageUrl") String imageUrl);
 
 }

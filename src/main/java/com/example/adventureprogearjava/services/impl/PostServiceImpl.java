@@ -60,15 +60,15 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void updatePost(Long postId, PostDTO postDTO, User user) {
         log.info("Updating post with id: {}", postId);
-
         if (!postRepository.existsById(postId)) {
             log.warn("Post not found!");
             throw new ResourceNotFoundException("Post not found with id " + postId);
         } else {
-            postRepository.update(postId, user.getId(), postDTO.getPostTitle(),
-                    postDTO.getContent(), postDTO.getImageUrl());
+            postRepository.update(postId, user.getId(),
+                    postDTO.getTitleEn(), postDTO.getTitleUa(),
+                    postDTO.getContentEn(), postDTO.getContentUa(),
+                    postDTO.getImageUrl());
         }
-
     }
 
     @Override
@@ -83,8 +83,10 @@ public class PostServiceImpl implements PostService {
     private void insertPost(PostDTO postDTO) {
         postRepository.insertPost(
                 postDTO.getUser_id(),
-                postDTO.getPostTitle(),
-                postDTO.getContent(),
+                postDTO.getTitleEn(),
+                postDTO.getTitleUa(),
+                postDTO.getContentEn(),
+                postDTO.getContentUa(),
                 postDTO.getImageUrl()
         );
     }

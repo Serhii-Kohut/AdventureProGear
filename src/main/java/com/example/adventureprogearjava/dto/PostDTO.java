@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,13 +22,20 @@ public class PostDTO {
     Long user_id;
 
     @NotBlank
-    String postTitle;
+    String titleEn;
 
     @NotBlank
-    String content;
+    String titleUa;
+
+    @NotBlank
+    String contentEn;
+
+    @NotBlank
+    String contentUa;
 
     @Column(name = "image")
     String imageUrl;
 
+    LocalDateTime createdAt;
 
 }

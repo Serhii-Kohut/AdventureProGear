@@ -12,6 +12,11 @@ public interface PostMapper {
     PostMapper MAPPER = Mappers.getMapper(PostMapper.class);
 
     @Mapping(source = "author.id", target = "user_id")
+    @Mapping(source = "titleEn", target = "titleEn")
+    @Mapping(source = "titleUa", target = "titleUa")
+    @Mapping(source = "contentEn", target = "contentEn")
+    @Mapping(source = "contentUa", target = "contentUa")
+    @Mapping(source = "createdAt", target = "createdAt")
     PostDTO postToDto(Post post);
 
     @InheritInverseConfiguration

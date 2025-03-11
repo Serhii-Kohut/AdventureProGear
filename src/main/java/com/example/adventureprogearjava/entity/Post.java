@@ -18,6 +18,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Post")
@@ -39,13 +42,23 @@ public class Post extends BaseEntity {
     @NotNull
     User author;
 
-    @Column(name = "title")
-    String postTitle;
+    @Column(name = "title_en")
+    String titleEn;
 
-    @Column(name = "content")
-    String content;
+    @Column(name = "title_ua")
+    String titleUa;
+
+    @Column(name = "content_en")
+    String contentEn;
+
+    @Column(name = "content_ua")
+    String contentUa;
 
     @Column(name = "image")
     String imageUrl;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    LocalDateTime createdAt;
 
 }
