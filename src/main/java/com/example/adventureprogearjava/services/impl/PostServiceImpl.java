@@ -51,8 +51,12 @@ public class PostServiceImpl implements PostService {
         log.info("Creating new post.");
 
         postDTO.setUser_id(user.getId());
-        insertPost(postDTO);
-        return postDTO;
+
+        Post savedPost = postRepository.findTopByAuthorIdOrderByCreatedAtDesc(user.getId())
+                .orElseThrow(() -> new RuntimeException("Failed to retrieve created post"));
+
+        return postMapper.postToDto(savedPost);
+
     }
 
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -42,5 +43,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                 @Param("contentEn") String contentEn,
                 @Param("contentUa") String contentUa,
                 @Param("imageUrl") String imageUrl);
+
+    Optional<Post> findTopByAuthorIdOrderByCreatedAtDesc(Long userId);
 
 }
