@@ -35,7 +35,7 @@ public class SwaggerConfig {
                         )
                 )
                 .servers(List.of(
-                        new Server().url("https://adventure-production-f742.up.railway.app")
+                        new Server().url("http://13.217.73.157:8080")
                 ))
                 .components(new Components()
                         .addSecuritySchemes(SECURITY_SCHEME_NAME, new SecurityScheme()
