@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class})
 public interface ProductMapper {
-    String PRODUCT_API = "https://adventure-production-f742.up.railway.app/api/public/products/";
-    String CATEGORY_API = "https://adventure-production-f742.up.railway.app/api/public/categories/";
+    String PRODUCT_API = "http://13.217.73.157:8080/api/public/products/";
+    String CATEGORY_API = "http://13.217.73.157:8080/api/public/categories/";
 
     @Mapping(target = "productId", source = "id")
     @Mapping(target = "productNameUa", source = "productNameUa")
