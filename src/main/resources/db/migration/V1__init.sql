@@ -16,9 +16,6 @@ CREATE TABLE IF NOT EXISTS sections
     sectionicon       VARCHAR
 );
 
-alter table sections
-    owner to postgres;
-
 CREATE TABLE IF NOT EXISTS public.categories
 (
 
