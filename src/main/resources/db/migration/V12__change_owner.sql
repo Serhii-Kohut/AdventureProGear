@@ -1,0 +1,1 @@
+ALTER TABLE sections OWNER TO dbname_4ba5_user;
