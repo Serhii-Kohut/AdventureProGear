@@ -3,6 +3,7 @@ package com.example.adventureprogearjava.controllers;
 import com.example.adventureprogearjava.annotation.reactionToPostController.CreateReactionToPost;
 import com.example.adventureprogearjava.annotation.reactionToPostController.DeleteReactionOfPost;
 import com.example.adventureprogearjava.annotation.reactionToPostController.GetAllReactionsOfPost;
+import com.example.adventureprogearjava.dto.ReactionResponseDTO;
 import com.example.adventureprogearjava.dto.ReactionToPostDTO;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.ReactionType;
@@ -22,17 +23,18 @@ import java.util.Map;
 public class ReactionToPostController {
     ReactionToPostServiceImpl reactionToPostService;
 
-    @CreateReactionToPost(path = "/{postId}")
-    public ReactionToPostDTO addReaction(@PathVariable Long postId, @RequestBody ReactionType reactionType, @AuthenticationPrincipal User user) {
-        return reactionToPostService.addReaction(postId, user.getId(), reactionType);
+    @PostMapping("/{postId}")
+    public ReactionResponseDTO toggleReaction(@PathVariable Long postId,
+                                              @RequestBody ReactionType reactionType,
+                                              @AuthenticationPrincipal User user) {
+        return reactionToPostService.toggleReaction(postId, user.getId(), reactionType);
     }
 
-    @GetAllReactionsOfPost(path = "/{postId}/count")
+    @GetMapping("/{postId}/count")
     public Map<ReactionType, Long> countReactions(@PathVariable Long postId) {
         return reactionToPostService.countReaction(postId);
     }
 
-    @DeleteReactionOfPost(path = "/{postId}")
     @DeleteMapping("/{postId}")
     public void removeReaction(@PathVariable Long postId, @AuthenticationPrincipal User user) {
         reactionToPostService.removeReaction(postId, user.getId());

@@ -1,5 +1,6 @@
 package com.example.adventureprogearjava.services.impl;
 
+import com.example.adventureprogearjava.dto.ReactionResponseDTO;
 import com.example.adventureprogearjava.dto.ReactionToPostDTO;
 import com.example.adventureprogearjava.entity.Post;
 import com.example.adventureprogearjava.entity.ReactionToPost;
@@ -33,14 +34,13 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
     UserRepository userRepository;
     PostRepository postRepository;
 
-    @Override
     @Transactional
-    public ReactionToPostDTO addReaction(Long postId, Long userId, ReactionType reactionType) {
-        Post post = postRepository.findById(postId).orElseThrow(() ->
-                new ResourceNotFoundException("Post not found"));
+    public ReactionResponseDTO toggleReaction(Long postId, Long userId, ReactionType reactionType) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
 
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new ResourceNotFoundException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (!isValidReactionType(reactionType)) {
             throw new InvalidReactionTypeException("Invalid reaction type: " + reactionType);
@@ -49,21 +49,25 @@ public class ReactionToPostServiceImpl implements ReactionToPostService {
         ReactionToPost existingReaction = reactionToPostRepository.findByPostAndUser(post, user)
                 .orElse(null);
 
-        if (existingReaction != null) {
-            if (existingReaction.getReactionType().equals(reactionType)) {
-                log.info("Reaction already exists on post {} for user {} with the same type", postId, userId);
-                return new ReactionToPostDTO(reactionType, postId, userId);
-            } else {
-                reactionToPostRepository.delete(existingReaction);
-                insertReaction(new ReactionToPostDTO(reactionType, postId, userId));
-                log.info("Updated reaction on post {} for user {} ", postId, userId);
-            }
+        ReactionResponseDTO response = new ReactionResponseDTO(postId, userId, null, reactionType);
+
+        if (existingReaction != null && existingReaction.getReactionType() == reactionType) {
+            // Така сама реакція вже існує -> видаляємо (аналог unlike)
+            reactionToPostRepository.delete(existingReaction);
+            response.setOperation("removed");
+            log.info("Removed {} reaction on post {} for user {}", reactionType, postId, userId);
         } else {
+            // Реакція відсутня або іншого типу -> додаємо нову
+            if (existingReaction != null) {
+                // Видаляємо стару реакцію, якщо вона іншого типу
+                reactionToPostRepository.delete(existingReaction);
+            }
             insertReaction(new ReactionToPostDTO(reactionType, postId, userId));
-            log.info("Inserted new reaction on post {} for user {} ", postId, userId);
+            response.setOperation("added");
+            log.info("Added {} reaction on post {} for user {}", reactionType, postId, userId);
         }
 
-        return new ReactionToPostDTO(reactionType, postId, userId);
+        return response;
     }
 
 
