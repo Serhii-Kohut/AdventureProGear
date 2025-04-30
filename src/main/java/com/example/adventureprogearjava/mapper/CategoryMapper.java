@@ -12,7 +12,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
-    String CATEGORY_API = "http://13.217.73.157:8080/api/public/categories/";
+    String CATEGORY_API = "https://adventure-9crt.onrender.com/api/public/categories/";
 
     @Mapping(target = "sectionId", source = "section.id")
     @Mapping(target = "selfLink", expression = "java(createSelfLink(category))")

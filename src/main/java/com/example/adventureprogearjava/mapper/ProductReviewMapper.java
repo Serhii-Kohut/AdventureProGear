@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ProductReviewMapper {
-    String api = "http://13.217.73.157:8080/api/public/products_review";
+    String api = "https://adventure-9crt.onrender.com/api/public/products_review";
 
     @Mapping(target = "productId", source = "product.id")
     @Mapping(target = "date", source = "date")
