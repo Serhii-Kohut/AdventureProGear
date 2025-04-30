@@ -1,10 +1,6 @@
 package com.example.adventureprogearjava.controllers;
 
-import com.example.adventureprogearjava.annotation.reactionToPostController.CreateReactionToPost;
-import com.example.adventureprogearjava.annotation.reactionToPostController.DeleteReactionOfPost;
-import com.example.adventureprogearjava.annotation.reactionToPostController.GetAllReactionsOfPost;
 import com.example.adventureprogearjava.dto.ReactionResponseDTO;
-import com.example.adventureprogearjava.dto.ReactionToPostDTO;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.ReactionType;
 import com.example.adventureprogearjava.services.impl.ReactionToPostServiceImpl;
@@ -12,7 +8,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 

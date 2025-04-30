@@ -1,7 +1,6 @@
 package com.example.adventureprogearjava.services;
 
 import com.example.adventureprogearjava.dto.ReactionResponseDTO;
-import com.example.adventureprogearjava.dto.ReactionToPostDTO;
 import com.example.adventureprogearjava.entity.enums.ReactionType;
 
 import java.util.Map;
