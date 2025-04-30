@@ -13,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +32,10 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public List<PostDTO> getAllPosts() {
-        log.info("Getting all posts.");
-        List<Post> posts = postRepository.findAll();
-        return posts.stream()
-                .map(postMapper::postToDto)
-                .collect(Collectors.toList());
+    public Page<PostDTO> getAllPosts(Pageable pageable) {
+        log.info("Getting posts with pagination: {}", pageable);
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.map(postMapper::postToDto);
     }
 
     @Override

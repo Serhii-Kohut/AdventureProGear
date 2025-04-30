@@ -9,6 +9,10 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +29,8 @@ public class PostController {
     PostServiceImpl postService;
 
     @GetAllPosts(path = "")
-    public List<PostDTO> getAllPosts() {
-        return postService.getAllPosts();
+    public Page<PostDTO> getAllPosts(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return postService.getAllPosts(pageable);
     }
 
     @GetPostById(path = "/{postId}")
