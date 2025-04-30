@@ -1,6 +1,10 @@
 package com.example.adventureprogearjava.controllers;
 
-import com.example.adventureprogearjava.annotation.postController.*;
+import com.example.adventureprogearjava.annotation.postController.CreateNewPost;
+import com.example.adventureprogearjava.annotation.postController.DeletePost;
+import com.example.adventureprogearjava.annotation.postController.GetAllPosts;
+import com.example.adventureprogearjava.annotation.postController.GetPostById;
+import com.example.adventureprogearjava.annotation.postController.UpdatePost;
 import com.example.adventureprogearjava.dto.PostDTO;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.exceptions.PostNotFoundException;
@@ -18,8 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/blog/posts")
