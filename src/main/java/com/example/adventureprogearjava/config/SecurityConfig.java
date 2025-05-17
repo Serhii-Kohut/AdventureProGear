@@ -92,7 +92,8 @@ public class SecurityConfig {
                 "http://localhost:8080",
                 "https://adventure-pro-gear.vercel.app",
                 "https://adventure-9crt.onrender.com",
-                "https://adventure-pro-gear-theta.vercel.app"
+                "https://adventure-pro-gear-theta.vercel.app",
+                "https://adventure-u79f.onrender.com"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
