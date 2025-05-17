@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/public/products/reviews")
@@ -84,27 +85,16 @@ public class ProductReviewController {
         return (Double) productReviewServiceImpl.calculateAverageRating(productId);
     }
 
-    @LikeReview(path = "/{id}/like")
-    public ResponseEntity<String> likeReview(@PathVariable Long id) {
-        String result = productReviewService.incrementLikes(id);
-        return ResponseEntity.ok(result);
+    @ToggleLikeReview(path = "/{id}/toggle-like")
+    public ResponseEntity<Map<String, String>> toggleLike(@PathVariable Long id) {
+        Map<String, String> response = productReviewService.toggleLike(id);
+        return ResponseEntity.ok(response);
     }
 
-    @DislikeReview(path = "/{id}/dislike")
-    public ResponseEntity<String> dislikeReview(@PathVariable Long id) {
-        String result = productReviewService.incrementDislikes(id);
-        return ResponseEntity.ok(result);
+    @ToggleDislikeReview(path = "/{id}/toggle-dislike")
+    public ResponseEntity<Map<String, String>> toggleDislike(@PathVariable Long id) {
+        Map<String, String> response = productReviewService.toggleDislike(id);
+        return ResponseEntity.ok(response);
     }
 
-    @UnlikeReview(path = "/{id}/unlike")
-    public ResponseEntity<String> unlikeReview(@PathVariable Long id) {
-        String result = productReviewService.decrementLikes(id);
-        return ResponseEntity.ok(result);
-    }
-
-    @UnDislikeReview(path = "/{id}/undislike")
-    public ResponseEntity<String> undislikeReview(@PathVariable Long id) {
-        String result = productReviewService.decrementDislikes(id);
-        return ResponseEntity.ok(result);
-    }
 }

@@ -16,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -59,31 +61,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .collect(Collectors.toList());
     }
 
-    public String incrementLikes(Long reviewId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        ProductReview review = productReviewRepository.findById(reviewId)
-                .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
-
-        boolean hasReacted = productReviewReactionRepository.existsByUserIdAndProductReview(user.getId(), review);
-        if (hasReacted) {
-            return "User has already reacted to this review";
-        }
-
-        review.setLikes(review.getLikes() + 1);
-        productReviewRepository.save(review);
-
-        ProductReviewReaction reaction = new ProductReviewReaction();
-        reaction.setUserId(user.getId());
-        reaction.setProductReview(review);
-        reaction.setReactionType("LIKE");
-        productReviewReactionRepository.save(reaction);
-
-        return "Like added successfully.";
-    }
 
     public String incrementDislikes(Long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -111,7 +88,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         return "Dislike added successfully.";
     }
 
-    public String decrementLikes(Long reviewId) {
+    public Map<String, String> toggleLike(Long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
@@ -121,27 +98,43 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
         Optional<ProductReviewReaction> reactionOpt = productReviewReactionRepository.findByUserIdAndProductReview(user.getId(), review);
-        if (reactionOpt.isEmpty()) {
-            return "Reaction not found";
-        }
+        Map<String, String> response = new HashMap<>();
 
-        ProductReviewReaction reaction = reactionOpt.get();
-        if (reaction.getReactionType().equals("LIKE")) {
-            if (review.getLikes() > 0) {
-                review.setLikes(review.getLikes() - 1);
-                productReviewRepository.save(review);
+        if (reactionOpt.isPresent()) {
+            ProductReviewReaction reaction = reactionOpt.get();
+            if (reaction.getReactionType().equals("LIKE")) {
+                // Користувач уже лайкнув, видаляємо лайк
+                if (review.getLikes() > 0) {
+                    review.setLikes(review.getLikes() - 1);
+                    productReviewRepository.save(review);
+                }
+                productReviewReactionRepository.delete(reaction);
+                response.put("action", "unliked");
+                response.put("message", "Like removed successfully.");
             } else {
-                return "No likes to remove";
+                // Користувач поставив дизлайк, не дозволяємо лайкати
+                response.put("action", "error");
+                response.put("message", "Cannot like a review you have disliked.");
             }
-
-            productReviewReactionRepository.delete(reaction);
-            return "Like removed successfully.";
         } else {
-            return "User has not liked this review";
+            // Користувач ще не реагував, додаємо лайк
+            review.setLikes(review.getLikes() + 1);
+            productReviewRepository.save(review);
+
+            ProductReviewReaction newReaction = new ProductReviewReaction(); // Змінено ім'я змінної
+            newReaction.setUserId(user.getId());
+            newReaction.setProductReview(review);
+            newReaction.setReactionType("LIKE");
+            productReviewReactionRepository.save(newReaction);
+
+            response.put("action", "liked");
+            response.put("message", "Like added successfully.");
         }
+
+        return response;
     }
 
-    public String decrementDislikes(Long reviewId) {
+    public Map<String, String> toggleDislike(Long reviewId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email)
@@ -151,23 +144,39 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .orElseThrow(() -> new ReviewNotFoundException("Review not found with ID: " + reviewId));
 
         Optional<ProductReviewReaction> reactionOpt = productReviewReactionRepository.findByUserIdAndProductReview(user.getId(), review);
-        if (reactionOpt.isEmpty()) {
-            return "Reaction not found";
-        }
+        Map<String, String> response = new HashMap<>();
 
-        ProductReviewReaction reaction = reactionOpt.get();
-        if (reaction.getReactionType().equals("DISLIKE")) {
-            if (review.getDislikes() > 0) {
-                review.setDislikes(review.getDislikes() - 1);
-                productReviewRepository.save(review);
+        if (reactionOpt.isPresent()) {
+            ProductReviewReaction reaction = reactionOpt.get();
+            if (reaction.getReactionType().equals("DISLIKE")) {
+                // Користувач уже дизлайкнув, видаляємо дизлайк
+                if (review.getDislikes() > 0) {
+                    review.setDislikes(review.getDislikes() - 1);
+                    productReviewRepository.save(review);
+                }
+                productReviewReactionRepository.delete(reaction);
+                response.put("action", "undisliked");
+                response.put("message", "Dislike removed successfully.");
             } else {
-                return "No dislikes to remove";
+                // Користувач поставив лайк, не дозволяємо дизлайкати
+                response.put("action", "error");
+                response.put("message", "Cannot dislike a review you have liked.");
             }
-
-            productReviewReactionRepository.delete(reaction);
-            return "Dislike removed successfully.";
         } else {
-            return "User has not disliked this review";
+            // Користувач ще не реагував, додаємо дизлайк
+            review.setDislikes(review.getDislikes() + 1);
+            productReviewRepository.save(review);
+
+            ProductReviewReaction newReaction = new ProductReviewReaction();
+            newReaction.setUserId(user.getId());
+            newReaction.setProductReview(review);
+            newReaction.setReactionType("DISLIKE");
+            productReviewReactionRepository.save(newReaction);
+
+            response.put("action", "disliked");
+            response.put("message", "Dislike added successfully.");
         }
+
+        return response;
     }
 }

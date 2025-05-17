@@ -3,15 +3,12 @@ package com.example.adventureprogearjava.services;
 import com.example.adventureprogearjava.dto.ProductReviewDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductReviewService {
     List<ProductReviewDTO> getAll(Long productId, Double ratingFrom, Double ratingTo);
 
-    String incrementLikes(Long id);
+    Map<String, String> toggleLike(Long reviewId);
 
-    String incrementDislikes(Long id);
-
-    String decrementLikes(Long id);
-
-    String decrementDislikes(Long id);
+    Map<String, String> toggleDislike(Long reviewId);
 }
