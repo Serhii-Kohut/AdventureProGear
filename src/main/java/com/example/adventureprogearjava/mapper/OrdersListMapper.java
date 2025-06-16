@@ -12,7 +12,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface OrdersListMapper {
-    String api = "https://adventure-u79f.onrender.com/api/order-lists/";
+    String api = "https://adventure0625.onrender.com/api/order-lists/";
 
     OrdersListMapper MAPPER = Mappers.getMapper(OrdersListMapper.class);
 
