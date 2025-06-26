@@ -151,7 +151,7 @@ public class ProductServiceImpl implements ProductService {
             Long subcategoryId,
             Long priceFrom,
             Long priceTo,
-            String gender,
+            String gender,  // Приймаємо String з контролера
             String categoryName,
             int page,
             int size) {
@@ -161,6 +161,16 @@ public class ProductServiceImpl implements ProductService {
         validateFilters(categoryId, subcategoryId, priceFrom, priceTo, gender);
 
         Pageable pageable = PageRequest.of(page, size);
+
+        // Конвертуємо String у Gender
+        Gender genderEnum = null;
+        if (gender != null) {
+            try {
+                genderEnum = Gender.valueOf(gender.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Неправильне значення gender: " + gender);
+            }
+        }
 
         if (subcategoryId != null) {
             Category subcategory = categoryRepository.findById(subcategoryId).orElse(null);
@@ -187,7 +197,7 @@ public class ProductServiceImpl implements ProductService {
                     subcategoryId,
                     priceFrom,
                     priceTo,
-                    gender,
+                    genderEnum,  // Передаємо Gender enum замість String
                     categoryName,
                     pageable
             );

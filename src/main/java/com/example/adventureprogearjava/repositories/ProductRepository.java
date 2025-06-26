@@ -1,6 +1,7 @@
 package com.example.adventureprogearjava.repositories;
 
 import com.example.adventureprogearjava.entity.Product;
+import com.example.adventureprogearjava.entity.enums.Gender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -123,7 +124,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("subcategoryId") Long subcategoryId,
             @Param("priceFrom") Long priceFrom,
             @Param("priceTo") Long priceTo,
-            @Param("gender") String gender,
+            @Param("gender") Gender gender,  // Змінено з String на Gender
             @Param("categoryName") String categoryName,
             Pageable pageable);
 
