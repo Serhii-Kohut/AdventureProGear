@@ -5,6 +5,8 @@ import com.example.adventureprogearjava.dto.OrderUpdateDTO;
 import com.example.adventureprogearjava.dto.OrdersListDTO;
 import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.Order;
+import com.example.adventureprogearjava.entity.OrdersList;
+import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import com.example.adventureprogearjava.entity.enums.Role;
@@ -94,32 +96,51 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
     public OrderDTO createOrder(OrderDTO orderDTO, User user) {
         log.info("Creating new order.");
 
+        // Перевіряємо, чи є ordersLists, якщо ні — створюємо порожній список
         if (orderDTO.getOrdersLists() == null) {
             orderDTO.setOrdersLists(new ArrayList<>());
         }
 
+        // Перетворюємо DTO в сутність і налаштовуємо базові поля
         Order order = orderMapper.toEntity(orderDTO);
         order.setUser(user);
 
-        if (orderDTO.getOrderDate() == null) {
+        if (order.getOrderDate() == null) {
             order.setOrderDate(LocalDateTime.now());
         }
-        if (orderDTO.getStatus() == null) {
+        if (order.getStatus() == null) {
             order.setStatus(OrderStatus.NEW);
         }
-        double totalPrice = 0;
-        for (OrdersListDTO item : orderDTO.getOrdersLists()) {
-            double productPrice = productRepository.findProductPriceById(item.getProductId());
-            totalPrice += productPrice * item.getQuantity();
-        }
-        order.setPrice((long) totalPrice);
 
+        // Зберігаємо ордер у базі даних
         Order savedOrder = orderRepository.save(order);
+
+        // Створюємо і зберігаємо списки ордерів
+        List<OrdersList> ordersLists = new ArrayList<>();
+        for (OrdersListDTO item : orderDTO.getOrdersLists()) {
+            OrdersList ordersList = new OrdersList();
+            ordersList.setOrder(savedOrder);
+            ordersList.setProduct(productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID " + item.getProductId())));
+            ordersList.setQuantity(item.getQuantity());
+            ordersLists.add(ordersList);
+        }
+        ordersListRepository.saveAll(ordersLists);
+
+        // Обчислюємо загальну ціну
+        double totalPrice = ordersLists.stream()
+                .mapToDouble(ol -> ol.getProduct().getBasePrice() * ol.getQuantity())
+                .sum();
+        savedOrder.setPrice((long) totalPrice);
+        orderRepository.save(savedOrder); // Оновлюємо ордер із ціною
+
+        // Оновлюємо DTO для повернення
         orderDTO.setId(savedOrder.getId());
         orderDTO.setUserId(user.getId());
         orderDTO.setPrice(savedOrder.getPrice());
         orderDTO.setStatus(savedOrder.getStatus());
         orderDTO.setOrderDate(savedOrder.getOrderDate());
+
         sendOrderConfirmation(orderDTO, user.getId());
         return orderDTO;
     }
