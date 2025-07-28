@@ -5,6 +5,8 @@ import com.example.adventureprogearjava.event.OnPasswordResetRequestEvent;
 import com.example.adventureprogearjava.services.MailService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,11 @@ public class PasswordResetListener implements ApplicationListener<OnPasswordRese
         this.environment = environment;
     }
 
+    @Value("${app.base-url}")
+    @NonFinal
+    String serverUrl;
+
+
     @Override
     public void onApplicationEvent(OnPasswordResetRequestEvent event) {
         this.sendPasswordResetEmail(event);
@@ -31,7 +38,7 @@ public class PasswordResetListener implements ApplicationListener<OnPasswordRese
 
         String subject = environment.getProperty("email.reset.subject", "Password Reset Request");
 
-        String url = "http://localhost:3000/uk-UA/?auth=reset-password&token=" + token;
+        String url = serverUrl + "/uk-UA/?auth=reset-password&token=" + token;
 
         String message = environment.getProperty("email.reset.body", "To reset your password, click the following link:") + "\r\n" + url;
 
