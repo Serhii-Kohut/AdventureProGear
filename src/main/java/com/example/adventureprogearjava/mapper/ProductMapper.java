@@ -1,7 +1,19 @@
 package com.example.adventureprogearjava.mapper;
 
-import com.example.adventureprogearjava.dto.*;
-import com.example.adventureprogearjava.entity.*;
+import com.example.adventureprogearjava.dto.CategoryDTO;
+import com.example.adventureprogearjava.dto.ContentDTO;
+import com.example.adventureprogearjava.dto.ProductAttributeDTO;
+import com.example.adventureprogearjava.dto.ProductCharacteristicDTO;
+import com.example.adventureprogearjava.dto.ProductDTO;
+import com.example.adventureprogearjava.dto.SubSubCategoryDTO;
+import com.example.adventureprogearjava.dto.SubcategoryDTO;
+import com.example.adventureprogearjava.entity.Category;
+import com.example.adventureprogearjava.entity.CategoryCharacteristic;
+import com.example.adventureprogearjava.entity.Product;
+import com.example.adventureprogearjava.entity.ProductAttribute;
+import com.example.adventureprogearjava.entity.ProductCharacteristic;
+import com.example.adventureprogearjava.entity.ProductContent;
+import com.example.adventureprogearjava.entity.Section;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -24,11 +36,11 @@ public interface ProductMapper {
     @Mapping(target = "gender", source = "gender")
     @Mapping(target = "averageRating", source = "averageRating")
     @Mapping(target = "reviewCount", source = "reviewCount")
-    @Mapping(target = "category", source = "category", qualifiedByName = "mapToCategoryDto")
-    @Mapping(target = "attributes", source = "attributes")
-    @Mapping(target = "contents", source = "contents")
+    @Mapping(target = "category", ignore = true) // Ігноруємо category
+    @Mapping(target = "attributes", ignore = true)
+    @Mapping(target = "contents", ignore = true)
+    @Mapping(target = "characteristics", ignore = true)
     @Mapping(target = "selfLink", source = "id", qualifiedByName = "idToProductLink")
-    @Mapping(target = "characteristics", source = "productCharacteristics", qualifiedByName = "mapToProductCharacteristicDtos")
     ProductDTO toDto(Product product);
 
     @Mapping(target = "productNameUa", source = "dto.productNameUa")

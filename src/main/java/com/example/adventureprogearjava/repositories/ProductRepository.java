@@ -4,6 +4,7 @@ import com.example.adventureprogearjava.entity.Product;
 import com.example.adventureprogearjava.entity.enums.Gender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -141,5 +142,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("UPDATE Product p SET p.reviewCount = :reviewCount WHERE p.id = :productId")
     void updateReviewCount(@Param("productId") Long productId, @Param("reviewCount") int reviewCount);
+
+    @Query(value = "SELECT p.* FROM products p JOIN product_attributes pa ON p.id = pa.product_id WHERE pa.label = :label",
+            countQuery = "SELECT count(DISTINCT p.id) FROM products p JOIN product_attributes pa ON p.id = pa.product_id WHERE pa.label = :label",
+            nativeQuery = true)
+    Page<Product> findProductsByAttributeLabel(@Param("label") String label, Pageable pageable);
 
 }
