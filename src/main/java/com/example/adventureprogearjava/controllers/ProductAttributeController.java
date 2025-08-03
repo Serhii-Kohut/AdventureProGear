@@ -1,11 +1,14 @@
 package com.example.adventureprogearjava.controllers;
 
-import com.example.adventureprogearjava.annotation.productAttributeController.*;
+import com.example.adventureprogearjava.annotation.productAttributeController.CreateProductAttribute;
+import com.example.adventureprogearjava.annotation.productAttributeController.DeleteProductAttributes;
+import com.example.adventureprogearjava.annotation.productAttributeController.GetAllProductsAttributes;
+import com.example.adventureprogearjava.annotation.productAttributeController.GetProductAttributesById;
+import com.example.adventureprogearjava.annotation.productAttributeController.GetProductsByAttributeLabel;
+import com.example.adventureprogearjava.annotation.productAttributeController.UpdateProductAttributes;
 import com.example.adventureprogearjava.dto.ProductAttributeDTO;
 import com.example.adventureprogearjava.dto.ProductDTO;
-import com.example.adventureprogearjava.services.CRUDService;
 import com.example.adventureprogearjava.services.ProductAttributeService;
-import com.example.adventureprogearjava.services.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -13,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
