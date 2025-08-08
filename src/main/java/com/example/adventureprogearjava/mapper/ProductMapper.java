@@ -36,10 +36,10 @@ public interface ProductMapper {
     @Mapping(target = "gender", source = "gender")
     @Mapping(target = "averageRating", source = "averageRating")
     @Mapping(target = "reviewCount", source = "reviewCount")
-    @Mapping(target = "category", ignore = true) // Ігноруємо category
-    @Mapping(target = "attributes", ignore = true)
-    @Mapping(target = "contents", ignore = true)
-    @Mapping(target = "characteristics", ignore = true)
+    @Mapping(target = "category", source =  "category")
+    @Mapping(target = "attributes", source = "attributes")
+    @Mapping(target = "contents", source = "contents")
+    @Mapping(target = "characteristics", source = "productCharacteristics")
     @Mapping(target = "selfLink", source = "id", qualifiedByName = "idToProductLink")
     ProductDTO toDto(Product product);
 
