@@ -7,9 +7,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductCharacteristicMapper {
-    @Mapping(source = "categoryCharacteristic.name", target = "name")
-    @Mapping(source = "categoryCharacteristic.id", target = "categoryCharacteristicId")
-    @Mapping(source = "product.id", target = "productId")
+    @Mapping(target = "name", source = "categoryCharacteristic.name")
+    @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "categoryCharacteristicId", source = "categoryCharacteristic.id")
     ProductCharacteristicDTO toDto(ProductCharacteristic characteristic);
 
     @Mapping(source = "categoryCharacteristicId", target = "categoryCharacteristic.id")

@@ -95,7 +95,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "JOIN FETCH p.category c " +
             "LEFT JOIN FETCH p.attributes " +
             "LEFT JOIN FETCH p.contents " +
-            "LEFT JOIN FETCH p.productCharacteristics " +
+            "LEFT JOIN FETCH p.productCharacteristics pc " +
+            "LEFT JOIN FETCH pc.categoryCharacteristic " +  // Критично: додайте це
             "LEFT JOIN FETCH c.parentCategory " +
             "LEFT JOIN FETCH c.section " +
             "LEFT JOIN FETCH c.characteristics " +
@@ -111,10 +112,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable);
 
     @Query("SELECT DISTINCT p FROM Product p " +
-            "JOIN p.category c " +
-            "LEFT JOIN c.parentCategory pc " +
+            "JOIN FETCH p.category c " +
+            "LEFT JOIN FETCH p.attributes " +
+            "LEFT JOIN FETCH p.contents " +
+            "LEFT JOIN FETCH p.productCharacteristics prc " +  // Зміна: prc замість pc
+            "LEFT JOIN FETCH prc.categoryCharacteristic " +     // Використовуємо prc
+            "LEFT JOIN FETCH c.parentCategory pc " +            // Зберігаємо pc для parentCategory
+            "LEFT JOIN FETCH c.section " +
+            "LEFT JOIN FETCH c.characteristics " +
             "WHERE (:categoryId IS NULL OR c.id = :categoryId) " +
-            "AND (:subcategoryId IS NULL OR c.id = :subcategoryId OR pc.id = :subcategoryId) " +
+            "AND (:subcategoryId IS NULL OR c.id = :subcategoryId OR pc.id = :subcategoryId) " +  // pc тут
             "AND (:categoryName IS NULL OR c.categoryNameEn = :categoryName) " +
             "AND (:priceFrom IS NULL OR p.basePrice >= :priceFrom) " +
             "AND (:priceTo IS NULL OR p.basePrice <= :priceTo) " +
@@ -124,9 +131,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("subcategoryId") Long subcategoryId,
             @Param("priceFrom") Long priceFrom,
             @Param("priceTo") Long priceTo,
-            @Param("gender") Gender gender,  // Змінено з String на Gender
+            @Param("gender") Gender gender,
             @Param("categoryName") String categoryName,
             Pageable pageable);
+
+    @Query("SELECT p FROM Product p " +
+            "JOIN FETCH p.category c " +
+            "LEFT JOIN FETCH p.attributes " +
+            "LEFT JOIN FETCH p.contents " +
+            "LEFT JOIN FETCH p.productCharacteristics pc " +
+            "LEFT JOIN FETCH pc.categoryCharacteristic " +
+            "LEFT JOIN FETCH c.parentCategory " +
+            "LEFT JOIN FETCH c.section " +
+            "LEFT JOIN FETCH c.characteristics " +
+            "WHERE p.id = :id")
+    Optional<Product> findByIdWithCharacteristics(@Param("id") Long id);
 
 
     @Query("SELECT p FROM Product p WHERE p.category.categoryNameEn = :categoryName")

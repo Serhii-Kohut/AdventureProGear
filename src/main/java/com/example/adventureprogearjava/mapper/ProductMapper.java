@@ -43,6 +43,11 @@ public interface ProductMapper {
     @Mapping(target = "selfLink", source = "id", qualifiedByName = "idToProductLink")
     ProductDTO toDto(Product product);
 
+    @Mapping(target = "name", source = "categoryCharacteristic.name")  // Критично: мапимо name з nested
+    @Mapping(target = "productId", source = "product.id")  // Встановлюємо productId
+    @Mapping(target = "categoryCharacteristicId", source = "categoryCharacteristic.id")  // Встановлюємо ID
+    ProductCharacteristicDTO toCharacteristicDto(ProductCharacteristic characteristic);  // Метод для characteristic
+
     @Mapping(target = "productNameUa", source = "dto.productNameUa")
     @Mapping(target = "productNameEn", source = "dto.productNameEn")
     @Mapping(target = "descriptionUa", source = "dto.descriptionUa")
