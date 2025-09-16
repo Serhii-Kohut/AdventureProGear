@@ -24,9 +24,13 @@ public class ProductReviewDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     String username;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    Long userId;
+
     @Min(value = 1, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating must be at most 5")
     double rating;
+
     private int likes = 0;
     private int dislikes = 0;
 
