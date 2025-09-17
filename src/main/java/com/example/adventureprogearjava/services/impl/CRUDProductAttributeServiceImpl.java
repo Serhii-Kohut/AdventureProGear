@@ -118,4 +118,29 @@ public class CRUDProductAttributeServiceImpl implements ProductAttributeService 
 
         return new PageImpl<>(products, pageable, productsPage.getTotalElements());
     }
+
+    @Override
+    public Page<ProductDTO> getProductsByPriceDeviation(Long minPriceDeviation, Pageable pageable) {
+        log.info("Getting products with price deviation greater than: {} with pageable: {}", minPriceDeviation, pageable);
+
+        Page<Product> productsPage = productRepository.findProductsByPriceDeviation(minPriceDeviation, pageable);
+
+        if (productsPage.isEmpty()) {
+            throw new ResourceNotFoundException("No products found with price deviation greater than: " + minPriceDeviation);
+        }
+
+        List<ProductDTO> products = productsPage.getContent().stream()
+                .map(product -> {
+                    ProductDTO dto = productMapper.toDto(product);
+                    // Фільтруємо атрибути
+                    List<ProductAttributeDTO> filteredAttributes = dto.getAttributes().stream()
+                            .filter(attr -> attr.getPriceDeviation() > minPriceDeviation)
+                            .collect(Collectors.toList());
+                    dto.setAttributes(filteredAttributes);
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(products, pageable, productsPage.getTotalElements());
+    }
 }

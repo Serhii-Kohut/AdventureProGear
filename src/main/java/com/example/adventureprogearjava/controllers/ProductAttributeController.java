@@ -5,6 +5,7 @@ import com.example.adventureprogearjava.annotation.productAttributeController.De
 import com.example.adventureprogearjava.annotation.productAttributeController.GetAllProductsAttributes;
 import com.example.adventureprogearjava.annotation.productAttributeController.GetProductAttributesById;
 import com.example.adventureprogearjava.annotation.productAttributeController.GetProductsByAttributeLabel;
+import com.example.adventureprogearjava.annotation.productAttributeController.GetProductsByPriceDeviation;
 import com.example.adventureprogearjava.annotation.productAttributeController.UpdateProductAttributes;
 import com.example.adventureprogearjava.dto.ProductAttributeDTO;
 import com.example.adventureprogearjava.dto.ProductDTO;
@@ -16,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -60,5 +63,12 @@ public class ProductAttributeController {
     @GetProductsByAttributeLabel(path = "/by-label/{label}")
     public Page<ProductDTO> getProductsByLabel(@PathVariable String label, Pageable pageable) {
         return productAttributeServiceImp.getProductsByAttributeLabel(label, pageable);
+    }
+
+    @GetProductsByPriceDeviation(path = "/by-price-deviation")
+    public Page<ProductDTO> getProductsByPriceDeviation(
+            @RequestParam(defaultValue = "0") Long minPriceDeviation,
+            Pageable pageable) {
+        return productAttributeServiceImp.getProductsByPriceDeviation(minPriceDeviation, pageable);
     }
 }

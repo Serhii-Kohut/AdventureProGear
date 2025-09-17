@@ -20,4 +20,6 @@ public interface ProductAttributeService {
 
     Page<ProductDTO> getProductsByAttributeLabel(String label, Pageable pageable);
 
+    Page<ProductDTO> getProductsByPriceDeviation(Long minPriceDeviation, Pageable pageable);
+
 }

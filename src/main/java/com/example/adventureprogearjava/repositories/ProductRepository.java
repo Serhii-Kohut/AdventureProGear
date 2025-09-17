@@ -166,4 +166,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             nativeQuery = true)
     Page<Product> findProductsByAttributeLabel(@Param("label") String label, Pageable pageable);
 
+    @Query("SELECT DISTINCT p FROM Product p " +
+            "JOIN FETCH p.attributes a " +
+            "WHERE EXISTS (SELECT 1 FROM ProductAttribute pa WHERE pa.product = p AND pa.priceDeviation > :minPriceDeviation)")
+    Page<Product> findProductsByPriceDeviation(@Param("minPriceDeviation") Long minPriceDeviation, Pageable pageable);
+
 }
