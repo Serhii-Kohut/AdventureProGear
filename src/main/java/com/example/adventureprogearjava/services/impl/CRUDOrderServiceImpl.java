@@ -6,7 +6,7 @@ import com.example.adventureprogearjava.dto.OrdersListDTO;
 import com.example.adventureprogearjava.dto.UpdateOrderStatusDTO;
 import com.example.adventureprogearjava.entity.Order;
 import com.example.adventureprogearjava.entity.OrdersList;
-import com.example.adventureprogearjava.entity.Product;
+import com.example.adventureprogearjava.entity.ProductAttribute;
 import com.example.adventureprogearjava.entity.User;
 import com.example.adventureprogearjava.entity.enums.OrderStatus;
 import com.example.adventureprogearjava.entity.enums.Role;
@@ -17,6 +17,7 @@ import com.example.adventureprogearjava.exceptions.ResourceNotFoundException;
 import com.example.adventureprogearjava.mapper.OrderMapper;
 import com.example.adventureprogearjava.repositories.OrderRepository;
 import com.example.adventureprogearjava.repositories.OrdersListRepository;
+import com.example.adventureprogearjava.repositories.ProductAttributeRepository;
 import com.example.adventureprogearjava.repositories.ProductRepository;
 import com.example.adventureprogearjava.repositories.UserRepository;
 import com.example.adventureprogearjava.services.CRUDOrderService;
@@ -41,6 +42,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
     OrderRepository orderRepository;
     OrdersListRepository ordersListRepository;
     UserRepository userRepository;
+    ProductAttributeRepository productAttributeRepository;
     OrderMapper orderMapper;
     private final MailService mailService;
     private final ProductRepository productRepository;
@@ -115,22 +117,43 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         // Зберігаємо ордер у базі даних
         Order savedOrder = orderRepository.save(order);
 
-        // Створюємо і зберігаємо списки ордерів
+        // Створюємо і зберігаємо списки ордерів з урахуванням атрибутів
         List<OrdersList> ordersLists = new ArrayList<>();
+        double totalPrice = 0.0; // Змінено на double для точності розрахунку
         for (OrdersListDTO item : orderDTO.getOrdersLists()) {
             OrdersList ordersList = new OrdersList();
             ordersList.setOrder(savedOrder);
             ordersList.setProduct(productRepository.findById(item.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID " + item.getProductId())));
+
+            // Завантажуємо атрибут, якщо attributeId передано
+            ProductAttribute productAttribute = null;
+            if (item.getProductAttributeId() != null) {
+                productAttribute = productAttributeRepository.findById(item.getProductAttributeId())
+                        .orElseThrow(() -> new ResourceNotFoundException("ProductAttribute not found with ID " + item.getProductAttributeId()));
+                // Перевіряємо, чи атрибут належить продукту
+                if (!productAttribute.getProduct().getId().equals(item.getProductId())) {
+                    throw new ResourceNotFoundException("ProductAttribute does not belong to the specified product");
+                }
+                ordersList.setProductAttribute(productAttribute);
+            }
             ordersList.setQuantity(item.getQuantity());
             ordersLists.add(ordersList);
+
+            // Розраховуємо ціну з урахуванням знижки
+            long basePrice = ordersList.getProduct().getBasePrice();
+            long itemPrice = basePrice;
+            if (productAttribute != null && productAttribute.getPriceDeviation() > 0) {
+                itemPrice = basePrice - productAttribute.getPriceDeviation(); // Знижка, якщо >0
+                if (itemPrice < 0) {
+                    itemPrice = 0; // Уникаємо від'ємної ціни
+                }
+            }
+            totalPrice += (double) itemPrice * item.getQuantity();
         }
         ordersListRepository.saveAll(ordersLists);
 
-        // Обчислюємо загальну ціну
-        double totalPrice = ordersLists.stream()
-                .mapToDouble(ol -> ol.getProduct().getBasePrice() * ol.getQuantity())
-                .sum();
+        // Встановлюємо загальну ціну (кастуємо до long, якщо потрібно)
         savedOrder.setPrice((long) totalPrice);
         orderRepository.save(savedOrder); // Оновлюємо ордер із ціною
 
@@ -165,15 +188,31 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
 
         for (OrdersListDTO item : savedOrderDTO.getOrdersLists()) {
             String productName = productRepository.getProductNameById(item.getProductId());
-            Long productPrice = productRepository.findProductPriceById(item.getProductId());
-            if (productPrice == null) {
+            long basePrice = productRepository.findProductPriceById(item.getProductId());
+            if (basePrice == 0) { // Змінено: перевірка на 0, бо Long
                 throw new ResourceNotFoundException("Product price not found for product id " + item.getProductId());
             }
-            double itemTotalPrice = productPrice * item.getQuantity();
+
+            // Завантажуємо атрибут для розрахунку знижки
+            long itemPrice = basePrice;
+            if (item.getProductAttributeId() != null) {
+                ProductAttribute attr = productAttributeRepository.findById(item.getProductAttributeId())
+                        .orElse(null);
+                if (attr != null && attr.getPriceDeviation() > 0) {
+                    itemPrice = basePrice - attr.getPriceDeviation();
+                    if (itemPrice < 0) {
+                        itemPrice = 0;
+                    }
+                }
+            }
+
+            double itemTotalPrice = itemPrice * item.getQuantity();
             message.append(itemNumber).append(". ")
                     .append(productName).append(" — ")
-                    .append(item.getQuantity()).append(" шт. прайс: ")
-                    .append(productPrice).append(" грн/одиниця\n");
+                    .append(item.getQuantity()).append(" шт. ")
+                    .append("прайс: ").append(itemPrice).append(" грн/одиниця") // З урахуванням знижки
+                    .append(" (базова: ").append(basePrice).append(" грн") // Опціонально: показати базову ціну
+                    .append(")\n");
 
             totalPrice += itemTotalPrice;
             itemNumber++;
