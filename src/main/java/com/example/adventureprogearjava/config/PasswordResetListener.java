@@ -22,9 +22,9 @@ public class PasswordResetListener implements ApplicationListener<OnPasswordRese
         this.environment = environment;
     }
 
-    @Value("${app.base-url}")
+    /*@Value("${app.base-url}")
     @NonFinal
-    String serverUrl;
+    String serverUrl;*/
 
 
     @Override
@@ -38,7 +38,7 @@ public class PasswordResetListener implements ApplicationListener<OnPasswordRese
 
         String subject = environment.getProperty("email.reset.subject", "Password Reset Request");
 
-        String url = serverUrl + "/uk-UA/?auth=reset-password&token=" + token;
+        String url = "https://adventure-pro-gear-theta.vercel.app/?auth=reset-password&token=" + token;
 
         String message = environment.getProperty("email.reset.body", "To reset your password, click the following link:") + "\r\n" + url;
 
