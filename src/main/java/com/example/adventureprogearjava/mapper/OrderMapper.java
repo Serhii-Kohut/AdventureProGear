@@ -15,14 +15,15 @@ public interface OrderMapper {
 
     @Mapping(target = "selfLink", source = "order.id", qualifiedByName = "orderIdToLink")
     @Mapping(target = "userId", source = "order.user.id")
-    @Mapping(target = "ordersLists", source = "order.ordersLists") // Додайте мапінг для ordersLists
+    @Mapping(target = "ordersLists", source = "order.ordersLists") // Мапінг колекції ordersLists через OrdersListMapper
     OrderDTO toDTO(Order order);
 
-    @Mapping(target = "status", source = "orderDTO.status")
+    @Mapping(target = "ordersLists", source = "ordersLists") // Для toEntity: мапінг ordersLists з DTO на сутність
     Order toEntity(OrderDTO orderDTO);
 
+    // Додатковий метод для мапінгу ID на selfLink (якщо потрібно)
     @Named("orderIdToLink")
-    default String getLink(Long id) {
-        return api + id;
+    default String orderIdToLink(Long orderId) {
+        return api + orderId;
     }
 }

@@ -119,7 +119,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
 
         // Створюємо і зберігаємо списки ордерів з урахуванням атрибутів
         List<OrdersList> ordersLists = new ArrayList<>();
-        double totalPrice = 0.0; // Змінено на double для точності розрахунку
+        double totalPrice = 0.0; // Використовуємо double для точності з відсотками
         for (OrdersListDTO item : orderDTO.getOrdersLists()) {
             OrdersList ordersList = new OrdersList();
             ordersList.setOrder(savedOrder);
@@ -135,16 +135,17 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
                 if (!productAttribute.getProduct().getId().equals(item.getProductId())) {
                     throw new ResourceNotFoundException("ProductAttribute does not belong to the specified product");
                 }
-                ordersList.setProductAttribute(productAttribute);
+                ordersList.setProductAttribute(productAttribute); // Встановлюємо атрибут у OrdersList
             }
             ordersList.setQuantity(item.getQuantity());
             ordersLists.add(ordersList);
 
-            // Розраховуємо ціну з урахуванням знижки
+            // Розраховуємо ціну з урахуванням відсоткової знижки
             long basePrice = ordersList.getProduct().getBasePrice();
             long itemPrice = basePrice;
             if (productAttribute != null && productAttribute.getPriceDeviation() > 0) {
-                itemPrice = basePrice - productAttribute.getPriceDeviation(); // Знижка, якщо >0
+                double discountPercentage = productAttribute.getPriceDeviation() / 100.0;
+                itemPrice = (long) (basePrice - basePrice * discountPercentage); // Формула: basePrice - basePrice * (priceDeviation / 100)
                 if (itemPrice < 0) {
                     itemPrice = 0; // Уникаємо від'ємної ціни
                 }
@@ -153,7 +154,7 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         }
         ordersListRepository.saveAll(ordersLists);
 
-        // Встановлюємо загальну ціну (кастуємо до long, якщо потрібно)
+        // Встановлюємо загальну ціну (кастуємо до long)
         savedOrder.setPrice((long) totalPrice);
         orderRepository.save(savedOrder); // Оновлюємо ордер із ціною
 
@@ -189,20 +190,22 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
         for (OrdersListDTO item : savedOrderDTO.getOrdersLists()) {
             String productName = productRepository.getProductNameById(item.getProductId());
             long basePrice = productRepository.findProductPriceById(item.getProductId());
-            if (basePrice == 0) { // Змінено: перевірка на 0, бо Long
+            if (basePrice == 0) {
                 throw new ResourceNotFoundException("Product price not found for product id " + item.getProductId());
             }
 
-            // Завантажуємо атрибут для розрахунку знижки
+            // Завантажуємо атрибут для розрахунку відсоткової знижки
             long itemPrice = basePrice;
+            String discountInfo = ""; // Для відображення знижки в листі
             if (item.getProductAttributeId() != null) {
-                ProductAttribute attr = productAttributeRepository.findById(item.getProductAttributeId())
-                        .orElse(null);
+                ProductAttribute attr = productAttributeRepository.findById(item.getProductAttributeId()).orElse(null);
                 if (attr != null && attr.getPriceDeviation() > 0) {
-                    itemPrice = basePrice - attr.getPriceDeviation();
+                    double discountPercentage = attr.getPriceDeviation() / 100.0;
+                    itemPrice = (long) (basePrice - basePrice * discountPercentage); // Формула: basePrice - basePrice * (priceDeviation / 100)
                     if (itemPrice < 0) {
                         itemPrice = 0;
                     }
+                    discountInfo = " (знижка " + attr.getPriceDeviation() + "%)"; // Відображення відсотка
                 }
             }
 
@@ -210,9 +213,8 @@ public class CRUDOrderServiceImpl implements CRUDOrderService {
             message.append(itemNumber).append(". ")
                     .append(productName).append(" — ")
                     .append(item.getQuantity()).append(" шт. ")
-                    .append("прайс: ").append(itemPrice).append(" грн/одиниця") // З урахуванням знижки
-                    .append(" (базова: ").append(basePrice).append(" грн") // Опціонально: показати базову ціну
-                    .append(")\n");
+                    .append("прайс: ").append(itemPrice).append(" грн/одиниця")
+                    .append(discountInfo).append("\n"); // Додано info про знижку
 
             totalPrice += itemTotalPrice;
             itemNumber++;
