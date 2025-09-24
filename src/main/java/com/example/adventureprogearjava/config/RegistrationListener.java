@@ -43,7 +43,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
         String recipientAddress = userEmailDto.getEmail();
         String subject = environment.getProperty("email.registration.subject", "Registration Confirmation");
-        String confirmationUrl = serverUrl + event.getAppUrl() + "/api/public/registration/confirmation?token=" + token;
+        String confirmationUrl = "https://adventure-pro-gear-theta.vercel.app/?auth=signup-success&token=" + token;
         String emailBody = environment.getProperty("email.registration.body", "To complete the registration, please follow the link:") + "\r\n" + confirmationUrl;
 
         mailService.sendEmail(recipientAddress, subject, emailBody);
