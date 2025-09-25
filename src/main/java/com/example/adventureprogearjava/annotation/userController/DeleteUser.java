@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @RequestMapping(method = RequestMethod.DELETE)
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasAuthority('ROLE_ADMIN') or #user.id == principal.id")
 @Operation(
         summary = "Delete user by ID",
         description = "Deletes a user account by their ID",
