@@ -96,7 +96,8 @@ public class SecurityConfig {
                 "https://adventure0625.onrender.com",
                 "https://adventure-9lt9.onrender.com",
                 "https://adventure-new-5.onrender.com",
-                "https://adventure0925.onrender.com"
+                "https://adventure0925.onrender.com",
+                "https://adventure-jtvg.onrender.com"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
