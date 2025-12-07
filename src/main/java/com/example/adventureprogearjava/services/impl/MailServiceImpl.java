@@ -55,9 +55,9 @@ public class MailServiceImpl implements MailService {
 
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("from", from);
-        requestBody.put("to", to);  // Якщо потрібно кілька отримувачів, зробіть List<String>
+        requestBody.put("to", to);
         requestBody.put("subject", subject);
-        requestBody.put("text", body);  // Використовуємо text, бо ваш body — простий текст. Якщо хочете HTML, використовуйте "html"
+        requestBody.put("text", body);
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
