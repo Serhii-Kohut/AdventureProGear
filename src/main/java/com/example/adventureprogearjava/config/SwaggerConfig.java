@@ -35,7 +35,7 @@ public class SwaggerConfig {
                         )
                 )
                 .servers(List.of(
-                        new Server().url("https://adventure-12-25.onrender.com")
+                        new Server().url("https://adventure-01-26.onrender.com")
                 ))
                 .components(new Components()
                         .addSecuritySchemes(SECURITY_SCHEME_NAME, new SecurityScheme()

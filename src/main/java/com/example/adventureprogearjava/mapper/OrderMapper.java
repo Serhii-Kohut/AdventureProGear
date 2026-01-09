@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface OrderMapper {
     OrderMapper MAPPER = Mappers.getMapper(OrderMapper.class);
 
-    String api = "https://adventure-12-25.onrender.com/api/orders/";
+    String api = "https://adventure-01-26.onrender.com/api/orders/";
 
     @Mapping(target = "selfLink", source = "order.id", qualifiedByName = "orderIdToLink")
     @Mapping(target = "userId", source = "order.user.id")
