@@ -103,7 +103,8 @@ public class SecurityConfig {
                 "send.adventure-pro-gear.xyz",
                 "https://adventure-pro-gear.xyz",
                 "adventure-pro-gear.xyz",
-                "https://adventure-01-26.onrender.com"
+                "https://adventure-01-26.onrender.com",
+                "https://adventure-02-26.onrender.com"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

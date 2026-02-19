@@ -8,7 +8,7 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface ProductAttributeMapper {
-    String api = "https://adventure-01-26.onrender.com/api/v1/productAttributes/";
+    String api = "https://adventure-02-26.onrender.com/api/v1/productAttributes/";
 
     @Mapping(target = "selfLink", source = "productAttribute.id", qualifiedByName = "idToLink")
     @Mapping(target = "productId", source = "product.id")
